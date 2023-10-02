@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Facility;
@@ -72,10 +74,10 @@ class PublicPagesController extends Controller
 
         $courses_included = $subscription->courses()->get();
         foreach($courses_included as $course){
-            if($course->pivot->price == 0) {
+            if($course->pivot->course_price == 0) {
                 $course->offer_price = 'FREE!';
-            } elseif($course->pivot->price < $course->price) {
-                $course->offer_price = $course->pivot->price.' (' .round(($course->pivot->price*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+            } elseif($course->pivot->course_price < $course->price) {
+                $course->offer_price = $course->pivot->course_price.' (' .round(($course->pivot->course_price*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
                 $course->offer_price = $course->price;
             }
@@ -83,16 +85,33 @@ class PublicPagesController extends Controller
 
         $facilities_included = $subscription->facilities()->get();
         foreach($facilities_included as $facility){
-            if($facility->pivot->price == 0) {
+            if($facility->pivot->facility_price == 0) {
                 $facility->offer_price = 'FREE!';
-            } elseif($facility->pivot->price < $facility->price) {
-                $facility->offer_price = $facility->pivot->price.' (' .round(($facility->pivot->price*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+            } elseif($facility->pivot->facility_price < $facility->price) {
+                $facility->offer_price = $facility->pivot->facility_price.' (' .round(($facility->pivot->facility_price*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
                 $facility->offer_price = $facility->price;
             }
         }
+        $user_have_subscription = false;
+        $logged_user = Auth::guard('web')->user();
+        // dd($logged_user->hasSubscription($subscription->id));
+        // $user_have_subscription_expires_in
+        
+
+        // if(Auth::guard('web')->user()->subscriptions()->get()->find($subscription->id) !== null){
+        //     $user_have_subscription = true;
+        //     $user_have_subscription_created = Auth::guard('web')->user()->subscriptions()->get()->find($subscription->id)->pivot->created_at;
+        //     // dd($user_have_subscription_created);
+        //     $now = Carbon::now(); 
+        //     $user_have_subscription_expires_in = $user_have_subscription_created->diffInDays($now);
+        //     dd($user_have_subscription_created->diffInDays($now));
+        //     dd(Auth::guard('web')->user()->subscriptions()->get()->find($subscription->id)->pivot->created_at);
+        // }
         return Inertia::render('Public/SubscriptionSingle', [
             'subscription_plan'=>$subscription,
+            'user_have_subscription'=>$logged_user ? $logged_user->hasSubscription($subscription->id) : false,
+            // 'user_have_subscription_expires_in' => $user_have_subscription_expires_in,
             'courses_included'=>$courses_included,
             'facilities_included'=>$facilities_included
         ]);
@@ -103,10 +122,10 @@ class PublicPagesController extends Controller
         $included_subscriptions = $course->subscriptions()->get();
         // dd($included_subscriptions);
         foreach($included_subscriptions as $subscription){
-            if($subscription->pivot->price == 0) {
+            if($subscription->pivot->course_price == 0) {
                 $subscription->offer_price = 'FREE!';
-            } elseif($subscription->pivot->price < $course->price) {
-                $subscription->offer_price = $subscription->pivot->price.' (' .round(($subscription->pivot->price*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+            } elseif($subscription->pivot->course_price < $course->price) {
+                $subscription->offer_price = $subscription->pivot->course_price.' (' .round(($subscription->pivot->course_price*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
                 $subscription->offer_price = $course->price;
             }
@@ -123,12 +142,12 @@ class PublicPagesController extends Controller
 
         $included_subscriptions = $facility->subscriptions()->get();
         foreach($included_subscriptions as $subscription){
-            if($subscription->pivot->price == 0) {
+            if($subscription->pivot->facility_price == 0) {
                 $subscription->offer_price = 'FREE!';
-            } elseif($subscription->pivot->price < $facility->price) {
-                $subscription->offer_price = $subscription->pivot->price.' (' .round(($subscription->pivot->price*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+            } elseif($subscription->pivot->facility_price < $facility->price) {
+                $subscription->offer_price = $subscription->pivot->facility_price.' (' .round(($subscription->pivot->facility_price*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
-                $subscription->offer_price = $course->price;
+                $subscription->offer_price = $facility->price;
             }
         }
         return Inertia::render('Public/FacilitySingle', [

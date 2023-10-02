@@ -23,7 +23,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             // $table->foreignId('facility_id')->onDelete('cascade');
             // $table->foreignId('subscription_id')->onDelete('cascade');
-            $table->float('price')->default(0.0);
+            $table->float('facility_price')->default(0.0);
             $table->timestamps();
         });
     }

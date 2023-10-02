@@ -49,11 +49,49 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected $appends = [ 'avatar_url','full_name'];
+    protected $appends = ['avatar_url', 'full_name'];
 
     public function subscriptions()
     {
-        return $this->belongsToMany(Subscription::class, 'subscription_user');
+        return $this->belongsToMany(Subscription::class, 'subscription_user')->withPivot('created_at');
+        ;
+    }
+
+    // public function hasAnyRole($roles)
+    // {
+    //     if (is_array($roles)) {
+    //         foreach ($roles as $role) {
+    //             if ($this->hasRole($role)) {
+    //                 return true;
+    //             }
+    //         }
+    //     } else {
+    //         if ($this->hasRole($roles)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+
+    public function hasSubscription($subscription_id)
+    {
+        $subscription = $this->subscriptions()->find($subscription_id);
+        if ($subscription !== null) {
+            $now = Carbon::now();
+            $subscriptionCreated = $subscription->pivot->created_at;
+            // $expiresIn = $subscriptionCreated->diffInDays($now);
+            // dd($subscription->validity - $subscriptionCreated->diffInDays($now));
+            // dd($now = Carbon::now());
+            // dd($subscriptionCreated->diffInDays($now));
+            $expiresIn = $subscription->validity - $subscriptionCreated->diffInDays($now);
+            if ($expiresIn > 0) {
+                return ['hasValidSubscription' => true, 'created_at' => $subscriptionCreated, 'expires_in' => $expiresIn];
+            } else {
+                // $this->subscriptions()->detach($subscription->id);
+                return ['hasValidSubscription' => false, 'created_at' => $subscriptionCreated, 'expires_in' => $expiresIn];
+            }
+        }
+        return ['hasValidSubscription' => false, 'created_at' => null, 'expires_in' => null];
     }
 
     // public function hasSubscribed($subscription)
@@ -97,9 +135,11 @@ class User extends Authenticatable
     {
         $query
             ->when(
-                $filters['search'] ?? false, fn($query, $search) =>
+                $filters['search'] ?? false,
+                fn($query, $search) =>
                 $query
-                    ->where(fn($query) =>
+                    ->where(
+                        fn($query) =>
                         $query
                             ->where('first_name', 'like', "%{$search}%")
                             ->orWhere('last_name', 'like', "%{$search}%")
@@ -110,11 +150,13 @@ class User extends Authenticatable
                     )
             )
 
-            ->when($filters['dateStart'] ?? false, function ($query, $dateStart) {
-                $dateStart = Carbon::createFromFormat('m/d/Y', $dateStart)->format('Y-m-d');
-                $query
-                    ->whereDate('created_at', '>=', $dateStart);
-            }
+            ->when(
+                $filters['dateStart'] ?? false,
+                function ($query, $dateStart) {
+                    $dateStart = Carbon::createFromFormat('m/d/Y', $dateStart)->format('Y-m-d');
+                    $query
+                        ->whereDate('created_at', '>=', $dateStart);
+                }
             )
 
             ->when(
@@ -126,9 +168,13 @@ class User extends Authenticatable
                 }
             )
 
-            ->when($filters['roles'] ?? false, fn($query, $roles) =>
+            ->when(
+                $filters['roles'] ?? false,
+                fn($query, $roles) =>
                 $query
-                    ->whereHas('roles', fn($query) =>
+                    ->whereHas(
+                        'roles',
+                        fn($query) =>
                         $query->whereIn('value', json_decode($roles))
                     )
             )
@@ -154,7 +200,7 @@ class User extends Authenticatable
     {
         parse_url($this->avatar)['host'] ?? '' === 'images.pexels.com' ? $avatar = $this->avatar : $avatar = '' . $this->avatar;
         return Attribute::make(
-            get:fn($value) => asset($avatar)
+            get: fn($value) => asset($avatar)
         );
     }
 
@@ -164,10 +210,9 @@ class User extends Authenticatable
             // get: fn (string $value) => ucfirst($value),
             set: function ($value) {
                 // dd($value);
-                if(empty($value)){
-                    return fake()->randomElement(['assets/static/img/avatar_woman.png','assets/static/img/avatar_man.png']);
-                }
-                else {
+                if (empty($value)) {
+                    return fake()->randomElement(['assets/static/img/avatar_woman.png', 'assets/static/img/avatar_man.png']);
+                } else {
                     return $value;
                 }
 
@@ -178,7 +223,7 @@ class User extends Authenticatable
     public function fullName(): Attribute
     {
         return Attribute::make(
-            get:fn() => $this->first_name . ' ' . $this->last_name
+            get: fn() => $this->first_name . ' ' . $this->last_name
         );
     }
 

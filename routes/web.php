@@ -45,11 +45,11 @@ Route::name('public.')->group(function () {
 
     Route::name('account.')->group(function(){
         Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
-        Route::post('login', [UserController::class, 'auth'])->middleware('guest');
-        Route::post('logout', [UserController::class, 'logout'])->middleware('auth')->name('logout');
+        Route::post('login', [LoginController::class, 'auth'])->middleware('guest');
+        Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
-        Route::get('register', [UserController::class, 'create'])->middleware('guest')->name('register');
-        Route::post('register', [UserController::class, 'store'])->middleware('guest');
+        Route::get('register', [LoginController::class, 'create'])->middleware('guest')->name('register');
+        Route::post('register', [LoginController::class, 'store'])->middleware('guest');
     });
 
     Route::name('products.')->group(function(){

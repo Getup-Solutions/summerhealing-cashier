@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Agegroup;
 use App\Models\Subscription;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -106,7 +107,7 @@ class Course extends Model
 
     public function subscriptions()
     {
-        return $this->belongsToMany(Subscription::class, 'course_subscription')->withPivot('price');
+        return $this->belongsToMany(Subscription::class, 'course_subscription')->withPivot('course_price');
     }
 
     public function trainers()

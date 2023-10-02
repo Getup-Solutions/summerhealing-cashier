@@ -69,7 +69,9 @@ class FacilityController extends Controller
 
         if (isset($subscriptionsPrices)) {
             foreach ($subscriptionsPrices as $subscriptionPrice) {
-                $facility->subscriptions()->attach($subscriptionPrice["id"], ['price' => $subscriptionPrice["price"]]);
+                if($subscriptionPrice["price"]<$facility->price){
+                    $facility->subscriptions()->attach($subscriptionPrice["id"], ['facility_price' => $subscriptionPrice["price"]]);
+                }    
             }
         }
 
@@ -88,7 +90,7 @@ class FacilityController extends Controller
     {
         $subscriptions = Subscription::where('published', 1)->get();
         foreach ($subscriptions as $subscription) {
-            $subscription->price = $facility->subscriptions()->find($subscription->id)->pivot->price;
+            $subscription->price = $facility->subscriptions()->find($subscription->id)->pivot->facility_price;
         }
         $subscriptionsPrices = $subscriptions;
         return Inertia::render('Admin/Dashboard/Facilities/Edit', [
@@ -127,7 +129,9 @@ class FacilityController extends Controller
 
         if (isset($subscriptionsPrices)) {
             foreach ($subscriptionsPrices as $subscriptionPrice) {
-                $facility->subscriptions()->attach($subscriptionPrice["id"], ['price' => $subscriptionPrice["price"]]);
+                if($subscriptionPrice["price"]<$facility->price){
+                    $facility->subscriptions()->attach($subscriptionPrice["id"], ['facility_price' => $subscriptionPrice["price"]]);
+                }    
             }
         }
 

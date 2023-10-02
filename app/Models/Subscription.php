@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Facility;
 use Illuminate\Database\Eloquent\Model;
@@ -84,17 +85,27 @@ class Subscription extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_subscription')->withPivot('price');
+        return $this->belongsToMany(Course::class, 'course_subscription')->withPivot('course_price');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'subscription_user')->withPivot('created_at');
     }
 
     public function facilities()
     {
-        return $this->belongsToMany(Facility::class, 'facility_subscription')->withPivot('price');
+        return $this->belongsToMany(Facility::class, 'facility_subscription')->withPivot('facility_price');
+    }
+
+    public function sessions()
+    {
+        return $this->belongsToMany(Session::class, 'session_subscription')->withPivot('session_price');
     }
 
     protected function thumbnailUrl(): Attribute
     {
-        parse_url($this->avatar)['host'] ?? '' === 'images.pexels.com' ? $avatar = $this->avatar : $avatar = '' . $this->avatar;
+        // parse_url($this->avatar)['host'] ?? '' === 'images.pexels.com' ? $avatar = $this->avatar : $avatar = '' . $this->avatar;
         return Attribute::make(
             get:fn($value) => asset($this->thumbnail)
         );

@@ -1,21 +1,21 @@
 <template>
   <div :class="{ 'w-full': fullWidth }" class="flex w-fit">
     <button type="submit" :class="{
-      'bg-blue-700 hover:bg-blue-800 focus:ring-blue-300  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800':
+      'bg-blue-700 hover:bg-blue-800 focus:ring-blue-300  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-white dark:text-white':
         color === 'blue',
-      'bg-indigo-700 hover:bg-indigo-800 focus:ring-indigo-300  dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800':
+      'bg-indigo-700 hover:bg-indigo-800 focus:ring-indigo-300  dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800 text-white dark:text-white':
         color === 'indigo',
-      'bg-red-700 hover:bg-red-800 focus:ring-red-300  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800':
+      'bg-red-700 hover:bg-red-800 focus:ring-red-300  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 text-white dark:text-white':
         color === 'red',
-      'bg-green-700 hover:bg-green-800 focus:ring-green-300  dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800':
+      'bg-green-700 hover:bg-green-800 focus:ring-green-300  dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 text-white dark:text-white':
         color === 'green',
-        'bg-yellow-300 hover:bg-yellow-500 focus:ring-yellow-300  dark:bg-sh_yellow dark:hover:bg-yellow-400 dark:focus:ring-yellow-800':
+        'bg-yellow-300 hover:bg-yellow-500 focus:ring-yellow-300  dark:bg-sh_yellow dark:hover:bg-yellow-400 dark:focus:ring-yellow-800 text-white dark:text-gray-900':
         color === 'yellow',
       'w-full': fullWidth,
       'rounded-full': rounded,
       'rounded-lg': !rounded,
     }"
-      class="text-white dark:text-gray-900 focus:ring-4 focus:outline-none font-medium text-sm px-5 py-2.5 text-center flex items-center justify-center">
+      class="focus:ring-4 focus:outline-none font-medium text-sm px-5 py-2.5 text-center flex items-center justify-center">
       <slot> </slot>
       <div v-html="disableFlash ? text : show && flash.success ? flash.success : text"></div>
     </button>

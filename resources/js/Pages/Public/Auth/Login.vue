@@ -1,7 +1,7 @@
 <template>
-    <section class="bg-cover bg-blend-darken min-h-screen dark:bg-sh_dark_blue/80" style="background-image: url('/assets/static/img/home_banner.webp');">
+    <section class="bg-cover bg-blend-darken min-h-screen dark:bg-sh_dark_blue/30" style="background-image: url('/assets/static/img/home_image_2.jpg');">
         <div
-            class="flex flex-col items-center justify-center h-full px-6 py-2 mx-auto"
+            class="flex flex-col items-center justify-center min-h-screen px-6 py-2 mx-auto backdrop-blur-sm"
         >
             <Link
                 href="#"
@@ -15,7 +15,7 @@
                 <!-- {{ $page.props.siteName }} -->
             </Link>
             <div
-                class="w-full bg-white rounded-lg shadow sm:max-w-md dark:bg-white/10"
+                class="w-full bg-white rounded-lg shadow sm:max-w-md dark:bg-sh_dark_blue/80 backdrop-blur-sm"
             >
                 <div class="p-6 space-y-4 sm:p-8">
                     <h2 class="pb-2 border-b-2">Sign in</h2>
@@ -56,16 +56,16 @@
                         <Button
                             @click.prevent="login()"
                             :text="'Sign in'"
-                            :color="'blue'"
+                            :color="'yellow'"
                             :fullWidth="true"
                         ></Button>
                         <p
-                            class="text-sm font-light text-gray-700 dark:text-gray-400"
+                            class="text-sm font-light text-gray-700 dark:text-gray-200"
                         >
                             Don’t have an account yet?
                             <Link
                                 href="/register"
-                                class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                class="font-medium text-primary-600 hover:underline dark:text-text-gray-200"
                                 >Sign up
                             </Link>
                         </p>
@@ -88,7 +88,7 @@ export default {
     },
     methods: {
         login() {
-            router.post("/admin/login", this.loginInfo, {
+            router.post("/login", this.loginInfo, {
                 preserveScroll: true,
                 preserveState: true,
                 only:['errors']

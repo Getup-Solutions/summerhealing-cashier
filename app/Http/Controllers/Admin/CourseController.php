@@ -80,7 +80,7 @@ class CourseController extends Controller
 
         if (isset($subscriptionsPrices)) {
             foreach ($subscriptionsPrices as $subscriptionPrice) {
-                $course->subscriptions()->attach($subscriptionPrice["id"], ['price' => $subscriptionPrice["price"]]);
+                $course->subscriptions()->attach($subscriptionPrice["id"], ['course_price' => $subscriptionPrice["price"]]);
             }
         }
 
@@ -102,7 +102,7 @@ class CourseController extends Controller
         $selectedSubscriptionsIds = $course->subscriptions()->pluck('subscription_id')->toArray();
         foreach ($subscriptions as $subscription) {
             if (in_array($subscription->id, $selectedSubscriptionsIds)) {
-                $subscription->price = $course->subscriptions()->find($subscription->id)->pivot->price;
+                $subscription->price = $course->subscriptions()->find($subscription->id)->pivot->course_price;
 
             } else {
                 $subscription->price =(float)$course->price;
@@ -159,7 +159,7 @@ class CourseController extends Controller
 
         if (isset($subscriptionsPrices)) {
             foreach ($subscriptionsPrices as $subscriptionPrice) {
-                $course->subscriptions()->attach($subscriptionPrice["id"], ['price' => $subscriptionPrice["price"]]);
+                $course->subscriptions()->attach($subscriptionPrice["id"], ['course_price' => $subscriptionPrice["price"]]);
             }
         }
 
