@@ -68,12 +68,12 @@ class Course extends Model
             //         $query
             //             ->where('published','=',$published[0])
             //     )
-            ->when($filters['subscriptions'] ?? false, fn($query, $subscriptions) =>
-                $query
-                    ->whereHas('subscriptions', fn($query) =>
-                        $query->whereIn('slug', json_decode($subscriptions))
-                    )
-            )
+            // ->when($filters['subscriptions'] ?? false, fn($query, $subscriptions) =>
+            //     $query
+            //         ->whereHas('subscriptions', fn($query) =>
+            //             $query->whereIn('slug', json_decode($subscriptions))
+            //         )
+            // )
 
             ->when(
                 $filters['sortBy'] ?? 'default',
@@ -105,10 +105,10 @@ class Course extends Model
         return $this->belongsTo(Agegroup::class);
     }
 
-    public function subscriptions()
-    {
-        return $this->belongsToMany(Subscription::class, 'course_subscription')->withPivot('course_price');
-    }
+    // public function subscriptions()
+    // {
+    //     return $this->belongsToMany(Subscription::class, 'course_subscription')->withPivot('course_price');
+    // }
 
     public function trainers()
     {

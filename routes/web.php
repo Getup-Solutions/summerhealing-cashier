@@ -68,6 +68,8 @@ Route::name('public.')->group(function () {
         Route::name('dashboard.')->group(function(){
             Route::prefix('dashboard')->group(function(){
                 Route::get('/', [CustomerDashboardController::class, 'index'])->name('home');
+                Route::get('/setup-intent', [UserController::class, 'setupIntent'])->name('setup_intent');
+                Route::post('/setup-intent', [UserController::class, 'setupIntent'])->name('store.setup_intent');
                 Route::get('/address', [CustomerDashboardController::class, 'address'])->name('address');
                 Route::get('/orders', [CustomerDashboardController::class, 'orders'])->name('orders');
                 Route::post('/{user}', [CustomerDashboardController::class, 'update']);

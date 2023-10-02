@@ -175,6 +175,13 @@ class UserController extends Controller
         return redirect('/admin/dashboard/users')->with('success', 'User Deleted!');
     }
 
+    public function setupIntent(){
+        // dd(Auth::user()->createSetupIntent());
+        return Inertia::render('Public/SetupIntent',[
+            'intent'=> Auth::user()->createSetupIntent()
+        ]);
+    }
+
     protected function validateUser( ? User $user = null) : array
     {
         $user ??= new User();

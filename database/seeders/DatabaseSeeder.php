@@ -100,62 +100,62 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Populating Course, Trainer and Subscription
-        Course::factory(10)->create();
+        // Course::factory(10)->create();
 
-        for ($i = 0; $i < 10; $i++) {
-            $trainer = Trainer::factory()->create();
-            $trainer->user->roles()->attach([1, 2]);
-        }
+        // for ($i = 0; $i < 10; $i++) {
+        //     $trainer = Trainer::factory()->create();
+        //     $trainer->user->roles()->attach([1, 2]);
+        // }
 
-        Subscription::factory(10)->create();
+        // Subscription::factory(10)->create();
 
         // Connecting many-to-many relations to Subscriptions and Courses
-        $subscriptions = Subscription::all();
+        // $subscriptions = Subscription::all();
 
-        Course::all()->random(5)->each(function ($course) use ($subscriptions) {
-            $course->subscriptions()->attach(
-                $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
-                ['course_price' => 12.5]
-            );
-        });
+        // Course::all()->random(5)->each(function ($course) use ($subscriptions) {
+        //     $course->subscriptions()->attach(
+        //         $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
+        //         ['course_price' => 12.5]
+        //     );
+        // });
 
         // Populating Sessions
-        Session::factory(10)->create();
+        // Session::factory(10)->create();
 
-        Session::all()->random(5)->each(function ($session) use ($subscriptions) {
-            $session->subscriptions()->attach(
-                $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
-                ['session_price' => 12.5]
-            );
-        });
+        // Session::all()->random(5)->each(function ($session) use ($subscriptions) {
+        //     $session->subscriptions()->attach(
+        //         $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
+        //         ['session_price' => 12.5]
+        //     );
+        // });
 
         // Connecting many-to-many relations to Courses and Trainers
-        $trainers = Trainer::all();
+        // $trainers = Trainer::all();
 
-        Course::all()->random(10)->each(function ($course) use ($trainers) {
-            $course->trainers()->attach(
-                $trainers->random(rand(1, 10))->pluck('id')->toArray()
-            );
-        });
+        // Course::all()->random(10)->each(function ($course) use ($trainers) {
+        //     $course->trainers()->attach(
+        //         $trainers->random(rand(1, 10))->pluck('id')->toArray()
+        //     );
+        // });
 
-        Session::all()->random(10)->each(function ($session) use ($trainers) {
-            $session->trainers()->attach(
-                $trainers->random(rand(1, 10))->pluck('id')->toArray()
-            );
-        });
+        // Session::all()->random(10)->each(function ($session) use ($trainers) {
+        //     $session->trainers()->attach(
+        //         $trainers->random(rand(1, 10))->pluck('id')->toArray()
+        //     );
+        // });
 
 
-        Lead::factory(10)->create();
+        // Lead::factory(10)->create();
 
-        Facility::factory(10)->create();
-        Facility::all()->random(5)->each(function ($facility) use ($subscriptions) {
-            $facility->subscriptions()->attach(
-                $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
-                ['facility_price' => 12.5]
-            );
-        });
+        // Facility::factory(10)->create();
+        // Facility::all()->random(5)->each(function ($facility) use ($subscriptions) {
+        //     $facility->subscriptions()->attach(
+        //         $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
+        //         ['facility_price' => 12.5]
+        //     );
+        // });
 
-        Training::factory(10)->create();
+        // Training::factory(10)->create();
 
 
     }

@@ -97,8 +97,8 @@ class Facility extends Model
         );
     }
 
-    public function subscriptions()
-    {
-        return $this->belongsToMany(Subscription::class, 'facility_subscription')->withPivot('facility_price');
-    }
+    // public function subscriptions()
+    // {
+    //     return $this->belongsToMany(Subscription::class, 'facility_subscription')->withPivot('facility_price');
+    // }
 }

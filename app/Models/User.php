@@ -13,10 +13,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Laravel\Cashier\Billable;
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -51,11 +51,11 @@ class User extends Authenticatable
 
     protected $appends = ['avatar_url', 'full_name'];
 
-    public function subscriptions()
-    {
-        return $this->belongsToMany(Subscription::class, 'subscription_user')->withPivot('created_at');
-        ;
-    }
+    // public function subscriptions()
+    // {
+    //     return $this->belongsToMany(Subscription::class, 'subscription_user')->withPivot('created_at');
+    //     ;
+    // }
 
     // public function hasAnyRole($roles)
     // {
@@ -73,26 +73,26 @@ class User extends Authenticatable
     //     return false;
     // }
 
-    public function hasSubscription($subscription_id)
-    {
-        $subscription = $this->subscriptions()->find($subscription_id);
-        if ($subscription !== null) {
-            $now = Carbon::now();
-            $subscriptionCreated = $subscription->pivot->created_at;
-            // $expiresIn = $subscriptionCreated->diffInDays($now);
-            // dd($subscription->validity - $subscriptionCreated->diffInDays($now));
-            // dd($now = Carbon::now());
-            // dd($subscriptionCreated->diffInDays($now));
-            $expiresIn = $subscription->validity - $subscriptionCreated->diffInDays($now);
-            if ($expiresIn > 0) {
-                return ['hasValidSubscription' => true, 'created_at' => $subscriptionCreated, 'expires_in' => $expiresIn];
-            } else {
-                // $this->subscriptions()->detach($subscription->id);
-                return ['hasValidSubscription' => false, 'created_at' => $subscriptionCreated, 'expires_in' => $expiresIn];
-            }
-        }
-        return ['hasValidSubscription' => false, 'created_at' => null, 'expires_in' => null];
-    }
+    // public function hasSubscription($subscription_id)
+    // {
+    //     $subscription = $this->subscriptions()->find($subscription_id);
+    //     if ($subscription !== null) {
+    //         $now = Carbon::now();
+    //         $subscriptionCreated = $subscription->pivot->created_at;
+    //         // $expiresIn = $subscriptionCreated->diffInDays($now);
+    //         // dd($subscription->validity - $subscriptionCreated->diffInDays($now));
+    //         // dd($now = Carbon::now());
+    //         // dd($subscriptionCreated->diffInDays($now));
+    //         $expiresIn = $subscription->validity - $subscriptionCreated->diffInDays($now);
+    //         if ($expiresIn > 0) {
+    //             return ['hasValidSubscription' => true, 'created_at' => $subscriptionCreated, 'expires_in' => $expiresIn];
+    //         } else {
+    //             // $this->subscriptions()->detach($subscription->id);
+    //             return ['hasValidSubscription' => false, 'created_at' => $subscriptionCreated, 'expires_in' => $expiresIn];
+    //         }
+    //     }
+    //     return ['hasValidSubscription' => false, 'created_at' => null, 'expires_in' => null];
+    // }
 
     // public function hasSubscribed($subscription)
     // {

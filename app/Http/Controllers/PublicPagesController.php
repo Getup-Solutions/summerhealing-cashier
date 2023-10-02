@@ -18,7 +18,7 @@ class PublicPagesController extends Controller
     {
         // $homePageContent = HomePageContent::first();
         return Inertia::render('Public/Home', [
-            'subscription_plans'=>Subscription::all()->take(3),
+            // 'subscription_plans'=>Subscription::all()->take(3),
             'courses'=>Course::select('title','excerpt','description','thumbnail','slug','price')->where('published',1)->get(),
             // 'homePageContent' => $homePageContent,
             // 'categories' => Category::all(),

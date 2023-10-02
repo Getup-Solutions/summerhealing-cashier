@@ -104,10 +104,10 @@ class Session extends Model
         return $this->belongsTo(Agegroup::class);
     }
 
-    public function subscriptions()
-    {
-        return $this->belongsToMany(Subscription::class, 'session_subscription')->withPivot('session_price');
-    }
+    // public function subscriptions()
+    // {
+    //     return $this->belongsToMany(Subscription::class, 'session_subscription')->withPivot('session_price');
+    // }
 
     public function trainers()
     {

@@ -12,10 +12,10 @@ return new class extends Migration {
     {
         Schema::create('subscription_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id')->references('id')
-                ->on('subscriptions')->onDelete('cascade');
-            $table->foreignId('user_id')->references('id')
-                ->on('users')->onDelete('cascade');
+            // $table->foreignId('subscription_id')->references('id')
+            //     ->on('subscriptions')->onDelete('cascade');
+            // $table->foreignId('user_id')->references('id')
+            //     ->on('users')->onDelete('cascade');
             $table->timestamp('created_at');
             // $table->timestamp('updated_at');
         });

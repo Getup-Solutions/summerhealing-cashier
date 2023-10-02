@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('slug');
-            $table->string('thumbnail');
-            $table->text('description');
-            $table->boolean('published')->default(true);
-            $table->float('price');
-            $table->string('validity');
-            $table->timestamps();
-        });
+        // Schema::create('subscriptions', function (Blueprint $table) {
+            // $table->id();
+            // $table->string('title');
+            // $table->string('slug');
+            // $table->string('thumbnail');
+            // $table->text('description');
+            // $table->boolean('published')->default(true);
+            // $table->float('price');
+            // $table->string('validity');
+            // $table->timestamps();
+        // });
     }
 
     /**
