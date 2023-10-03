@@ -30,7 +30,7 @@ class TrainerController extends Controller
     public function create()
     {
         return Inertia::render('Admin/Dashboard/Trainers/Create', [
-            'roles' => Role::whereNotIn('value', ['USER_ROLE','TRAINER_ROLE'])->get(),
+            'roles' => Role::whereNotIn('value', ['USER_ROLE'])->get(),
         ]);
     }
 }

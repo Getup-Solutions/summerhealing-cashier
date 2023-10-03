@@ -11,11 +11,11 @@
                 sortBy: true,
                 filterByFiltersEnabled: [
                     {
-                        name: 'Subscription plan',
-                        slug: 'subscriptions',
+                        name: 'Subscription plans',
+                        slug: 'subscriptionplans',
                         valueKey: 'slug',
                         nameKey: 'title',
-                        options: subscriptions,
+                        options: subscriptionplans,
                     },
                     {
                         name: 'Status',
@@ -39,7 +39,7 @@
 </template>
 <script>
 export default {
-    props: ["filters", 'courses','subscriptions'],
+    props: ["filters", 'courses','subscriptionplans'],
     data() {
         return {
             deleteId: false,

@@ -93,20 +93,20 @@ export default {
                 },
                 {
                     name: "Subscription Plans",
-                    link: "/admin/dashboard/subscriptions",
+                    link: "/admin/dashboard/subscriptionplans",
                     method: "get",
                     icon: IdentificationIcon,
-                    urlStartsWith:'/admin/dashboard/subscriptions',
+                    urlStartsWith:'/admin/dashboard/subscriptionplans',
                     subMenu: [
                         {
                             name: "Create",
-                            link: "/admin/dashboard/subscriptions/create",
-                            url:'/admin/dashboard/subscriptions/create',
+                            link: "/admin/dashboard/subscriptionplans/create",
+                            url:'/admin/dashboard/subscriptionplans/create',
                         },
                         {
-                            name: "All subscriptions plans",
-                            link: '/admin/dashboard/subscriptions',
-                            url:'/admin/dashboard/subscriptions',
+                            name: "All subscriptionplans plans",
+                            link: '/admin/dashboard/subscriptionplans',
+                            url:'/admin/dashboard/subscriptionplans',
                         },
                     ],
                 },

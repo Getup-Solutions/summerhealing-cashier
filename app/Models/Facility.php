@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -65,10 +65,10 @@ class Facility extends Model
             //         $query
             //             ->where('published','=',$published[0])
             //     )
-            // ->when($filters['subscriptions'] ?? false, fn($query, $subscriptions) =>
+            // ->when($filters['subscriptionplans'] ?? false, fn($query, $subscriptionplans) =>
             //     $query
-            //         ->whereHas('subscriptions', fn($query) =>
-            //             $query->whereIn('slug', json_decode($subscriptions))
+            //         ->whereHas('subscriptionplans', fn($query) =>
+            //             $query->whereIn('slug', json_decode($subscriptionplans))
             //         )
             // )
 
@@ -97,8 +97,8 @@ class Facility extends Model
         );
     }
 
-    // public function subscriptions()
-    // {
-    //     return $this->belongsToMany(Subscription::class, 'facility_subscription')->withPivot('facility_price');
-    // }
+    public function subscriptionplans()
+    {
+        return $this->belongsToMany(Subscriptionplan::class, 'facility_subscriptionplan')->withPivot('facility_price');
+    }
 }

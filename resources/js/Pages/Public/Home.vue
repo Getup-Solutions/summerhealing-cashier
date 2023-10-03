@@ -71,20 +71,20 @@
                             plans</button>
                         </Link>
 
-                        <div v-for="subscription_plan in subscription_plans" :key="subscription_plan.id">
+                        <div v-for="subscriptionplan in subscriptionplans" :key="subscriptionplan.id">
                             <a href="#"
                                 class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-4xl hover:bg-gray-100 dark:border-gray-700 dark:hover:border-gray-400 dark:hover:shadow-xl dark:hover:shadow-sh_yellow/40 dark:bg-white/10 dark:hover:bg-white/10">
                                 <img class="object-cover w-full md:ml-4 rounded-md md:rounded-2xl h-56 md:h-full md:w-56"
-                                    :src="subscription_plan.thumbnail_url" alt="">
+                                    :src="subscriptionplan.thumbnail_url" alt="">
                                 <div class="flex flex-col justify-between p-2 md:p-4 leading-normal w-full">
-                                    <h5 class="mb-2 sh-head-3 tracking-tight text-left">{{ subscription_plan.title }}</h5>
+                                    <h5 class="mb-2 sh-head-3 tracking-tight text-left">{{ subscriptionplan.title }}</h5>
                                     <p class="mb-3 sh-para text-left line-clamp-3 dark:hover:line-clamp-4 text-sm">{{
-                                        subscription_plan.description }}</p>
-                                    <p class="mb-3 sh-para text-left font-medium">Validity : {{ subscription_plan.validity
+                                        subscriptionplan.description }}</p>
+                                    <p class="mb-3 sh-para text-left font-medium">Validity : {{ subscriptionplan.validity
                                     }}</p>
-                                    <p class="mb-3 sh-para text-left font-medium">Price (AUD) : {{ subscription_plan.price
+                                    <p class="mb-3 sh-para text-left font-medium">Price (AUD) : {{ subscriptionplan.price
                                     }}</p>
-                                    <Link :href="`subscriptions/${subscription_plan.slug}`">
+                                    <Link :href="`subscriptions/${subscriptionplan.slug}`">
                                     <button class="sh-button flex justify-center items-center md:w-36">Learn more <svg
                                             class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 14 10">
@@ -176,7 +176,7 @@
 </template>
 <script>
 export default {
-    props: ["subscription_plans", "courses"],
+    props: ["subscriptionplans", "courses"],
 }
 </script>
 <script setup>

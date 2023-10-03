@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use App\Models\Trainer;
 
 class Session extends Model
@@ -67,10 +67,10 @@ class Session extends Model
             //         $query
             //             ->where('published','=',$published[0])
             //     )
-            ->when($filters['subscriptions'] ?? false, fn($query, $subscriptions) =>
+            ->when($filters['subscriptionplans'] ?? false, fn($query, $subscriptionplans) =>
                 $query
-                    ->whereHas('subscriptions', fn($query) =>
-                        $query->whereIn('slug', json_decode($subscriptions))
+                    ->whereHas('subscriptionplans', fn($query) =>
+                        $query->whereIn('slug', json_decode($subscriptionplans))
                     )
             )
 
@@ -104,10 +104,10 @@ class Session extends Model
         return $this->belongsTo(Agegroup::class);
     }
 
-    // public function subscriptions()
-    // {
-    //     return $this->belongsToMany(Subscription::class, 'session_subscription')->withPivot('session_price');
-    // }
+    public function subscriptionplans()
+    {
+        return $this->belongsToMany(Subscriptionplan::class, 'session_subscriptionplan')->withPivot('session_price');
+    }
 
     public function trainers()
     {

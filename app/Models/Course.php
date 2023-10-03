@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Agegroup;
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -68,12 +68,12 @@ class Course extends Model
             //         $query
             //             ->where('published','=',$published[0])
             //     )
-            // ->when($filters['subscriptions'] ?? false, fn($query, $subscriptions) =>
-            //     $query
-            //         ->whereHas('subscriptions', fn($query) =>
-            //             $query->whereIn('slug', json_decode($subscriptions))
-            //         )
-            // )
+            ->when($filters['subscriptionplans'] ?? false, fn($query, $subscriptionplans) =>
+                $query
+                    ->whereHas('subscriptionplans', fn($query) =>
+                        $query->whereIn('slug', json_decode($subscriptionplans))
+                    )
+            )
 
             ->when(
                 $filters['sortBy'] ?? 'default',
@@ -105,10 +105,10 @@ class Course extends Model
         return $this->belongsTo(Agegroup::class);
     }
 
-    // public function subscriptions()
-    // {
-    //     return $this->belongsToMany(Subscription::class, 'course_subscription')->withPivot('course_price');
-    // }
+    public function subscriptionplans()
+    {
+        return $this->belongsToMany(Subscriptionplan::class, 'course_subscriptionplan')->withPivot('course_price');
+    }
 
     public function trainers()
     {
@@ -118,7 +118,7 @@ class Course extends Model
     // protected static function booted()
     // {
     //     static::deleting(function ($course) {
-    //         $course->subscriptions()->detach();
+    //         $course->subscriptionplans()->detach();
     //     });
     // }
 

@@ -7,7 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Trainer;
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use Illuminate\Validation\Rule;
 use App\Services\FileManagement;
 use App\Http\Controllers\Controller;
@@ -36,7 +36,7 @@ class UserController extends Controller
         return Inertia::render('Admin/Dashboard/Users/Create', [
             'roles' => Role::where('value', '!=', 'USER_ROLE')->get(),
             'url_params' => Request::only(['first_name', 'last_name', 'email', 'phone_number','lead_id']),
-            'subscriptions' => Subscription::where('published',1)->get()
+            'subscriptionplans' => Subscription::where('published',1)->get()
         ]);
     }
 
@@ -59,10 +59,10 @@ class UserController extends Controller
         unset($attributes['roles']);
 
 
-        if (isset($attributes['subscriptions'])) {
-            $subscriptions = $attributes['subscriptions'];
+        if (isset($attributes['subscriptionplans'])) {
+            $subscriptionplans = $attributes['subscriptionplans'];
         }
-        unset($attributes['subscriptions']);
+        unset($attributes['subscriptionplans']);
 
 
         if (isset($attributes['lead_id'])) {
@@ -90,13 +90,16 @@ class UserController extends Controller
 
         if (isset($roles)) {
             $user->roles()->sync($roles);
+            if($user->hasRole('TRAINER_ROLE')){
+                Trainer::create(['user_id'=>$user->id,'about'=>$attributes['about']]);
+            }   
         }
 
         $user->roles()->attach([1]);
 
 
-        if (isset($subscriptions)) {
-            $user->subscriptions()->sync($subscriptions);
+        if (isset($subscriptionplans)) {
+            $user->subscriptionplans()->sync($subscriptionplans);
         }
 
         $user->save();
@@ -116,8 +119,8 @@ class UserController extends Controller
         return Inertia::render('Admin/Dashboard/Users/Edit', [
             'user' => $user,
             'user_roles' => $user->roles()->pluck('role_id'),
-            'user_subscriptions' => $user->subscriptions()->pluck('subscription_id'),
-            'subscriptions' => Subscription::where('published',1)->get(),
+            'user_subscriptionplans' => $user->subscriptionplans()->pluck('subscriptionplan_id'),
+            'subscriptionplans' => Subscriptionplan::where('published',1)->get(),
             'roles' => Role::where('value', '!=', 'USER_ROLE')->get(['id', 'name', 'value']),
         ]);
 
@@ -150,15 +153,21 @@ class UserController extends Controller
 
         if (isset($roles)) {
             $user->roles()->sync($roles);
+            if($user->hasRole('TRAINER_ROLE')){
+                $trainer = Trainer::where('user_id','=',$user->id)->first();
+                $trainer->about = $attributes['about'];
+                $trainer->update();
+                // Trainer::create(['user_id'=>$user->id,'about'=>$attributes['about']]);
+            }   
         }
 
-        if (isset($attributes['subscriptions'])) {
-            $subscriptions = $attributes['subscriptions'];
+        if (isset($attributes['subscriptionplans'])) {
+            $subscriptionplans = $attributes['subscriptionplans'];
         }
-        unset($attributes['subscriptions']);
+        unset($attributes['subscriptionplans']);
 
-        if (isset($subscriptions)) {
-            $user->subscriptions()->sync($subscriptions);
+        if (isset($subscriptionplans)) {
+            $user->subscriptionplans()->sync($subscriptionplans);
         }
 
         $user->update($attributes);
@@ -169,6 +178,11 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // dd($teacher->course->all());
+        if($user->hasRole('TRAINER_ROLE')){
+            $trainer = Trainer::where('user_id','=',$user->id)->first();
+            $trainer->delete();
+            // Trainer::create(['user_id'=>$user->id,'about'=>$attributes['about']]);
+        }  
         $user->delete();
         Storage::disk('public')->deleteDirectory('assets/app/images/users/id_' . $user['id']);
 
@@ -194,7 +208,7 @@ class UserController extends Controller
                 'dob' => 'required|max:50',
                 'lead_id'=>'nullable|numeric',
                 'roles' => [Auth::guard('web')->user()->can('admin') ? 'nullable' : 'exclude'],
-                'subscriptions' => [$user->exists ? Rule::excludeIf(count(request()->input('roles'))>1) : Rule::excludeIf(count(request()->input('roles'))>0) , 'nullable'],
+                'subscriptionplans' => [$user->exists ? Rule::excludeIf(count(request()->input('roles'))>1) : Rule::excludeIf(count(request()->input('roles'))>0) , 'nullable'],
                 'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
                 'about' => 'nullable|max:500',
                 'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user)],

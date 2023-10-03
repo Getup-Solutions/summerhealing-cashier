@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\TrainingController;
-use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\SubscriptionplanController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 
 /*
@@ -102,7 +102,7 @@ Route::name('admin.')->group(function () {
                     Route::resource('/courses', CourseController::class)->except('show');
                     Route::resource('/facilities', FacilityController::class)->except('show');
                     Route::resource('/trainers', TrainerController::class)->except(['show','store']);
-                    Route::resource('/subscriptions', SubscriptionController::class)->except('show');
+                    Route::resource('/subscriptionplans', SubscriptionplanController::class)->except('show');
                     Route::resource('/leads', LeadController::class)->except('show');
                     Route::resource('/trainings', TrainingController::class)->except('show');
 

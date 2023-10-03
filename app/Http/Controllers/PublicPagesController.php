@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Facility;
 use App\Models\Training;
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use Illuminate\Http\Request;
 
 class PublicPagesController extends Controller
@@ -18,7 +18,7 @@ class PublicPagesController extends Controller
     {
         // $homePageContent = HomePageContent::first();
         return Inertia::render('Public/Home', [
-            // 'subscription_plans'=>Subscription::all()->take(3),
+            'subscriptionplans'=>Subscriptionplan::all()->take(3),
             'courses'=>Course::select('title','excerpt','description','thumbnail','slug','price')->where('published',1)->get(),
             // 'homePageContent' => $homePageContent,
             // 'categories' => Category::all(),
@@ -26,11 +26,11 @@ class PublicPagesController extends Controller
         ]);
     }
 
-    public function subscriptionsPage(){
+    public function subscriptionplansPage(){
 
-        // dd(Subscription::select('title','description','slug','validity','price')->where('published',1)->get());
-        return Inertia::render('Public/Subscriptions', [
-            'subscription_plans'=>Subscription::select('title','description','thumbnail','slug','validity','price')->where('published',1)->get(),
+        // dd(Subscriptionplan::select('title','description','slug','validity','price')->where('published',1)->get());
+        return Inertia::render('Public/Subscriptionplans', [
+            'subscriptionplan_plans'=>Subscriptionplan::select('title','description','thumbnail','slug','validity','price')->where('published',1)->get(),
             // 'courses'=>Course::all()->take(3),
             // 'homePageContent' => $homePageContent,
             // 'categories' => Category::all(),
@@ -40,7 +40,7 @@ class PublicPagesController extends Controller
 
     public function coursesPage(){
 
-        // dd(Subscription::select('title','description','slug','validity','price')->where('published',1)->get());
+        // dd(Subscriptionplan::select('title','description','slug','validity','price')->where('published',1)->get());
         return Inertia::render('Public/Courses', [
             'courses'=>Course::select('title','excerpt','description','thumbnail','slug','price')->where('published',1)->get(),
             // 'courses'=>Course::all()->take(3),
@@ -70,9 +70,9 @@ class PublicPagesController extends Controller
         ]);
     }
 
-    public function subscriptionSinglePage(Subscription $subscription){
+    public function subscriptionplanSinglePage(Subscriptionplan $subscriptionplan){
 
-        $courses_included = $subscription->courses()->get();
+        $courses_included = $subscriptionplan->courses()->get();
         foreach($courses_included as $course){
             if($course->pivot->course_price == 0) {
                 $course->offer_price = 'FREE!';
@@ -83,7 +83,7 @@ class PublicPagesController extends Controller
             }
         }
 
-        $facilities_included = $subscription->facilities()->get();
+        $facilities_included = $subscriptionplan->facilities()->get();
         foreach($facilities_included as $facility){
             if($facility->pivot->facility_price == 0) {
                 $facility->offer_price = 'FREE!';
@@ -93,25 +93,25 @@ class PublicPagesController extends Controller
                 $facility->offer_price = $facility->price;
             }
         }
-        $user_have_subscription = false;
+        $user_have_subscriptionplan = false;
         $logged_user = Auth::guard('web')->user();
-        // dd($logged_user->hasSubscription($subscription->id));
-        // $user_have_subscription_expires_in
+        // dd($logged_user->hasSubscriptionplan($subscriptionplan->id));
+        // $user_have_subscriptionplan_expires_in
         
 
-        // if(Auth::guard('web')->user()->subscriptions()->get()->find($subscription->id) !== null){
-        //     $user_have_subscription = true;
-        //     $user_have_subscription_created = Auth::guard('web')->user()->subscriptions()->get()->find($subscription->id)->pivot->created_at;
-        //     // dd($user_have_subscription_created);
+        // if(Auth::guard('web')->user()->subscriptionplans()->get()->find($subscriptionplan->id) !== null){
+        //     $user_have_subscriptionplan = true;
+        //     $user_have_subscriptionplan_created = Auth::guard('web')->user()->subscriptionplans()->get()->find($subscriptionplan->id)->pivot->created_at;
+        //     // dd($user_have_subscriptionplan_created);
         //     $now = Carbon::now(); 
-        //     $user_have_subscription_expires_in = $user_have_subscription_created->diffInDays($now);
-        //     dd($user_have_subscription_created->diffInDays($now));
-        //     dd(Auth::guard('web')->user()->subscriptions()->get()->find($subscription->id)->pivot->created_at);
+        //     $user_have_subscriptionplan_expires_in = $user_have_subscriptionplan_created->diffInDays($now);
+        //     dd($user_have_subscriptionplan_created->diffInDays($now));
+        //     dd(Auth::guard('web')->user()->subscriptionplans()->get()->find($subscriptionplan->id)->pivot->created_at);
         // }
-        return Inertia::render('Public/SubscriptionSingle', [
-            'subscription_plan'=>$subscription,
-            'user_have_subscription'=>$logged_user ? $logged_user->hasSubscription($subscription->id) : false,
-            // 'user_have_subscription_expires_in' => $user_have_subscription_expires_in,
+        return Inertia::render('Public/SubscriptionplanSingle', [
+            'subscriptionplan_plan'=>$subscriptionplan,
+            'user_have_subscriptionplan'=>$logged_user ? $logged_user->hasSubscriptionplan($subscriptionplan->id) : false,
+            // 'user_have_subscriptionplan_expires_in' => $user_have_subscriptionplan_expires_in,
             'courses_included'=>$courses_included,
             'facilities_included'=>$facilities_included
         ]);
@@ -119,40 +119,40 @@ class PublicPagesController extends Controller
 
     public function courseSinglePage(Course $course){
 
-        $included_subscriptions = $course->subscriptions()->get();
-        // dd($included_subscriptions);
-        foreach($included_subscriptions as $subscription){
-            if($subscription->pivot->course_price == 0) {
-                $subscription->offer_price = 'FREE!';
-            } elseif($subscription->pivot->course_price < $course->price) {
-                $subscription->offer_price = $subscription->pivot->course_price.' (' .round(($subscription->pivot->course_price*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+        $included_subscriptionplans = $course->subscriptionplans()->get();
+        // dd($included_subscriptionplans);
+        foreach($included_subscriptionplans as $subscriptionplan){
+            if($subscriptionplan->pivot->course_price == 0) {
+                $subscriptionplan->offer_price = 'FREE!';
+            } elseif($subscriptionplan->pivot->course_price < $course->price) {
+                $subscriptionplan->offer_price = $subscriptionplan->pivot->course_price.' (' .round(($subscriptionplan->pivot->course_price*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
-                $subscription->offer_price = $course->price;
+                $subscriptionplan->offer_price = $course->price;
             }
         }
 
-        // dd($included_subscriptions);
+        // dd($included_subscriptionplans);
         return Inertia::render('Public/CourseSingle', [
             'course'=>$course,
-            'included_subscriptions'=>$included_subscriptions
+            'included_subscriptionplans'=>$included_subscriptionplans
         ]);
     }
 
     public function facilitySinglePage(Facility $facility){
 
-        $included_subscriptions = $facility->subscriptions()->get();
-        foreach($included_subscriptions as $subscription){
-            if($subscription->pivot->facility_price == 0) {
-                $subscription->offer_price = 'FREE!';
-            } elseif($subscription->pivot->facility_price < $facility->price) {
-                $subscription->offer_price = $subscription->pivot->facility_price.' (' .round(($subscription->pivot->facility_price*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+        $included_subscriptionplans = $facility->subscriptionplans()->get();
+        foreach($included_subscriptionplans as $subscriptionplan){
+            if($subscriptionplan->pivot->facility_price == 0) {
+                $subscriptionplan->offer_price = 'FREE!';
+            } elseif($subscriptionplan->pivot->facility_price < $facility->price) {
+                $subscriptionplan->offer_price = $subscriptionplan->pivot->facility_price.' (' .round(($subscriptionplan->pivot->facility_price*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
-                $subscription->offer_price = $facility->price;
+                $subscriptionplan->offer_price = $facility->price;
             }
         }
         return Inertia::render('Public/FacilitySingle', [
             'facility'=>$facility,
-            'included_subscriptions'=>$included_subscriptions
+            'included_subscriptionplans'=>$included_subscriptionplans
         ]);
     }
 }

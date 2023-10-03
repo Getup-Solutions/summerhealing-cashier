@@ -13,7 +13,7 @@ use App\Models\Agegroup;
 use App\Models\Facility;
 use App\Models\Session;
 use App\Models\Training;
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -51,6 +51,8 @@ class DatabaseSeeder extends Seeder
 
         $adminUser = User::where('email', '=', config('admin.email'))->first();
         $adminUser->roles()->attach([1, 2, 3]);
+
+        Trainer::create(['user_id'=>$adminUser->id]);
 
         // Creating and assigning roles to Trainers and Admins
         User::factory()->create([
@@ -99,7 +101,7 @@ class DatabaseSeeder extends Seeder
             'value' => 'advanced',
         ]);
 
-        // Populating Course, Trainer and Subscription
+        // Populating Course, Trainer and Subscriptionplan
         // Course::factory(10)->create();
 
         // for ($i = 0; $i < 10; $i++) {
@@ -107,14 +109,14 @@ class DatabaseSeeder extends Seeder
         //     $trainer->user->roles()->attach([1, 2]);
         // }
 
-        // Subscription::factory(10)->create();
+        // Subscriptionplan::factory()->create();
 
-        // Connecting many-to-many relations to Subscriptions and Courses
-        // $subscriptions = Subscription::all();
+        // Connecting many-to-many relations to Subscriptionplans and Courses
+        // $subscriptionplans = Subscriptionplan::all();
 
-        // Course::all()->random(5)->each(function ($course) use ($subscriptions) {
-        //     $course->subscriptions()->attach(
-        //         $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
+        // Course::all()->random(5)->each(function ($course) use ($subscriptionplans) {
+        //     $course->subscriptionplans()->attach(
+        //         $subscriptionplans->random(rand(1, 10))->pluck('id')->toArray(),
         //         ['course_price' => 12.5]
         //     );
         // });
@@ -122,9 +124,9 @@ class DatabaseSeeder extends Seeder
         // Populating Sessions
         // Session::factory(10)->create();
 
-        // Session::all()->random(5)->each(function ($session) use ($subscriptions) {
-        //     $session->subscriptions()->attach(
-        //         $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
+        // Session::all()->random(5)->each(function ($session) use ($subscriptionplans) {
+        //     $session->subscriptionplans()->attach(
+        //         $subscriptionplans->random(rand(1, 10))->pluck('id')->toArray(),
         //         ['session_price' => 12.5]
         //     );
         // });
@@ -148,9 +150,9 @@ class DatabaseSeeder extends Seeder
         // Lead::factory(10)->create();
 
         // Facility::factory(10)->create();
-        // Facility::all()->random(5)->each(function ($facility) use ($subscriptions) {
-        //     $facility->subscriptions()->attach(
-        //         $subscriptions->random(rand(1, 10))->pluck('id')->toArray(),
+        // Facility::all()->random(5)->each(function ($facility) use ($subscriptionplans) {
+        //     $facility->subscriptionplans()->attach(
+        //         $subscriptionplans->random(rand(1, 10))->pluck('id')->toArray(),
         //         ['facility_price' => 12.5]
         //     );
         // });

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Role;
 use Inertia\Inertia;
 use App\Models\Level;
 use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\Agegroup;
-use App\Models\Subscription;
 use Illuminate\Validation\Rule;
+use App\Models\Subscriptionplan;
 use App\Services\FileManagement;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -23,22 +24,23 @@ class CourseController extends Controller
 
         return Inertia::render('Admin/Dashboard/Courses/Index', [
             'courses' => Course::filter(
-                request(['search', 'dateStart', 'dateEnd', 'sortBy', 'published', 'subscriptions'])
+                request(['search', 'dateStart', 'dateEnd', 'sortBy', 'published', 'subscriptionplans'])
             )
                 ->paginate(3)->withQueryString(),
-            'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'published', 'subscriptions']),
-            'subscriptions' => Subscription::all(),
+            'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'published', 'subscriptionplans']),
+            'subscriptionplans' => Subscriptionplan::all(),
 
         ]);
     }
 
     public function create()
     {
+        // dd(Role::where('value', 'TRAINER_ROLE')->first()->users()->get());
         return Inertia::render('Admin/Dashboard/Courses/Create', [
             'agegroups' => Agegroup::all(),
             'levels' => Level::all(),
-            'trainers' => Trainer::all(),
-            'subscriptions' => Subscription::where('published', 1)->get(),
+            'trainers' =>Trainer::all(),
+            'subscriptionplans' => Subscriptionplan::where('published', 1)->get(),
 
         ]);
     }
@@ -58,10 +60,10 @@ class CourseController extends Controller
         }
         unset($attributes['trainers']);
 
-        if (isset($attributes['subscriptionsPrices'])) {
-            $subscriptionsPrices = $attributes['subscriptionsPrices'];
+        if (isset($attributes['subscriptionplansPrices'])) {
+            $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
-        unset($attributes['subscriptionsPrices']);
+        unset($attributes['subscriptionplansPrices']);
 
         $course = Course::create($attributes);
 
@@ -78,9 +80,9 @@ class CourseController extends Controller
             $course->trainers()->sync($trainers);
         }
 
-        if (isset($subscriptionsPrices)) {
-            foreach ($subscriptionsPrices as $subscriptionPrice) {
-                $course->subscriptions()->attach($subscriptionPrice["id"], ['course_price' => $subscriptionPrice["price"]]);
+        if (isset($subscriptionplansPrices)) {
+            foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
+                $course->subscriptionplans()->attach($subscriptionplanPrice["id"], ['course_price' => $subscriptionplanPrice["price"]]);
             }
         }
 
@@ -98,25 +100,25 @@ class CourseController extends Controller
 
     public function edit(Course $course)
     {
-        $subscriptions = Subscription::where('published', 1)->get();
-        $selectedSubscriptionsIds = $course->subscriptions()->pluck('subscription_id')->toArray();
-        foreach ($subscriptions as $subscription) {
-            if (in_array($subscription->id, $selectedSubscriptionsIds)) {
-                $subscription->price = $course->subscriptions()->find($subscription->id)->pivot->course_price;
+        $subscriptionplans = Subscriptionplan::where('published', 1)->get();
+        $selectedSubscriptionplansIds = $course->subscriptionplans()->pluck('subscriptionplan_id')->toArray();
+        foreach ($subscriptionplans as $subscriptionplan) {
+            if (in_array($subscriptionplan->id, $selectedSubscriptionplansIds)) {
+                $subscriptionplan->price = $course->subscriptionplans()->find($subscriptionplan->id)->pivot->course_price;
 
             } else {
-                $subscription->price =(float)$course->price;
+                $subscriptionplan->price =(float)$course->price;
             }
         }
-        $subscriptionsPrices = $subscriptions;
+        $subscriptionplansPrices = $subscriptionplans;
 
         return Inertia::render('Admin/Dashboard/Courses/Edit', [
             'course' => $course,
             'agegroups' => Agegroup::all(),
             'levels' => Level::all(),
             'trainers' => Trainer::all(),
-            'subscriptionsPrices' => $subscriptionsPrices,
-            'subscriptionsSelected' => $course->subscriptions()->pluck('subscription_id'),
+            'subscriptionplansPrices' => $subscriptionplansPrices,
+            'subscriptionplansSelected' => $course->subscriptionplans()->pluck('subscriptionplan_id'),
             'trainersSelected' => $course->trainers()->pluck('trainer_id'),
         ]);
     }
@@ -145,21 +147,21 @@ class CourseController extends Controller
         }
         unset($attributes['trainers']);
 
-        if(isset($attributes['subscriptionsPrices'])) {
-            $subscriptionsPrices = $attributes['subscriptionsPrices'];
+        if(isset($attributes['subscriptionplansPrices'])) {
+            $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
-        unset($attributes['subscriptionsPrices']);
+        unset($attributes['subscriptionplansPrices']);
 
 
         if (isset($trainers)) {
             $course->trainers()->sync($trainers);
         }
 
-        $course->subscriptions()->sync([]);
+        $course->subscriptionplans()->sync([]);
 
-        if (isset($subscriptionsPrices)) {
-            foreach ($subscriptionsPrices as $subscriptionPrice) {
-                $course->subscriptions()->attach($subscriptionPrice["id"], ['course_price' => $subscriptionPrice["price"]]);
+        if (isset($subscriptionplansPrices)) {
+            foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
+                $course->subscriptionplans()->attach($subscriptionplanPrice["id"], ['course_price' => $subscriptionplanPrice["price"]]);
             }
         }
 
@@ -193,12 +195,12 @@ class CourseController extends Controller
                 'video_url' => 'required|max:200',
                 'level' => 'required',
                 'trainers' => 'nullable',
-                'subscriptionsPrices' => 'nullable',
+                'subscriptionplansPrices' => 'nullable',
                 'published' => 'required|boolean',
                 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png |max:2096',
             ],
             [
-                'slug' => 'Enter a unique slug for your the subscription\'s link',
+                'slug' => 'Enter a unique slug for your the subscriptionplan\'s link',
                 'thumbnail' => 'Upload thumbnail as jpg/png format with size less than 2MB',
             ]
         );

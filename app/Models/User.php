@@ -6,7 +6,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\Trainer;
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -51,68 +51,10 @@ class User extends Authenticatable
 
     protected $appends = ['avatar_url', 'full_name'];
 
-    // public function subscriptions()
-    // {
-    //     return $this->belongsToMany(Subscription::class, 'subscription_user')->withPivot('created_at');
-    //     ;
-    // }
-
-    // public function hasAnyRole($roles)
-    // {
-    //     if (is_array($roles)) {
-    //         foreach ($roles as $role) {
-    //             if ($this->hasRole($role)) {
-    //                 return true;
-    //             }
-    //         }
-    //     } else {
-    //         if ($this->hasRole($roles)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // public function hasSubscription($subscription_id)
-    // {
-    //     $subscription = $this->subscriptions()->find($subscription_id);
-    //     if ($subscription !== null) {
-    //         $now = Carbon::now();
-    //         $subscriptionCreated = $subscription->pivot->created_at;
-    //         // $expiresIn = $subscriptionCreated->diffInDays($now);
-    //         // dd($subscription->validity - $subscriptionCreated->diffInDays($now));
-    //         // dd($now = Carbon::now());
-    //         // dd($subscriptionCreated->diffInDays($now));
-    //         $expiresIn = $subscription->validity - $subscriptionCreated->diffInDays($now);
-    //         if ($expiresIn > 0) {
-    //             return ['hasValidSubscription' => true, 'created_at' => $subscriptionCreated, 'expires_in' => $expiresIn];
-    //         } else {
-    //             // $this->subscriptions()->detach($subscription->id);
-    //             return ['hasValidSubscription' => false, 'created_at' => $subscriptionCreated, 'expires_in' => $expiresIn];
-    //         }
-    //     }
-    //     return ['hasValidSubscription' => false, 'created_at' => null, 'expires_in' => null];
-    // }
-
-    // public function hasSubscribed($subscription)
-    // {
-    //     if ($this->roles()->where('value', $role)->first()) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-    public function roles()
+    public function subscriptionplans()
     {
-        return $this->belongsToMany(Role::class, 'role_user');
-    }
-
-    public function hasRole($role)
-    {
-        if ($this->roles()->where('value', $role)->first()) {
-            return true;
-        }
-        return false;
+        return $this->belongsToMany(Subscriptionplan::class, 'subscriptionplan_user')->withPivot('created_at');
+        ;
     }
 
     public function hasAnyRole($roles)
@@ -130,6 +72,64 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function hasSubscriptionplan($subscriptionplan_id)
+    {
+        $subscriptionplan = $this->subscriptionplans()->find($subscriptionplan_id);
+        if ($subscriptionplan !== null) {
+            $now = Carbon::now();
+            $subscriptionplanCreated = $subscriptionplan->pivot->created_at;
+            // $expiresIn = $subscriptionplanCreated->diffInDays($now);
+            // dd($subscriptionplan->validity - $subscriptionplanCreated->diffInDays($now));
+            // dd($now = Carbon::now());
+            // dd($subscriptionplanCreated->diffInDays($now));
+            $expiresIn = $subscriptionplan->validity - $subscriptionplanCreated->diffInDays($now);
+            if ($expiresIn > 0) {
+                return ['hasValidSubscriptionplan' => true, 'created_at' => $subscriptionplanCreated, 'expires_in' => $expiresIn];
+            } else {
+                // $this->subscriptionplans()->detach($subscriptionplan->id);
+                return ['hasValidSubscriptionplan' => false, 'created_at' => $subscriptionplanCreated, 'expires_in' => $expiresIn];
+            }
+        }
+        return ['hasValidSubscriptionplan' => false, 'created_at' => null, 'expires_in' => null];
+    }
+
+    public function hasSubscribed($subscriptionplan)
+    {
+        if ($this->roles()->where('value', $role)->first()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user');
+    }
+
+    public function hasRole($role)
+    {
+        if ($this->roles()->where('value', $role)->first()) {
+            return true;
+        }
+        return false;
+    }
+
+    // public function hasAnyRole($roles)
+    // {
+    //     if (is_array($roles)) {
+    //         foreach ($roles as $role) {
+    //             if ($this->hasRole($role)) {
+    //                 return true;
+    //             }
+    //         }
+    //     } else {
+    //         if ($this->hasRole($roles)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
     public function scopeFilter($query, array $filters)
     {

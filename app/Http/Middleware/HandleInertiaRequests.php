@@ -141,6 +141,7 @@ class HandleInertiaRequests extends Middleware
                 'id' => Auth::guard('web')->check() ? Auth::guard('web')->user()->id : false,
                 'email' => Auth::guard('web')->check() ? Auth::guard('web')->user()->email : false,
                 'full_name' => Auth::guard('web')->check() ? Auth::guard('web')->user()->full_name : false,
+                'first_name' => Auth::guard('web')->check() ? Auth::guard('web')->user()->first_name : false,
                 'avatar' => Auth::guard('web')->check() ? Auth::guard('web')->user()->avatar_url : false]);
 
         if (str_starts_with($request->route()->getName(), 'public')) {

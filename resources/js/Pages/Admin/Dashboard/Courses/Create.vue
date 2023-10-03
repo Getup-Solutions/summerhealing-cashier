@@ -64,6 +64,7 @@
                 <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
                         <ul class="grid w-full md:grid-cols-2 gap-6">
+                            
                             <li v-for="trainer in trainers" :key="trainer">
                                 <input type="checkbox" :id="`react-option-${trainer.id}`" class="hidden peer/trainer"
                                     :value="trainer.id" v-model="courseInfo.trainers" required="">
@@ -99,10 +100,10 @@
                 <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
                         <ul class="grid w-full gap-6 md:grid-cols-2">
-                            <li v-for="subscription in subscriptions" :key="subscription">
+                            <li v-for="subscription in subscriptionplans" :key="subscription">
                                 <input type="checkbox" :id="`react-option-${subscription.slug}`"
                                     class="hidden peer/subscription" :value="subscription.id"
-                                    v-model="courseInfo.subscriptionsSelected" required="">
+                                    v-model="courseInfo.subscriptionplansSelected" required="">
                                 <label :for="`react-option-${subscription.slug}`"
                                     :style="`background-image: url(${subscription.thumbnail_url});`"
                                     class="bg-center bg-contain inline-flex items-center p-3 justify-between w-full text-gray-900 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-white dark:border-gray-700 peer-checked/subscription:border-blue-600 peer-checked/subscription:shadow-xl peer-checked/subscription:shadow-blue-800 hover:text-gray-800 dark:peer-checked/subscription:text-white peer-checked/subscription:text-gray-900 hover:bg-gray-50 dark:text-white dark:bg-gray-800 dark:hover:bg-gray-700">
@@ -142,16 +143,16 @@
                                 <FormSimpleInput :label="'Price (No subscription)'" :name="'price'" :type="'number'"
                                     v-model="courseInfo.price" :error="errors.price"></FormSimpleInput>
                             </div>
-                            <div class=" col-span-2" v-if="selectedSubscriptionsWithPrice.length>0">
+                            <div class=" col-span-2" v-if="selectedSubscriptionplansWithPrice.length>0">
                                 <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pricing
                                     for Subscription plans:</label>
                             </div>
 
 
-                            <li v-for="subscription, index in  selectedSubscriptionsWithPrice" :key="subscription.id">
+                            <li v-for="subscription, index in  selectedSubscriptionplansWithPrice" :key="subscription.id">
                                 <FormSimpleInput :label="'Price for - ' + subscription.title + ' subscription'"
                                     :name="subscription.title" :type="'number'"
-                                    v-model="selectedSubscriptionsWithPrice[index].price"></FormSimpleInput>
+                                    v-model="selectedSubscriptionplansWithPrice[index].price"></FormSimpleInput>
                             </li>
                         </ul>
                     </div>
@@ -165,7 +166,7 @@
         </template>
         <template #footer>
             <Button
-                @click.prevent="createRequest({ url: '/admin/dashboard/courses', data: { ...courseInfo, subscriptionsPrices: selectedSubscriptionsWithPrice }, only: ['flash', 'errors'] })"
+                @click.prevent="createRequest({ url: '/admin/dashboard/courses', data: { ...courseInfo, subscriptionplansPrices: selectedSubscriptionplansWithPrice }, only: ['flash', 'errors'] })"
                 :text="'Create Course'" :color="'blue'"></Button>
         </template>
     </Modal>
@@ -173,17 +174,17 @@
 <script>
 
 export default {
-    props: ["errors", "agegroups", "levels", "trainers", "subscriptions"],
+    props: ["errors", "agegroups", "levels", "trainers", "subscriptionplans"],
     data() {
         return {
-            courseInfo: { trainers: [], subscriptionsSelected: [] },
-            // subscriptionsSelected:[],
+            courseInfo: { trainers: [], subscriptionplansSelected: [] },
+            // subscriptionplansSelected:[],
             subscriptionPricing: []
         };
     },
     computed: {
-        selectedSubscriptionsWithPrice() {
-            var selectedSubscription = this.subscriptions.filter((item) => this.courseInfo.subscriptionsSelected.includes(item.id));
+        selectedSubscriptionplansWithPrice() {
+            var selectedSubscription = this.subscriptionplans.filter((item) => this.courseInfo.subscriptionplansSelected.includes(item.id));
             var newArr = selectedSubscription.map(v => ({ ...v, price: this.courseInfo.price }))
             return newArr
         }
