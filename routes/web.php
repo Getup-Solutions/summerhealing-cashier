@@ -7,12 +7,18 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\PublicPagesController;
+use App\Http\Controllers\SubscriptionCheckoutController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\FacilityController;
+use App\Http\Controllers\Admin\SessionController;
 use App\Http\Controllers\Admin\TrainingController;
 use App\Http\Controllers\Admin\SubscriptionplanController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Mail\UserRegistration;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,15 +34,18 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 Route::get('/', [PublicPagesController::class,'home']);
 
 Route::name('public.')->group(function () {
+    Route::get('/mail',function(){
+        Mail::to(Auth::user())->send(new UserRegistration(Auth::user()));
+    });
     Route::get('/', [PublicPagesController::class, 'homePage'])->name('home');
-    Route::get('/subscriptions', [PublicPagesController::class, 'subscriptionsPage'])->name('subscriptions');
+    Route::get('/subscriptionplans', [PublicPagesController::class, 'subscriptionplansPage'])->name('subscriptionplans');
     Route::get('/courses', [PublicPagesController::class, 'coursesPage'])->name('courses');
     Route::get('/wellness-center', [PublicPagesController::class, 'facilitiesPage'])->name('facilities');
     Route::get('/trainings', [PublicPagesController::class, 'trainingsPage'])->name('trainings');
-    // Route::get('/subscriptions', [PublicPagesController::class, 'subscriptionPage'])->name('subscription');
+    // Route::get('/subscriptionplans', [PublicPagesController::class, 'subscriptionplanPage'])->name('subscriptionplan');
     Route::get('/about', [PublicPagesController::class, 'aboutPage'])->name('about');
     Route::get('/contact', [PublicPagesController::class, 'contactPage'])->name('contact');
-    Route::get('/subscriptions/{subscription:slug}', [PublicPagesController::class, 'subscriptionSinglePage'])->name('subscription_single');
+    Route::get('/subscriptionplans/{subscriptionplan:slug}', [PublicPagesController::class, 'subscriptionplanSinglePage'])->name('subscriptionplan_single');
     Route::get('/courses/{course:slug}', [PublicPagesController::class, 'courseSinglePage'])->name('course_single');
     Route::get('/wellness-center/{facility:slug}', [PublicPagesController::class, 'facilitySinglePage'])->name('facility_single');
 
@@ -65,6 +74,8 @@ Route::name('public.')->group(function () {
     });
 
     Route::middleware('auth')->group(function () {
+        Route::get('/subscription-plan/checkout/{subscriptionplan:id}', [SubscriptionCheckoutController::class, 'checkoutCreate'])->name('subscription_plan.checkout.create');
+        Route::post('/subscription-plan/checkout', [SubscriptionCheckoutController::class, 'checkoutPost'])->name('subscription_plan.checkout.post');
         Route::name('dashboard.')->group(function(){
             Route::prefix('dashboard')->group(function(){
                 Route::get('/', [CustomerDashboardController::class, 'index'])->name('home');
@@ -101,6 +112,7 @@ Route::name('admin.')->group(function () {
                     Route::resource('/users', UserController::class)->except('show');
                     Route::resource('/courses', CourseController::class)->except('show');
                     Route::resource('/facilities', FacilityController::class)->except('show');
+                    Route::resource('/sessions', SessionController::class)->except('show');
                     Route::resource('/trainers', TrainerController::class)->except(['show','store']);
                     Route::resource('/subscriptionplans', SubscriptionplanController::class)->except('show');
                     Route::resource('/leads', LeadController::class)->except('show');

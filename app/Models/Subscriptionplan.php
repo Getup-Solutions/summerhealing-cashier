@@ -84,12 +84,12 @@ class Subscriptionplan extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_subscription')->withPivot('price');
+        return $this->belongsToMany(Course::class, 'course_subscriptionplan')->withPivot('course_price');
     }
 
     public function facilities()
     {
-        return $this->belongsToMany(Facility::class, 'facility_subscription')->withPivot('price');
+        return $this->belongsToMany(Facility::class, 'facility_subscriptionplan')->withPivot('facility_price');
     }
 
     protected function thumbnailUrl(): Attribute
@@ -107,7 +107,7 @@ class Subscriptionplan extends Model
             set: function ($value) {
                 // dd($value);
                 if(empty($value)){
-                    return 'assets/static/img/subscription.png';
+                    return 'assets/static/img/subscriptionplan.png';
                 }
                 else {
                     return $value;

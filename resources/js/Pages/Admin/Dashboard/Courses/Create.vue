@@ -64,7 +64,7 @@
                 <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
                         <ul class="grid w-full md:grid-cols-2 gap-6">
-                            
+                            <p class="text-gray-900 dark:text-gray-200" v-if="trainers.length==0">No trainers.</p>
                             <li v-for="trainer in trainers" :key="trainer">
                                 <input type="checkbox" :id="`react-option-${trainer.id}`" class="hidden peer/trainer"
                                     :value="trainer.id" v-model="courseInfo.trainers" required="">
@@ -100,6 +100,7 @@
                 <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
                         <ul class="grid w-full gap-6 md:grid-cols-2">
+                            <p class="text-gray-900 dark:text-gray-200" v-if="subscriptionplans.length==0">No subscription plans.</p>
                             <li v-for="subscription in subscriptionplans" :key="subscription">
                                 <input type="checkbox" :id="`react-option-${subscription.slug}`"
                                     class="hidden peer/subscription" :value="subscription.id"

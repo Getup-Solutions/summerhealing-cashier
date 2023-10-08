@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Inertia\Inertia;
 // use Illuminate\Http\Request;
 use App\Models\Facility;
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use Illuminate\Validation\Rule;
 use App\Services\FileManagement;
 use App\Http\Controllers\Controller;
@@ -30,14 +30,14 @@ class FacilityController extends Controller
 
     public function create()
     {
-        $subscriptions = Subscription::where('published', 1)->get();
-        foreach ($subscriptions as $subscription) {
-            $subscription->price = '';
+        $subscriptionplans = Subscriptionplan::where('published', 1)->get();
+        foreach ($subscriptionplans as $subscriptionplan) {
+            $subscriptionplan->price = '';
         }
-        $subscriptionsPrices = $subscriptions;
+        $subscriptionplansPrices = $subscriptionplans;
 
         return Inertia::render('Admin/Dashboard/Facilities/Create', [
-            'subscriptionsPrices' => $subscriptionsPrices,
+            'subscriptionplansPrices' => $subscriptionplansPrices,
 
         ]);
     }
@@ -52,10 +52,10 @@ class FacilityController extends Controller
         }
         unset($attributes['thumbnail']);
 
-        if (isset($attributes['subscriptionsPrices'])) {
-            $subscriptionsPrices = $attributes['subscriptionsPrices'];
+        if (isset($attributes['subscriptionplansPrices'])) {
+            $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
-        unset($attributes['subscriptionsPrices']);
+        unset($attributes['subscriptionplansPrices']);
 
         $facility = Facility::create($attributes);
 
@@ -67,10 +67,10 @@ class FacilityController extends Controller
             $facility->thumbnail = $thumbnail;
         }
 
-        if (isset($subscriptionsPrices)) {
-            foreach ($subscriptionsPrices as $subscriptionPrice) {
-                if($subscriptionPrice["price"]<$facility->price){
-                    $facility->subscriptions()->attach($subscriptionPrice["id"], ['facility_price' => $subscriptionPrice["price"]]);
+        if (isset($subscriptionplansPrices)) {
+            foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
+                if($subscriptionplanPrice["price"]<$facility->price){
+                    $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"]]);
                 }    
             }
         }
@@ -88,14 +88,14 @@ class FacilityController extends Controller
 
     public function edit(Facility $facility)
     {
-        $subscriptions = Subscription::where('published', 1)->get();
-        foreach ($subscriptions as $subscription) {
-            $subscription->price = $facility->subscriptions()->find($subscription->id)->pivot->facility_price;
+        $subscriptionplans = Subscriptionplan::where('published', 1)->get();
+        foreach ($subscriptionplans as $subscriptionplan) {
+            $subscriptionplan->price = $facility->subscriptionplans()->find($subscriptionplan->id)->pivot->facility_price;
         }
-        $subscriptionsPrices = $subscriptions;
+        $subscriptionplansPrices = $subscriptionplans;
         return Inertia::render('Admin/Dashboard/Facilities/Edit', [
             'facility' => $facility,
-            'subscriptionsPrices' => $subscriptionsPrices,
+            'subscriptionplansPrices' => $subscriptionplansPrices,
         ]);
 
     }
@@ -120,17 +120,17 @@ class FacilityController extends Controller
             );
         }
 
-        if (isset($attributes['subscriptionsPrices'])) {
-            $subscriptionsPrices = $attributes['subscriptionsPrices'];
+        if (isset($attributes['subscriptionplansPrices'])) {
+            $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
-        unset($attributes['subscriptionsPrices']);
+        unset($attributes['subscriptionplansPrices']);
 
-        $facility->subscriptions()->sync([]);
+        $facility->subscriptionplans()->sync([]);
 
-        if (isset($subscriptionsPrices)) {
-            foreach ($subscriptionsPrices as $subscriptionPrice) {
-                if($subscriptionPrice["price"]<$facility->price){
-                    $facility->subscriptions()->attach($subscriptionPrice["id"], ['facility_price' => $subscriptionPrice["price"]]);
+        if (isset($subscriptionplansPrices)) {
+            foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
+                if($subscriptionplanPrice["price"]<$facility->price){
+                    $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"]]);
                 }    
             }
         }
@@ -162,11 +162,11 @@ class FacilityController extends Controller
                 'description' => 'required|max:1000',
                 'excerpt' => 'required|max:1000',
                 'published' => 'required|boolean',
-                'subscriptionsPrices' => 'nullable',
+                'subscriptionplansPrices' => 'nullable',
                 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpg,bmp,png|max:2096',
             ],
             [
-                'slug' => 'Enter a unique slug for your the subscription\'s link',
+                'slug' => 'Enter a unique slug for your the facility\'s link',
                 'thumbnail' => 'Upload thumbnail as jpg/png format with size less than 2MB',
             ]
         );

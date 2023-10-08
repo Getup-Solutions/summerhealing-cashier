@@ -33,7 +33,8 @@ import {
     IdentificationIcon,
     DocumentPlusIcon,
     CubeIcon,
-    SparklesIcon
+    SparklesIcon,
+    RectangleStackIcon
 } from "@heroicons/vue/24/solid";
 // initialize components based on data attribute selectors
 onMounted(() => {
@@ -145,6 +146,25 @@ export default {
                             name: "All facilities",
                             link: '/admin/dashboard/facilities',
                             url:'/admin/dashboard/facilities',
+                        },
+                    ],
+                },
+                {
+                    name: "Classes",
+                    link: "/admin/dashboard/sessions",
+                    method: "get",
+                    icon: RectangleStackIcon,
+                    urlStartsWith:'/admin/dashboard/sessions',
+                    subMenu: [
+                        {
+                            name: "Create",
+                            link: "/admin/dashboard/sessions/create",
+                            url:'/admin/dashboard/sessions/create',
+                        },
+                        {
+                            name: "All classes",
+                            link: '/admin/dashboard/sessions',
+                            url:'/admin/dashboard/sessions',
                         },
                     ],
                 },

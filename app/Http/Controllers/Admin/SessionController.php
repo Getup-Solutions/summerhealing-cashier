@@ -7,7 +7,7 @@ use App\Models\Agegroup;
 use App\Models\Level;
 use App\Models\Session;
 // use Illuminate\Http\Request;
-use App\Models\Subscription;
+use App\Models\Subscriptionplan;
 use App\Models\Trainer;
 use App\Services\FileManagement;
 use Illuminate\Support\Facades\Auth;
@@ -24,11 +24,11 @@ class SessionController extends Controller
 
         return Inertia::render('Admin/Dashboard/Sessions/Index', [
             'sessions' => Session::filter(
-                request(['search', 'dateStart', 'dateEnd', 'sortBy', 'published', 'subscriptions'])
+                request(['search', 'dateStart', 'dateEnd', 'sortBy', 'published', 'subscriptionplans'])
             )
                 ->paginate(3)->withQueryString(),
-            'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'published', 'subscriptions']),
-            'subscriptions' => Subscription::all(),
+            'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'published', 'subscriptionplans']),
+            'subscriptionplans' => Subscriptionplan::all(),
 
         ]);
     }
@@ -39,7 +39,7 @@ class SessionController extends Controller
             'agegroups' => Agegroup::all(),
             'levels' => Level::all(),
             'trainers' => Trainer::all(),
-            'subscriptions' => Subscription::where('published', 1)->get(),
+            'subscriptionplans' => Subscriptionplan::where('published', 1)->get(),
 
         ]);
     }
@@ -59,10 +59,10 @@ class SessionController extends Controller
         }
         unset($attributes['trainers']);
 
-        if (isset($attributes['subscriptionsPrices'])) {
-            $subscriptionsPrices = $attributes['subscriptionsPrices'];
+        if (isset($attributes['subscriptionplansPrices'])) {
+            $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
-        unset($attributes['subscriptionsPrices']);
+        unset($attributes['subscriptionplansPrices']);
 
         $session = Session::create($attributes);
 
@@ -79,9 +79,9 @@ class SessionController extends Controller
             $session->trainers()->sync($trainers);
         }
 
-        if (isset($subscriptionsPrices)) {
-            foreach ($subscriptionsPrices as $subscriptionPrice) {
-                $session->subscriptions()->attach($subscriptionPrice["id"], ['session_price' => $subscriptionPrice["price"]]);
+        if (isset($subscriptionplansPrices)) {
+            foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
+                $session->subscriptionplans()->attach($subscriptionplanPrice["id"], ['session_price' => $subscriptionplanPrice["price"]]);
             }
         }
 
@@ -99,31 +99,31 @@ class SessionController extends Controller
 
     public function edit(Session $session)
     {
-        $subscriptions = Subscription::where('published', 1)->get();
-        $selectedSubscriptionsIds = $session->subscriptions()->pluck('subscription_id')->toArray();
-        foreach ($subscriptions as $subscription) {
-            if (in_array($subscription->id, $selectedSubscriptionsIds)) {
-                $subscription->price = $session->subscriptions()->find($subscription->id)->pivot->session_price;
+        $subscriptionplans = Subscriptionplan::where('published', 1)->get();
+        $selectedSubscriptionplansIds = $session->subscriptionplans()->pluck('subscriptionplan_id')->toArray();
+        foreach ($subscriptionplans as $subscriptionplan) {
+            if (in_array($subscriptionplan->id, $selectedSubscriptionplansIds)) {
+                $subscriptionplan->price = $session->subscriptionplans()->find($subscriptionplan->id)->pivot->session_price;
 
             } else {
-                $subscription->price =(float)$session->price;
+                $subscriptionplan->price =(float)$session->price;
             }
         }
-        $subscriptionsPrices = $subscriptions;
+        $subscriptionplansPrices = $subscriptionplans;
 
         return Inertia::render('Admin/Dashboard/Sessions/Edit', [
             'session' => $session,
             'agegroups' => Agegroup::all(),
             'levels' => Level::all(),
             'trainers' => Trainer::all(),
-            'subscriptionsPrices' => $subscriptionsPrices,
-            'subscriptionsSelected' => $session->subscriptions()->pluck('subscription_id'),
+            'subscriptionplansPrices' => $subscriptionplansPrices,
+            'subscriptionplansSelected' => $session->subscriptionplans()->pluck('subscriptionplan_id'),
             'trainersSelected' => $session->trainers()->pluck('trainer_id'),
         ]);
     }
 
     public function update(Session $session){
-        $attributes = $this->validateSession();
+        $attributes = $this->validateSession($session);
 
         $fileManagement = new FileManagement();
 
@@ -146,21 +146,21 @@ class SessionController extends Controller
         }
         unset($attributes['trainers']);
 
-        if(isset($attributes['subscriptionsPrices'])) {
-            $subscriptionsPrices = $attributes['subscriptionsPrices'];
+        if(isset($attributes['subscriptionplansPrices'])) {
+            $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
-        unset($attributes['subscriptionsPrices']);
+        unset($attributes['subscriptionplansPrices']);
 
 
         if (isset($trainers)) {
             $session->trainers()->sync($trainers);
         }
 
-        $session->subscriptions()->sync([]);
+        $session->subscriptionplans()->sync([]);
 
-        if (isset($subscriptionsPrices)) {
-            foreach ($subscriptionsPrices as $subscriptionPrice) {
-                $session->subscriptions()->attach($subscriptionPrice["id"], ['session_price' => $subscriptionPrice["price"]]);
+        if (isset($subscriptionplansPrices)) {
+            foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
+                $session->subscriptionplans()->attach($subscriptionplanPrice["id"], ['session_price' => $subscriptionplanPrice["price"]]);
             }
         }
 
@@ -175,8 +175,7 @@ class SessionController extends Controller
         // dd($teacher->course->all());
         $session->delete();
         Storage::disk('public')->deleteDirectory('assets/app/images/sessions/id_' . $session['id']);
-
-        return redirect('/admin/dashboard/Sessions')->with('success', 'Session Deleted!');
+        return redirect('/admin/dashboard/sessions')->with('success', 'Session Deleted!');
     }
 
     protected function validateSession(?Session $session = null): array
@@ -194,12 +193,12 @@ class SessionController extends Controller
                 'video_url' => 'required|max:200',
                 'level' => 'required',
                 'trainers' => 'nullable',
-                'subscriptionsPrices' => 'nullable',
+                'subscriptionplansPrices' => 'nullable',
                 'published' => 'required|boolean',
                 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png |max:2096',
             ],
             [
-                'slug' => 'Enter a unique slug for your the subscription\'s link',
+                'slug' => 'Enter a unique slug for your the subscriptionplan\'s link',
                 'thumbnail' => 'Upload thumbnail as jpg/png format with size less than 2MB',
             ]
         );

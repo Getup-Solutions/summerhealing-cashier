@@ -22,7 +22,7 @@
                             <div class="mb-10">
                                 <h1 class="sh-para text-lg text-left dark:text-gray-200 font-bold mb-4 underline">Subscriptions
                                 </h1>
-                                <div class="grid grid-cols-5 gap-4" v-for="subscription in included_subscriptions" :key="subscription.id">
+                                <div class="grid grid-cols-5 gap-4" v-for="subscription in included_subscriptionplans" :key="subscription.id">
                                     <p class="mb-3 sh-para text-left text-base col-span-2">{{
                                         subscription.title }}</p>
                                     <p class="mb-3 sh-para text-base">-</p>
@@ -43,7 +43,7 @@
 </template>
 <script>
 export default {
-    props: ["course", "included_subscriptions"],
+    props: ["course", "included_subscriptionplans"],
 }
 </script>
 <script setup>

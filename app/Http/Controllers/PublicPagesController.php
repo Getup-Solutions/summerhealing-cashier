@@ -18,7 +18,7 @@ class PublicPagesController extends Controller
     {
         // $homePageContent = HomePageContent::first();
         return Inertia::render('Public/Home', [
-            'subscriptionplans'=>Subscriptionplan::all()->take(3),
+            'subscriptionplans'=>Subscriptionplan::where('published',1)->get()->take(3),
             'courses'=>Course::select('title','excerpt','description','thumbnail','slug','price')->where('published',1)->get(),
             // 'homePageContent' => $homePageContent,
             // 'categories' => Category::all(),
@@ -30,7 +30,7 @@ class PublicPagesController extends Controller
 
         // dd(Subscriptionplan::select('title','description','slug','validity','price')->where('published',1)->get());
         return Inertia::render('Public/Subscriptionplans', [
-            'subscriptionplan_plans'=>Subscriptionplan::select('title','description','thumbnail','slug','validity','price')->where('published',1)->get(),
+            'subscriptionplans'=>Subscriptionplan::select('title','description','thumbnail','slug','validity','price')->where('published',1)->get(),
             // 'courses'=>Course::all()->take(3),
             // 'homePageContent' => $homePageContent,
             // 'categories' => Category::all(),
@@ -109,7 +109,7 @@ class PublicPagesController extends Controller
         //     dd(Auth::guard('web')->user()->subscriptionplans()->get()->find($subscriptionplan->id)->pivot->created_at);
         // }
         return Inertia::render('Public/SubscriptionplanSingle', [
-            'subscriptionplan_plan'=>$subscriptionplan,
+            'subscriptionplan'=>$subscriptionplan,
             'user_have_subscriptionplan'=>$logged_user ? $logged_user->hasSubscriptionplan($subscriptionplan->id) : false,
             // 'user_have_subscriptionplan_expires_in' => $user_have_subscriptionplan_expires_in,
             'courses_included'=>$courses_included,

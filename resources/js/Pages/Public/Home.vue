@@ -84,7 +84,7 @@
                                     }}</p>
                                     <p class="mb-3 sh-para text-left font-medium">Price (AUD) : {{ subscriptionplan.price
                                     }}</p>
-                                    <Link :href="`subscriptions/${subscriptionplan.slug}`">
+                                    <Link :href="`subscriptionplans/${subscriptionplan.slug}`">
                                     <button class="sh-button flex justify-center items-center md:w-36">Learn more <svg
                                             class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 14 10">

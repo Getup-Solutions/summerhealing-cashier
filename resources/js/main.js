@@ -88,4 +88,25 @@ function addToCart({
     })
   }
 
-export { changeToSlug, createRequest, editRequest, deleteRequest, addToCart };
+  function payNow({
+    url = '/subscription-plan/checkout',
+    product,
+    type,
+    quantity = 1,
+    state_preservation = true,
+    scroll_preservation = true,
+    only_list,
+} = {}) {
+    // this.added = true;
+    var itemToPay = {};
+    itemToPay.product = product;
+    itemToPay.quantity = quantity;
+    itemToPay.type = type;
+    router.post(url, itemToPay, {
+        preserveState: state_preservation,
+        preserveScroll: scroll_preservation,
+        only: only_list,
+    })
+  }
+
+export { changeToSlug, createRequest, editRequest, deleteRequest, addToCart, payNow };

@@ -156,7 +156,7 @@ class SubscriptionplanController extends Controller
                 'validity' => 'required|numeric',
                 'description' => 'required|max:1000',
                 'published' => 'required|boolean',
-                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png |max:2096',
+                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png,PNG,jpg |max:2096',
             ],
             [
                 'slug' => 'Enter a unique slug for your the subscriptionplan\'s link',
