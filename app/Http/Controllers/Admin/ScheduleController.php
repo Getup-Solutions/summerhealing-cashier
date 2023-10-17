@@ -121,7 +121,7 @@ class ScheduleController extends Controller
                             $eventInfo["schedule_id"] = $schedule->id;
                             $eventInfo["calender_id"] = Calender::where('formated_date', '=', date('Y/m/d', $start_date))->first()->id;
                             if ($eventInfo["event_trainers"] ?? false) {
-                                $trainers = $eventInfo["event_trainers"];
+                                $trainers = json_decode($eventInfo["event_trainers"]);
                             }
                             unset($eventInfo["event_trainers"]);
                             $event = Event::create($eventInfo);

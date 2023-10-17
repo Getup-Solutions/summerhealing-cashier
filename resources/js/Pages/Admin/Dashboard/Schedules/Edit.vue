@@ -88,19 +88,22 @@ export default {
             daysEvent: this.daysEventData
         };
     },
-    // mounted() {
-    //     console.log(this.daysSelectedData);
-    //     this.sunEvents = []
-    //     this.monEvents = []
-    //     this.tueEvents = []
-    //     this.wedEvents = []
-    //     this.thuEvents = []
-    //     this.friEvents = []
-    //     this.satEvents = []
-    //     this.daysEvent = [this.sunEvents, this.monEvents, this.tueEvents, this.wedEvents, this.thuEvents, this.friEvents, this.satEvents]
-    // },
     mounted() {
-        console.log(this.daysEventData);
+        console.log(this.daysEventData.length);
+        if(this.daysEventData.length) {
+            console.log('sss');
+            this.daysEvent =  this.daysEventData
+        } else {
+            this.daysEvent = [[],[],[],[],[],[],[]]
+        }
+        // this.sunEvents = []
+        // this.monEvents = []
+        // this.tueEvents = []
+        // this.wedEvents = []
+        // this.thuEvents = []
+        // this.friEvents = []
+        // this.satEvents = []
+        // this.daysEvent = [this.sunEvents, this.monEvents, this.tueEvents, this.wedEvents, this.thuEvents, this.friEvents, this.satEvents]
     },
     methods: {
         sendEdit() {

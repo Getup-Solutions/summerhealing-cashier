@@ -1,11 +1,11 @@
 <template>
     <DeleteAlert v-if="deleteId" :id="deleteId" @close="deleteId = false" :url="'/admin/dashboard/sessions/'"
-        :text="'Deleting the session will permanently removed from the database. You can\'t recover the session again. Are you sure about deleting?'">
+        :text="'Deleting the class will permanently removed from the database. You can\'t recover the class again. Are you sure about deleting?'">
     </DeleteAlert>
 
     <div class="grid gap-4">
         <!-- Modal content -->
-        <Modal :modalHeadingText="'Edit session'" :modalHeadingResetButton="true" :modalWidth="2">
+        <Modal :modalHeadingText="'Edit class'" :modalHeadingResetButton="true" :modalWidth="2">
             <template #body>
                 <div class="grid md:grid-cols-2 gap-6 gap-y-4">
                     <div class="col-span-2 grid md:grid-cols-2 gap-6 gap-y-4">
@@ -178,14 +178,14 @@
             <template #footer>
                 <Button
                     @click.prevent="editRequest({ url: '/admin/dashboard/sessions/', data: { ...sessionInfo, subscriptionplansPrices: selectedSubscriptionplansWithPrice }, dataId: session.id, only: ['flash', 'errors'] })"
-                    :text="'Edit session'" :color="'blue'"></Button>
-                <Button @click.prevent="deleteId = session.id" :text="'Delete session'" :color="'red'"></Button>
+                    :text="'Edit Class'" :color="'blue'"></Button>
+                <Button @click.prevent="deleteId = session.id" :text="'Delete Class'" :color="'red'"></Button>
 
             </template>
         </Modal>
 
                 <!-- Schedule edit Modal -->
-                <ScheduleEdit :days="days" :type="'Session'" :errors="errors" :editURL="'/admin/dashboard/sessions/'" :editDataId="session.id" :scheduleInfoData="schedule" :daysSelectedData="daysSelectedData" :daysEventData="daysEventData"
+                <ScheduleEdit :days="days" :type="'Class'" :errors="errors" :editURL="'/admin/dashboard/sessions/'" :editDataId="session.id" :scheduleInfoData="schedule ?? {}" :daysSelectedData="daysSelectedData ?? []" :daysEventData="daysEventData ?? []"
             :editData="getEditData" :eventTitle="sessionInfo.title" :eventTrainers="sessionInfo.trainers" :scheduleableType="'App\\Models\\Session'" :scheduleableId="session.id"></ScheduleEdit>
 
     </div>

@@ -41,7 +41,7 @@ class SessionController extends Controller
             'agegroups' => Agegroup::all(),
             'levels' => Level::all(),
             'trainers' => Trainer::all(),
-            'days'=>Day::all(),
+            'days' => Day::all(),
             'subscriptionplans' => Subscriptionplan::where('published', 1)->get(),
 
         ]);
@@ -121,22 +121,22 @@ class SessionController extends Controller
         foreach ($subscriptionplans as $subscriptionplan) {
             if (in_array($subscriptionplan->id, $selectedSubscriptionplansIds)) {
                 $subscriptionplan->price = $session->subscriptionplans()->find($subscriptionplan->id)->pivot->session_price;
-
             } else {
-                $subscriptionplan->price =(float)$session->price;
+                $subscriptionplan->price = (float)$session->price;
             }
         }
         $subscriptionplansPrices = $subscriptionplans;
         // dd($session->schedule()->first());
-
-        $schedule_id = $session->schedule()->first()->id;
-        $daysSelected = $session->schedule()->first()->days()->get()->pluck('id')->toArray();
-        $daysEvent=[];
-        for ($i=0; $i < 7; $i++) { 
-            $daysEvent[$i] = in_array($i+1,$daysSelected) ? Day::find($i+1)->events()->wherePivot('schedule_id', $schedule_id)->get()->toArray() : [];
+        if ($schedule_id = $session->schedule()->first()) {
+            $schedule_id = $session->schedule()->first()->id;
+            $daysSelected = $session->schedule()->first()->days()->get()->pluck('id')->toArray();
+            $daysEvent = [];
+            for ($i = 0; $i < 7; $i++) {
+                $daysEvent[$i] = in_array($i + 1, $daysSelected) ? Day::find($i + 1)->events()->wherePivot('schedule_id', $schedule_id)->get()->toArray() : [];
+            }
         }
 
-        return Inertia::render('Admin/Dashboard/Sessions/Edit', [
+        $dataTosend = [
             'session' => $session,
             'agegroups' => Agegroup::all(),
             'levels' => Level::all(),
@@ -144,14 +144,25 @@ class SessionController extends Controller
             'subscriptionplansPrices' => $subscriptionplansPrices,
             'subscriptionplansSelected' => $session->subscriptionplans()->pluck('subscriptionplan_id'),
             'trainersSelected' => $session->trainers()->pluck('trainer_id'),
-            'schedule'=>$session->schedule()->first(),
+            // 'schedule'=> $session->schedule()->first(),
             'days'=>Day::all(),
-            'daysSelectedData'=>$daysSelected,
-            'daysEventData'=> $daysEvent
-        ]);
+            // 'daysSelectedData'=>isset($daysSelected) ? $daysSelected : [],
+            // 'daysEventData'=> isset($daysEvent) ? $daysEvent : []
+        ];
+
+        if (isset($schedule_id)) {
+            array_merge([
+                'schedule' => $session->schedule()->first(),
+                'daysSelectedData' => $daysSelected,
+                'daysEventData' => $daysEvent
+            ]);
+        }
+
+        return Inertia::render('Admin/Dashboard/Sessions/Edit', $dataTosend);
     }
 
-    public function update(Session $session){
+    public function update(Session $session)
+    {
         $attributes = $this->validateSession($session);
         // dd($attributes);
 
@@ -164,15 +175,15 @@ class SessionController extends Controller
 
         if ($attributes['thumbnail']) {
             $attributes['thumbnail'] =
-            $fileManagement->uploadFile(
-                file:$attributes['thumbnail'] ?? false,
-                deleteOldFile:$session->thumbnail ?? false,
-                oldFile:$session->thumbnail,
-                path:'assets/app/images/sessions/id_' .$session['id'].'/thumbnail', //($session['email'] !== $attributes['email'] ? $attributes['email'] : $session['email']) . '/thumbnail',
-            );
+                $fileManagement->uploadFile(
+                    file: $attributes['thumbnail'] ?? false,
+                    deleteOldFile: $session->thumbnail ?? false,
+                    oldFile: $session->thumbnail,
+                    path: 'assets/app/images/sessions/id_' . $session['id'] . '/thumbnail', //($session['email'] !== $attributes['email'] ? $attributes['email'] : $session['email']) . '/thumbnail',
+                );
         } else if ($session->thumbnail) {
             $fileManagement->deleteFile(
-                fileUrl:$session->thumbnail
+                fileUrl: $session->thumbnail
             );
         }
 
@@ -181,7 +192,7 @@ class SessionController extends Controller
         }
         unset($attributes['trainers']);
 
-        if(isset($attributes['subscriptionplansPrices'])) {
+        if (isset($attributes['subscriptionplansPrices'])) {
             $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
         unset($attributes['subscriptionplansPrices']);
@@ -200,16 +211,24 @@ class SessionController extends Controller
         }
 
         if (isset($scheduleInfo)) {
+            if(isset($scheduleInfo["id"])){
+                $scheduleController = new ScheduleController();
+                $scheduleController->update($scheduleInfo);
+            } else {
+                $scheduleInfo["scheduleable_type"] = 'App\Models\Session';
+                $scheduleInfo["scheduleable_id"] = $session->id;
+                $scheduleInfo["title"] = $session->title;
+                $scheduleController = new ScheduleController();
+                $scheduleController->store($scheduleInfo);
+            }
             // $scheduleInfo["scheduleable_type"] = 'App\Models\Session';
             // $scheduleInfo["scheduleable_id"] = $session->id;
-            $scheduleController = new ScheduleController();
-            $scheduleController->update($scheduleInfo);
+
         }
 
         $session->update($attributes);
 
         return back()->with('success', 'Session Updated!');
-
     }
 
     public function destroy(Session $session)
@@ -231,7 +250,7 @@ class SessionController extends Controller
         return request()->validate(
             [
                 'title' => 'required|min:3|max:50',
-                'slug' => ['required',],// Rule::unique('sessions', 'slug')->ignore($session)],
+                'slug' => ['required',], // Rule::unique('sessions', 'slug')->ignore($session)],
                 'price' => 'required|numeric|max:100000',
                 'description' => 'required|max:1000',
                 'excerpt' => 'required|max:1000',
@@ -242,10 +261,10 @@ class SessionController extends Controller
                 'trainers' => 'nullable',
                 'subscriptionplansPrices' => 'nullable',
                 'published' => 'required|boolean',
-                'scheduleInfo'=>'nullable',
-                'scheduleInfo.start_date'=>Rule::requiredIf(isset(request()->scheduleInfo)),
-                'scheduleInfo.end_date'=>Rule::requiredIf(isset(request()->scheduleInfo)),
-                'scheduleInfo.days'=>Rule::requiredIf(isset(request()->scheduleInfo)),
+                'scheduleInfo' => 'nullable',
+                'scheduleInfo.start_date' => Rule::requiredIf(isset(request()->scheduleInfo)),
+                'scheduleInfo.end_date' => Rule::requiredIf(isset(request()->scheduleInfo)),
+                'scheduleInfo.days' => Rule::requiredIf(isset(request()->scheduleInfo)),
                 // 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png |max:2096',
                 'thumbnail' => 'nullable',
             ],
