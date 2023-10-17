@@ -71,6 +71,8 @@
                 :text="'Create Facility'" :color="'blue'"></Button>
         </template>
     </Modal>
+
+    
 </template>
 <script>
 

@@ -14,7 +14,10 @@
             </span>
             <input
                 :type="type"
+                :required="required"
                 :name="name"
+                :max="max"
+                :min="min"
                 :placeholder="placeholder ?? ''"
                 :id="name"
                 :value="readOnly ?? modelValue"
@@ -47,7 +50,10 @@ export default {
         "placeholder",
         "disabled",
         "readOnly",
-        "preText"
+        "preText",
+        "max",
+        "min",
+        "required"
     ],
     emits: ["update:modelValue"],
 };

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Calender;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -47,6 +47,14 @@ class PublicPagesController extends Controller
             // 'homePageContent' => $homePageContent,
             // 'categories' => Category::all(),
             // 'productBestSellers'=>Product::whereIn('tag',['best_seller','new_arrival'])->paginate(10)->withQueryString()
+        ]);
+    }
+
+
+    public function calenderPage(){
+        // dd(Calender::whereDate('formated_date', '<=', date("Y/m/d",strtotime("+ 1 month")))->get());
+        return Inertia::render('Public/Calender/Calender', [
+            'calender'=>Calender::whereDate('formated_date', '<=', date("Y/m/d",strtotime("+ 1 month")))->get()
         ]);
     }
 

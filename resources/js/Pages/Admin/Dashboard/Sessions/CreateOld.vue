@@ -43,6 +43,7 @@
 
 
                     </div>
+
                 </div>
 
 
@@ -180,9 +181,120 @@
             </template>
         </Modal>
 
-        <!-- Schedule create Modal -->
-        <ScheduleCreate :days="days" :type="'Session'" :errors="errors" :createURL="'/admin/dashboard/sessions'"
-            :createData="getCreateData" :eventTitle="sessionInfo.title" :eventTrainers="sessionInfo.trainers" :scheduleableType="'App\\Models\\Session'"></ScheduleCreate>
+        <!-- Modal content -->
+        <Modal :modalHeadingText="'Schedule class'" :modalHeadingResetButton="true" :modalWidth="2">
+            <template #body>
+                <div class="grid md:grid-cols-2 gap-6 gap-y-4">
+                    <div class="col-span-2 grid md:grid-cols-2 gap-6 gap-y-4">
+                        <FormSimpleInput :label="'Start Date'" :name="'start_date'" :type="'date'"
+                            v-model="scheduleInfo.start_date" :error="errors['scheduleInfo.start_date']">
+                        </FormSimpleInput>
+                        <FormSimpleInput :label="'End Date'" :name="'end_date'" :type="'date'"
+                            :min="scheduleInfo.start_date" v-model="scheduleInfo.end_date"
+                            :error="errors['scheduleInfo.end_date']">
+                        </FormSimpleInput>
+                        <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
+                            Days</label>
+                        
+
+                        <div class="col-span-2 grid grid-cols-7 gap-4"
+                            v-if="(scheduleInfo.start_date === scheduleInfo.end_date) && (typeof scheduleInfo.end_date === 'string')">
+                            <input type="checkbox" :id="`react-option-singleday`" class="hidden peer/trainer"
+                                :value="getSingleDay" v-model="daysSelected" required="">
+                            <label :for="`react-option-singleday`"
+                                class="inline-flex items-center p-3 justify-between w-full text-gray-900 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-white dark:border-gray-700 peer-checked/trainer:border-blue-600 peer-checked/trainer:shadow-xl peer-checked/trainer:shadow-blue-800 hover:text-gray-800 dark:peer-checked/trainer:text-white peer-checked/trainer:text-gray-900 hover:bg-gray-50 dark:text-white dark:bg-gray-800 dark:hover:bg-gray-700">
+                                <div class="flex items-center space-x-4">
+                                    <div class="font-medium dark:text-white">
+                                        <div>{{ (new Date(scheduleInfo.start_date)).toString().split(' ')[0] }}</div>
+                                    </div>
+                                </div>
+                            </label>
+
+                        </div>
+
+                        <div class="col-span-2 grid grid-cols-7 gap-4" v-else-if="7 > getDaysDiffrenece > 0">
+                            <div class="" v-for="day in getNewDays" :key="day.id">
+                                <input type="checkbox" :id="`react-option-${day.day_name}`" class="hidden peer/trainer"
+                                    :value="day.id" v-model="daysSelected" required="">
+                                <label :for="`react-option-${day.day_name}`"
+                                    class="inline-flex items-center p-3 justify-between w-full text-gray-900 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-white dark:border-gray-700 peer-checked/trainer:border-blue-600 peer-checked/trainer:shadow-xl peer-checked/trainer:shadow-blue-800 hover:text-gray-800 dark:peer-checked/trainer:text-white peer-checked/trainer:text-gray-900 hover:bg-gray-50 dark:text-white dark:bg-gray-800 dark:hover:bg-gray-700">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="font-medium dark:text-white">
+                                            <div>{{ day.day_name }}</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-span-2 grid grid-cols-7 gap-4" v-else>
+                            <div class="" v-for="day in days" :key="day.id">
+                                <input type="checkbox" :id="`react-option-${day.day_name}`" class="hidden peer/trainer"
+                                    :value="day.id" v-model="daysSelected" required="">
+                                <label :for="`react-option-${day.day_name}`"
+                                    class="inline-flex items-center p-3 justify-between w-full text-gray-900 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-white dark:border-gray-700 peer-checked/trainer:border-blue-600 peer-checked/trainer:shadow-xl peer-checked/trainer:shadow-blue-800 hover:text-gray-800 dark:peer-checked/trainer:text-white peer-checked/trainer:text-gray-900 hover:bg-gray-50 dark:text-white dark:bg-gray-800 dark:hover:bg-gray-700">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="font-medium dark:text-white">
+                                            <div>{{ day.day_name }}</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div v-if="errors['scheduleInfo.days']" v-text="errors['scheduleInfo.days']" class="text-red-500 col-span-2 text-xs"></div>
+
+
+
+                    </div>
+                </div>
+                <!-- Events for days  -->
+
+                <div v-for="(dayEvent, index) in daysEvent" :key="index">
+                    <div v-if="daysSelected.includes(index + 1)" class="dark:bg-blue-500/10 p-4 rounded-lg ">
+                        <label for="" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Schedule
+                            for {{ dayNames[index] }} </label>
+                        <div class="dark:bg-blue-800/30 p-4 rounded-lg mt-4" v-for="(event, index) in dayEvent"
+                            :key="event">
+                            <div class="grid grid-cols-3 gap-10" v-if="dayEvent.length > 0">
+                                <div>
+                                    <FormSimpleInput :label="'Start Time'" :name="'start_time'" :type="'time'"
+                                        :min="'00:00'" v-model="event.start_time" :required="true"></FormSimpleInput>
+                                </div>
+                                <div>
+                                    <FormSimpleInput :label="'End Time'" :name="'end_time'" :type="'time'"
+                                        v-model="event.end_time"></FormSimpleInput>
+                                </div>
+                                <div>
+                                    <FormSimpleInput :label="'Size'" :name="'size'" :type="'number'" :min="0"
+                                        v-model="event.size"></FormSimpleInput>
+                                </div>
+
+
+                            </div>
+                            <div class="mt-4" v-if="dayEvent.length > 0">
+                                <Button @click.prevent="dayEvent.splice(index, 1)" :text="'Remove Event'" :color="'red'"
+                                    :fullWidth="true"></Button>
+                            </div>
+
+
+                        </div>
+                        <div class="mt-4">
+                            <Button @click.prevent="daysEvent[index].push({ start_time: '00:00', end_time: '00:00', size: 0 })"
+                                :text="'Create new Event'" :color="'blue'" :fullWidth="true"></Button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </template>
+            <template #footer>
+                <Button
+                    @click.prevent="createRequest({ url: '/admin/dashboard/sessions', data: { ...sessionInfo, subscriptionplansPrices: selectedSubscriptionplansWithPrice, scheduleInfo: { ...scheduleInfo, days: daysSelected, daysEvent: daysEvent } }, only: ['flash', 'errors'] })"
+                    :text="'Create Schedule'" :color="'blue'"></Button>
+            </template>
+        </Modal>
     </div>
 </template>
 <script>
@@ -192,15 +304,113 @@ export default {
     data() {
         return {
             sessionInfo: { trainers: [], subscriptionplansSelected: [] },
+            // subscriptionplansSelected:[],
             subscriptionPricing: [],
+            scheduleInfo: {},
+            daysSelected: [],
+            events: [],
+            dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            sunEvents: [], monEvents: [], tueEvents: [], wedEvents: [], thuEvents: [], friEvents: [], satEvents: [],
+            daysEvent: []
+
+
         };
     },
 
     computed: {
-        getCreateData(){
-            return { ...this.sessionInfo, subscriptionplansPrices: this.selectedSubscriptionplansWithPrice};
+
+        getSingleDay() {
+            console.log(this.days);
+            console.log((new Date(this.scheduleInfo.start_date)).getDay())
+            console.log(this.dayNames[((new Date(this.scheduleInfo.start_date)).getDay())]);
+            return ((new Date(this.scheduleInfo.start_date)).getDay()) + 1
+        },
+        getDaysDiffrenece() {
+            return ((new Date(this.scheduleInfo.end_date)) - (new Date(this.scheduleInfo.start_date))) / (1000 * 60 * 60 * 24)
+        },
+        getNewDays() {
+            var i = 0;
+            var newDays = []
+            var d = ((new Date(this.scheduleInfo.start_date)).getDay())
+            console.log(d);
+            console.log("getDaysDiffrenece : ", this.getDaysDiffrenece);
+            // loop forever
+            while (i < this.getDaysDiffrenece + 1) {
+                newDays.push(this.days[(d + i) % 7])
+                i = (i) % 7;
+                console.log(d + i);
+                if (i < 6) {
+                    i++
+                } else {
+                    break
+                }
+
+
+
+
+                // console.log(myArray[i] + 'hi');
+                // // i % 4 is the remainder when dividing i by 4
+                // // so this will cause i to be 0, 1, 2, 3, 0, 1, ...
+                // i = (i + 1) % myArray.length;
+            }
+            return newDays
         },
 
+
+        // schedules() {
+        //     this.daysSelected.forEach(element => {
+        //         if (this.scheduleInfo.schedules.length > 0) {
+        //             this.scheduleInfo.schedules.forEach(schedule => {
+        //                 if (schedule.hasOwnProperty("dayName")) {
+        //                     if (this.daysSelected.includes(schedule.dayName)) {
+        //                         if (schedule.events.length > 0) {
+        //                             return this.scheduleInfo.schedules
+        //                         } else {
+        //                             schedule.events.push({ startTimeHr: 0, startTimeMin: 0, endTimeHr: 0, endTimeMin: 0 })
+        //                         }
+        //                     } else {
+        //                         const index = schedules.indexOf(schedule);
+        //                         if (index > -1) { // only splice array when item is found
+        //                             schedules.splice(index, 1); // 2nd parameter means remove one item only
+        //                         }
+        //                     }
+        //                 } else {
+        //                     schedule = { dayName: element, events: [] }
+        //                 }
+
+        //             });
+        //         }
+
+        //     });
+
+        //     this.scheduleInfo.schedules.forEach(schedule => {
+        //         if (this.daysSelected.includes(schedule.dayName)) {
+        //             if (schedule.events.length > 0) {
+        //                 return this.scheduleInfo.schedules
+        //             } else {
+        //                 schedule.events.push({ startTimeHr: 0, startTimeMin: 0, endTimeHr: 0, endTimeMin: 0 })
+        //             }
+        //         } else {
+
+        //         }
+        //     })
+
+
+        //     this.daysSelected.forEach(day => {
+        //         this.scheduleInfo.schedule.push({ dayName: day, events: [] })
+
+        //     });
+
+
+        //     console.log(this.daysSelected);
+        //     this.scheduleInfo = { ...this.scheduleInfo, schedule: [] }
+        //     this.daysSelected.forEach(day => {
+        //         this.scheduleInfo.schedule.push({ dayName: day, events: [] })
+
+        //     });
+        //     // return this.days.filter((item) => this.daysSelected.includes(item.id));
+        //     return this.scheduleInfo.schedule;
+        // },
         selectedSubscriptionplansWithPrice() {
             var selectedSubscription = this.subscriptionplans.filter((item) => this.sessionInfo.subscriptionplansSelected.includes(item.id));
             var newArr = selectedSubscription.map(v => ({ ...v, price: this.sessionInfo.price }))
@@ -210,6 +420,16 @@ export default {
     },
     mounted() {
         this.sessionInfo.published = true
+        this.sunEvents = [] //{ startTimeHr: 0, startTimeMin: 0, endTimeHr: 0, endTimeMin: 0 }
+        this.monEvents = []
+        this.tueEvents = []
+        this.wedEvents = []
+        this.thuEvents = []
+        this.friEvents = []
+        this.satEvents = []
+        this.daysEvent = [this.sunEvents, this.monEvents, this.tueEvents, this.wedEvents, this.thuEvents, this.friEvents, this.satEvents]
+
+
     },
     methods: {
         nameToSlug() {
@@ -229,7 +449,6 @@ import Modal from "../../../../Shared/Modal/Modal.vue";
 import FormCheckBox from "../../../../Shared/FormElements/FormCheckBox.vue";
 import FormTextArea from "../../../../Shared/FormElements/FormTextArea.vue";
 import FormSelect from "../../../../Shared/FormElements/FormSelect.vue";
-import ScheduleCreate from "../Schedules/Create.vue";
 
 import { changeToSlug, createRequest } from '../../../../main.js'
 

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\ScheduleController;
 use App\Models\Agegroup;
+use App\Models\Day;
 use App\Models\Level;
 use App\Models\Session;
 // use Illuminate\Http\Request;
@@ -39,6 +41,7 @@ class SessionController extends Controller
             'agegroups' => Agegroup::all(),
             'levels' => Level::all(),
             'trainers' => Trainer::all(),
+            'days'=>Day::all(),
             'subscriptionplans' => Subscriptionplan::where('published', 1)->get(),
 
         ]);
@@ -48,6 +51,14 @@ class SessionController extends Controller
     {
 
         $attributes = $this->validateSession();
+        // dd($attributes);
+
+
+        if ($attributes['scheduleInfo'] ?? false) {
+            $scheduleInfo = $attributes['scheduleInfo'];
+        }
+        unset($attributes['scheduleInfo']);
+
 
         if ($attributes['thumbnail'] ?? false) {
             $thumbnail = $attributes['thumbnail'];
@@ -72,7 +83,6 @@ class SessionController extends Controller
                 path: 'assets/app/images/sessions/id_' . $session['id'] . '/thumbnail'
             );
             $session->thumbnail = $thumbnail;
-
         }
 
         if (isset($trainers)) {
@@ -85,6 +95,14 @@ class SessionController extends Controller
             }
         }
 
+        if (isset($scheduleInfo)) {
+            $scheduleInfo["scheduleable_type"] = 'App\Models\Session';
+            $scheduleInfo["scheduleable_id"] = $session->id;
+            $scheduleInfo["title"] = $session->title;
+            $scheduleController = new ScheduleController();
+            $scheduleController->store($scheduleInfo);
+        }
+
         $session->save();
 
         if (Auth::guard('web')->check()) {
@@ -94,7 +112,6 @@ class SessionController extends Controller
             return;
         }
         return;
-
     }
 
     public function edit(Session $session)
@@ -110,6 +127,14 @@ class SessionController extends Controller
             }
         }
         $subscriptionplansPrices = $subscriptionplans;
+        // dd($session->schedule()->first());
+
+        $schedule_id = $session->schedule()->first()->id;
+        $daysSelected = $session->schedule()->first()->days()->get()->pluck('id')->toArray();
+        $daysEvent=[];
+        for ($i=0; $i < 7; $i++) { 
+            $daysEvent[$i] = in_array($i+1,$daysSelected) ? Day::find($i+1)->events()->wherePivot('schedule_id', $schedule_id)->get()->toArray() : [];
+        }
 
         return Inertia::render('Admin/Dashboard/Sessions/Edit', [
             'session' => $session,
@@ -119,11 +144,21 @@ class SessionController extends Controller
             'subscriptionplansPrices' => $subscriptionplansPrices,
             'subscriptionplansSelected' => $session->subscriptionplans()->pluck('subscriptionplan_id'),
             'trainersSelected' => $session->trainers()->pluck('trainer_id'),
+            'schedule'=>$session->schedule()->first(),
+            'days'=>Day::all(),
+            'daysSelectedData'=>$daysSelected,
+            'daysEventData'=> $daysEvent
         ]);
     }
 
     public function update(Session $session){
         $attributes = $this->validateSession($session);
+        // dd($attributes);
+
+        if ($attributes['scheduleInfo'] ?? false) {
+            $scheduleInfo = $attributes['scheduleInfo'];
+        }
+        unset($attributes['scheduleInfo']);
 
         $fileManagement = new FileManagement();
 
@@ -164,6 +199,13 @@ class SessionController extends Controller
             }
         }
 
+        if (isset($scheduleInfo)) {
+            // $scheduleInfo["scheduleable_type"] = 'App\Models\Session';
+            // $scheduleInfo["scheduleable_id"] = $session->id;
+            $scheduleController = new ScheduleController();
+            $scheduleController->update($scheduleInfo);
+        }
+
         $session->update($attributes);
 
         return back()->with('success', 'Session Updated!');
@@ -173,6 +215,10 @@ class SessionController extends Controller
     public function destroy(Session $session)
     {
         // dd($teacher->course->all());
+        // dd($session->schedule()->first());
+        $schedule = $session->schedule()->first();
+        $scheduleController = new ScheduleController();
+        $scheduleController->destroy($schedule);
         $session->delete();
         Storage::disk('public')->deleteDirectory('assets/app/images/sessions/id_' . $session['id']);
         return redirect('/admin/dashboard/sessions')->with('success', 'Session Deleted!');
@@ -185,20 +231,29 @@ class SessionController extends Controller
         return request()->validate(
             [
                 'title' => 'required|min:3|max:50',
-                'slug' => ['required', Rule::unique('sessions', 'slug')->ignore($session)],
+                'slug' => ['required',],// Rule::unique('sessions', 'slug')->ignore($session)],
                 'price' => 'required|numeric|max:100000',
                 'description' => 'required|max:1000',
                 'excerpt' => 'required|max:1000',
                 'agegroup_id' => 'required|numeric',
                 'video_url' => 'required|max:200',
+                'size' => 'required',
                 'level' => 'required',
                 'trainers' => 'nullable',
                 'subscriptionplansPrices' => 'nullable',
                 'published' => 'required|boolean',
-                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png |max:2096',
+                'scheduleInfo'=>'nullable',
+                'scheduleInfo.start_date'=>Rule::requiredIf(isset(request()->scheduleInfo)),
+                'scheduleInfo.end_date'=>Rule::requiredIf(isset(request()->scheduleInfo)),
+                'scheduleInfo.days'=>Rule::requiredIf(isset(request()->scheduleInfo)),
+                // 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png |max:2096',
+                'thumbnail' => 'nullable',
             ],
             [
                 'slug' => 'Enter a unique slug for your the subscriptionplan\'s link',
+                'scheduleInfo.start_date' => 'Add a starting date for the schedule',
+                'scheduleInfo.end_date' => 'Add a end date for the schedule',
+                'scheduleInfo.days' => 'Select days and create schedule',
                 'thumbnail' => 'Upload thumbnail as jpg/png format with size less than 2MB',
             ]
         );

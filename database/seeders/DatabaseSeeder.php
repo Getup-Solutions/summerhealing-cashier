@@ -10,6 +10,8 @@ use App\Models\Level;
 use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\Agegroup;
+use App\Models\Calender;
+use App\Models\Day;
 use App\Models\Facility;
 use App\Models\Session;
 use App\Models\Training;
@@ -158,6 +160,27 @@ class DatabaseSeeder extends Seeder
         // });
 
         // Training::factory(10)->create();
+
+
+
+        // Seeding calender
+        for ($i=0; $i < 365; $i++) { 
+            Calender::create([
+                'formated_date'=> date("Y/m/d",strtotime("today + ".$i." day")),
+                'day'=> date("d",strtotime("today + ".$i." day")),
+                'day_name'=> date("l",strtotime("today + ".$i." day")),
+                'month_name'=> date("F",strtotime("today + ".$i." day")),
+                'is_today'=> date("Y/m/d") === date("Y/m/d",strtotime("today + ".$i." day"))
+            ]);
+        }
+
+        //Seeding Days
+        $days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+        foreach ($days as $day) {
+            Day::create([
+                'day_name'=>$day
+            ]);
+        }
 
 
     }

@@ -61,7 +61,7 @@ if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localS
 }
 
 var themeToggleBtn = document.getElementById('theme-toggle');
-if(!window.location.href.includes("admin")){
+if(!(window.location.href.includes("admin"))){
     themeToggleBtn.style.display = 'none';
 };
 

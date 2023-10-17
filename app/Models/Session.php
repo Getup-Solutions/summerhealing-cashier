@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use App\Models\Subscriptionplan;
+use App\Models\Schedule;
 use App\Models\Trainer;
+use App\Models\Event;
 
 class Session extends Model
 {
@@ -91,6 +95,16 @@ class Session extends Model
             );
     }
 
+    public function events(): MorphMany
+    {
+        return $this->morphMany(Event::class, 'eventable');
+    }
+
+    public function schedule(): MorphOne
+    {
+        return $this->morphOne(Schedule::class, 'scheduleable');
+    }
+
     protected function thumbnailUrl(): Attribute
     {
         parse_url($this->avatar)['host'] ?? '' === 'images.pexels.com' ? $avatar = $this->avatar : $avatar = '' . $this->avatar;
@@ -113,4 +127,5 @@ class Session extends Model
     {
         return $this->belongsToMany(Trainer::class, 'session_trainer');
     }
+
 }

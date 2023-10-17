@@ -44,12 +44,13 @@ function editRequest({
     scroll_preservation = true,
     only_list,
 } = {}) {
+    // data = JSON.parse(data);
     data['_method'] = "put";
     console.log(data);
     router.post(url + (dataId ?? ''), data, {
-        preserveState: state_preservation,
-        preserveScroll: scroll_preservation,
-        only: only_list,
+        // preserveState: state_preservation,
+        // preserveScroll: scroll_preservation,
+        // only: only_list,
     });
 }
 

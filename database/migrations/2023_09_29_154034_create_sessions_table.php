@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('thumbnail')->default('');
             $table->foreignId('agegroup_id');
             $table->string('video_url')->default('sTANio_2E0Q');
+            $table->integer('size')->default(10);
             $table->string('level')->nullable();
             $table->boolean('published')->default(true);
             $table->float('price');
