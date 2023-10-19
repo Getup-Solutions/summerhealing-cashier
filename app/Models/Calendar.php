@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Calender extends Model
+class Calendar extends Model
 {
     protected $with = ['events'];
     protected $append = ['session_events'];
     use HasFactory;
-    public function events(): HasMany
+    public function events()
     {
-        return $this->hasMany(Event::class);
+        return $this->belongsToMany(Event::class, 'calendar_event');
     }
     
     public function sessionEvents(){

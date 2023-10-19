@@ -1,6 +1,6 @@
 <template>
     <div class=" min-h-screen bg-white dark:bg-gray-50">
-        <CalenderHeader :calender="calender" v-model="selectedDate"></CalenderHeader>
+        <CalendarHeader :calendar="calendar" v-model="selectedDate"></CalendarHeader>
         <div class="p-10">
             <div class="grid gap-2">
                 <div class=" max-w-2xl" v-for="sessionEvent in sessionEvents" :key="sessionEvent">
@@ -21,7 +21,7 @@
                                 {{ sessionEvent["size"]}} Available
                             </div>
                             <div class="rounded-full text-sm cursor-pointer hover:bg-blue-800 bg-sh_dark_blue py-2 px-2 w-40 text-center text-white">Mark Attendence {{ markAttendence(sessionEvent.start_time) }}</div>
-                            <!-- <h3>{{ calender[selectedDate]["events"] }}</h3> -->
+                            <!-- <h3>{{ calendar[selectedDate]["events"] }}</h3> -->
                         </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
 </template>
 <script>
 export default {
-    props: ["calender"],
+    props: ["calendar"],
     data() {
         return {
             selectedDate: 0,
@@ -43,8 +43,8 @@ export default {
     },
     computed: {
         sessionEvents() {
-            if (this.calender[this.selectedDate]["events"]) {
-                return this.calender[this.selectedDate]["events"].filter((event) => event["eventable_type"] == 'App\\Models\\Session')
+            if (this.calendar[this.selectedDate]["events"]) {
+                return this.calendar[this.selectedDate]["events"].filter((event) => event["eventable_type"] == 'App\\Models\\Session')
             }
         },
 
@@ -53,8 +53,8 @@ export default {
         markAttendence(time){
             time = time.slice(0, -3);
             console.log(time);
-            console.log(this.calender[this.selectedDate]["formated_date"]);
-            var diffMs = new Date(this.calender[this.selectedDate]["formated_date"]+' '+time) - new Date();
+            console.log(this.calendar[this.selectedDate]["formated_date"]);
+            var diffMs = new Date(this.calendar[this.selectedDate]["formated_date"]+' '+time) - new Date();
             return Math.floor(diffMs / 86400000);
         },
         tConvert(time) {
@@ -76,5 +76,5 @@ export default {
 import {
     ClockIcon
 } from "@heroicons/vue/24/solid";
-import CalenderHeader from "../../../Shared/Calender/CalenderHeader.vue";
+import CalendarHeader from "../../../Shared/Calendar/CalendarHeader.vue";
 </script>

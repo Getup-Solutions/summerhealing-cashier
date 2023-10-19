@@ -4,7 +4,7 @@
     </div>
     <div class="dark:bg-[#010731] bg-zinc-950">
         <div class="p-2 flex gap-2 overflow-x-scroll no-scrollbar">
-            <div class="rounded-xl bg-white/10 hover:bg-white/20 text-white cursor-pointer" v-for="(day,index) in calender"
+            <div class="rounded-xl bg-white/10 hover:bg-white/20 text-white cursor-pointer" v-for="(day,index) in calendar"
                 :key="day" :class="{ ' bg-blue-700/50 text-gray-900': day.is_today == 1,'border-2 bg-blue-600/90 hover:bg-white/50 text-gray-900 border-white': day === selectedDate }">
                 <div class=" w-14 h-14 grid place-content-center" @click="selectDate(day,index)">
                     <p class="text-base  text-center font-semibold">{{ day.day }}</p>
@@ -16,7 +16,7 @@
 </template>
 <script>
 export default {
-    props: ["calender", "modelValue"],
+    props: ["calendar", "modelValue"],
     emits: ["update:modelValue"],
     data(){
         return {
@@ -30,7 +30,7 @@ export default {
         }
     },
     mounted(){
-        this.selectedDate = this.calender[0]
+        this.selectedDate = this.calendar[0]
         this.$emit('update:modelValue', 0);
     }
 }

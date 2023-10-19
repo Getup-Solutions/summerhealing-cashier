@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('title');
-            $table->json('days');
+            // $table->json('days');
             $table->integer('scheduleable_id');
             $table->string('scheduleable_type');
             $table->timestamps();

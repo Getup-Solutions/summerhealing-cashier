@@ -10,7 +10,7 @@ use App\Models\Level;
 use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\Agegroup;
-use App\Models\Calender;
+use App\Models\Calendar;
 use App\Models\Day;
 use App\Models\Facility;
 use App\Models\Session;
@@ -163,9 +163,9 @@ class DatabaseSeeder extends Seeder
 
 
 
-        // Seeding calender
+        // Seeding calendar
         for ($i=0; $i < 365; $i++) { 
-            Calender::create([
+            Calendar::create([
                 'formated_date'=> date("Y/m/d",strtotime("today + ".$i." day")),
                 'day'=> date("d",strtotime("today + ".$i." day")),
                 'day_name'=> date("l",strtotime("today + ".$i." day")),

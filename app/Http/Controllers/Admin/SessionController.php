@@ -151,12 +151,15 @@ class SessionController extends Controller
         ];
 
         if (isset($schedule_id)) {
-            array_merge([
+        // dd('ss');
+
+        $dataTosend = array_merge([
                 'schedule' => $session->schedule()->first(),
                 'daysSelectedData' => $daysSelected,
                 'daysEventData' => $daysEvent
-            ]);
+            ],$dataTosend);
         }
+        // dd($dataTosend);
 
         return Inertia::render('Admin/Dashboard/Sessions/Edit', $dataTosend);
     }

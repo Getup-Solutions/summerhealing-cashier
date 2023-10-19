@@ -8,6 +8,7 @@ use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Day;
+use App\Models\Calendar;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Event extends Model
@@ -47,5 +48,10 @@ class Event extends Model
         return Attribute::make(
             get: fn($value) => $trainerNames
         );
+    }
+
+    public function calendars()
+    {
+        return $this->belongsToMany(Calendar::class, 'calendar_event');
     }
 }

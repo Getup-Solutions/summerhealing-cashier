@@ -48,7 +48,7 @@ Route::name('public.')->group(function () {
     Route::get('/subscriptionplans/{subscriptionplan:slug}', [PublicPagesController::class, 'subscriptionplanSinglePage'])->name('subscriptionplan_single');
     Route::get('/courses/{course:slug}', [PublicPagesController::class, 'courseSinglePage'])->name('course_single');
     Route::get('/wellness-center/{facility:slug}', [PublicPagesController::class, 'facilitySinglePage'])->name('facility_single');
-    Route::get('/calender', [PublicPagesController::class, 'calenderPage'])->name('calender');
+    Route::get('/calendar', [PublicPagesController::class, 'calendarPage'])->name('calendar');
     
     // Route::get('/pages/{customPage:slug}', [PublicPagesController::class, 'customPage'])->name('customPage');
 

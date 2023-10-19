@@ -15,10 +15,8 @@ return new class extends Migration
             $table->id();
             $table->time('start_time');
             $table->time('end_time');
-            $table->date('date');
             $table->integer('size');
             $table->foreignId('schedule_id')->cascade();
-            $table->foreignId('calender_id')->cascade();
             // $table->string('location');
             // $table->foreignId('trainer_id')->cascade();
             $table->integer('eventable_id');
