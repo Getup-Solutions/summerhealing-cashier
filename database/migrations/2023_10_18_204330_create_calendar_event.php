@@ -23,7 +23,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             // $table->foreignId('course_id')->onDelete('cascade');
             // $table->foreignId('subscriptionplan_id')->onDelete('cascade');
-            // $table->foreignId('schedule_id');
+            $table->foreignId('schedule_id');
             $table->timestamps();
         });
     }

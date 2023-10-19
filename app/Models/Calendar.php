@@ -13,7 +13,7 @@ class Calendar extends Model
     use HasFactory;
     public function events()
     {
-        return $this->belongsToMany(Event::class, 'calendar_event');
+        return $this->belongsToMany(Event::class, 'calendar_event')->withPivot('schedule_id');
     }
     
     public function sessionEvents(){
