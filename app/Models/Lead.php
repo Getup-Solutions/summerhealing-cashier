@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Support\Carbon;
 class Lead extends Model
 {
     use HasFactory;
@@ -53,6 +53,24 @@ class Lead extends Model
             //             $query->whereIn('value', json_decode($roles))
             //         )
             // )
+
+
+
+                ->when($filters['privilage'] ?? false, function($query, $privilage){
+                   
+                    // dd($privilage);
+                    // dd(json_decode($privilage));
+                    if(in_array('user',json_decode($privilage))){
+                        $query
+                        ->whereNotNull('user_id');
+                    }
+                    // else  if(in_array('subscriber',json_decode($privilage))){
+                    //     $query
+                    //     ->whereNotNull('subscription_id');
+                    // }
+                    
+                }   
+                )
 
             ->when(
                 $filters['sortBy'] ?? 'default',

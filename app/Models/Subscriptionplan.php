@@ -27,7 +27,8 @@ class Subscriptionplan extends Model
                             // ->orWhere('email', 'like', "%{$search}%")
                             // ->orWhere('email', 'like', "%{$search}%")
                             // ->orWhere('keywords', 'like', "%{$search}%")
-                            // ->orWhere('id', '=', $search)
+                            ->orWhere('price', '=', $search)
+                            ->orWhere('validity', '=', $search)
                     )
             )
 

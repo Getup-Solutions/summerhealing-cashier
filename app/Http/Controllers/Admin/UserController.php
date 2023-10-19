@@ -36,7 +36,7 @@ class UserController extends Controller
         return Inertia::render('Admin/Dashboard/Users/Create', [
             'roles' => Role::where('value', '!=', 'USER_ROLE')->get(),
             'url_params' => Request::only(['first_name', 'last_name', 'email', 'phone_number','lead_id']),
-            'subscriptionplans' => Subscription::where('published',1)->get()
+            'subscriptionplans' => Subscriptionplan::where('published',1)->get()
         ]);
     }
 
@@ -204,7 +204,7 @@ class UserController extends Controller
             [
                 'first_name' => 'required|min:3|max:50',
                 'last_name' => 'required|max:50',
-                'avatar' => $user->exists ? 'nullable' : 'nullable|mimes:jpeg,png |max:2096',
+                'avatar' => $user->exists ? 'nullable' :  ['nullable','mimes:jpeg,png','max:2048'],
                 'dob' => 'required|max:50',
                 'lead_id'=>'nullable|numeric',
                 'roles' => [Auth::guard('web')->user()->can('admin') ? 'nullable' : 'exclude'],
