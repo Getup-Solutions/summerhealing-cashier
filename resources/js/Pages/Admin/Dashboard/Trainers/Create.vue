@@ -64,7 +64,7 @@
         </template>
         <template #footer>
             <Button
-                @click.prevent="createRequest({ url: '/admin/dashboard/users', data: userInfo, only: ['flash', 'errors'] })"
+                @click.prevent="createRequest({ url: '/admin/dashboard/users?from_trainer=true', data: userInfo, only: ['flash', 'errors'] })"
                 :text="'Create Trainer'" :color="'blue'"></Button>
         </template>
     </Modal>

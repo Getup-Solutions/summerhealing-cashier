@@ -72,7 +72,7 @@
         <template #footer>
             <Button
                 @click.prevent="editRequest({ url: '/admin/dashboard/facilities/', data: { ...facilityInfo, subscriptionplansPrices: subscriptionplansPricesModified }, dataId: facility.id, only: ['flash', 'errors'] })"
-                :text="'Edit Facility'" :color="'blue'"></Button>
+                :text="'Update Facility'" :color="'blue'"></Button>
                 <Button @click.prevent="deleteId = facility.id" :text="'Delete Facility'" :color="'red'"></Button>
         </template>
     </Modal>

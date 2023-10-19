@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->string('dob')->nullable();
             $table->text('about')->nullable();
-            $table->string('avatar')->nullable();
+            $table->string('avatar')->default(fake()->randomElement(['assets/static/img/avatar_woman.png', 'assets/static/img/avatar_man.png']));
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

@@ -169,7 +169,7 @@
         <template #footer>
             <Button
                 @click.prevent="editRequest({ url: '/admin/dashboard/courses/', data: { ...courseInfo, subscriptionplansPrices: selectedSubscriptionplansWithPrice },dataId: course.id, only: ['flash', 'errors'] })"
-                :text="'Edit Course'" :color="'blue'"></Button>
+                :text="'Update Course'" :color="'blue'"></Button>
                 <Button @click.prevent="deleteId = course.id" :text="'Delete Course'" :color="'red'"></Button>
 
         </template>

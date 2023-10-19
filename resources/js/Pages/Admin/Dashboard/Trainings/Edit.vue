@@ -43,7 +43,7 @@
         <template #footer>
             <Button
                 @click.prevent="editRequest({ url: '/admin/dashboard/trainings/', data: trainingInfo, only: ['flash', 'errors'], dataId:training.id })"
-                :text="'Edit Training'" :color="'blue'"></Button>
+                :text="'Update Training'" :color="'blue'"></Button>
                 <Button @click.prevent="deleteId = training.id" :text="'Delete Training'" :color="'red'"></Button>
         </template>
     </Modal>
