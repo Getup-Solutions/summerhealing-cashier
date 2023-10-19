@@ -45,19 +45,19 @@
 
             <div class="grid w-full gap-6 md:grid-cols-2">
                 <div class=" col-span-2">
-                    <FormSimpleInput :label="'Price (No subscription)'" :name="'price'" :type="'number'" @change="setSubscriptionPrice()"
+                    <FormSimpleInput :label="'Price (No subscriptionplan)'" :name="'price'" :type="'number'" @change="setSubscriptionplanPrice()"
                         v-model="facilityInfo.price" :error="errors.price"></FormSimpleInput>
                 </div>
-                <div class=" col-span-2" v-if="subscriptionsPrices.length > 0">
+                <div class=" col-span-2" v-if="subscriptionplansPrices.length > 0">
                     <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pricing
-                        for Subscription plans:</label>
+                        for Subscriptionplan plans:</label>
                 </div>
 
 
-                <div v-for="subscription, index in  subscriptionsPricesModified" :key="subscription.id">
-                    <FormSimpleInput :label="'Price for - ' + subscription.title + ' subscription'"
-                        :name="subscription.title" :type="'number'" :placeholder="facilityInfo.price"
-                        v-model="subscriptionsPricesModified[index].price"></FormSimpleInput>
+                <div v-for="subscriptionplan, index in  subscriptionplansPricesModified" :key="subscriptionplan.id">
+                    <FormSimpleInput :label="'Price for - ' + subscriptionplan.title + ' subscriptionplan'"
+                        :name="subscriptionplan.title" :type="'number'" :placeholder="facilityInfo.price"
+                        v-model="subscriptionplansPricesModified[index].price"></FormSimpleInput>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@
         </template>
         <template #footer>
             <Button
-                @click.prevent="createRequest({ url: '/admin/dashboard/facilities', data: { ...facilityInfo, subscriptionsPrices: subscriptionsPricesModified }, only: ['flash', 'errors'] })"
+                @click.prevent="createRequest({ url: '/admin/dashboard/facilities', data: { ...facilityInfo, subscriptionplansPrices: subscriptionplansPricesModified }, only: ['flash', 'errors'] })"
                 :text="'Create Facility'" :color="'blue'"></Button>
         </template>
     </Modal>
@@ -77,20 +77,20 @@
 <script>
 
 export default {
-    props: ["errors", "subscriptionsPrices"],
+    props: ["errors", "subscriptionplansPrices"],
     data() {
         return {
             facilityInfo: {price:0},
         };
     },
     computed: {
-        subscriptionsPricesModified() {
-            var subscriptionsPricesNew = this.subscriptionsPrices.filter((item) => {
+        subscriptionplansPricesModified() {
+            var subscriptionplansPricesNew = this.subscriptionplansPrices.filter((item) => {
                     item.price = this.facilityInfo.price ?? 0;
                     return item;
             });
-            // var newArr = selectedSubscription.map(v => ({ ...v, price: this.courseInfo.price }))
-            return subscriptionsPricesNew
+            // var newArr = selectedSubscriptionplan.map(v => ({ ...v, price: this.courseInfo.price }))
+            return subscriptionplansPricesNew
         }
 
     },

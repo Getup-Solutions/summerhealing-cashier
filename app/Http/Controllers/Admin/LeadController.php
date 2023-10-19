@@ -16,13 +16,13 @@ class LeadController extends Controller
     public function index()
     {
 
-        // dd(User::all());
+        // dd(request(['search', 'dateStart', 'dateEnd', 'sortBy', 'privilage']));
         return Inertia::render('Admin/Dashboard/Leads/Index', [
             'leads' => Lead::filter(
-                request(['search', 'dateStart', 'dateEnd', 'sortBy', 'user'])
+                request(['search', 'dateStart', 'dateEnd', 'sortBy', 'privilage'])
             )
                 ->with(['user'])->paginate(3)->withQueryString(),
-            'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'user']),
+            'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'privilage']),
             // 'roles' => Role::all(),
         ]);
     }

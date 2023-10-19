@@ -112,6 +112,7 @@ class CourseController extends Controller
         }
         $subscriptionplansPrices = $subscriptionplans;
 
+
         return Inertia::render('Admin/Dashboard/Courses/Edit', [
             'course' => $course,
             'agegroups' => Agegroup::all(),
@@ -124,7 +125,7 @@ class CourseController extends Controller
     }
 
     public function update(Course $course){
-        $attributes = $this->validateCourse();
+        $attributes = $this->validateCourse($course);
 
         $fileManagement = new FileManagement();
 
@@ -194,10 +195,10 @@ class CourseController extends Controller
                 'agegroup_id' => 'required|numeric',
                 'video_url' => 'required|max:200',
                 'level' => 'required',
-                'trainers' => 'nullable',
-                'subscriptionplansPrices' => 'nullable',
+                'trainers' => 'required',
+                'subscriptionplansPrices' => 'required',
                 'published' => 'required|boolean',
-                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png |max:2096',
+                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : ['required','mimes:jpeg,png','max:2048'],
             ],
             [
                 'slug' => 'Enter a unique slug for your the subscriptionplan\'s link',

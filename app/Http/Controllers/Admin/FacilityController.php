@@ -163,7 +163,7 @@ class FacilityController extends Controller
                 'excerpt' => 'required|max:1000',
                 'published' => 'required|boolean',
                 'subscriptionplansPrices' => 'nullable',
-                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpg,bmp,png|max:2096',
+                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' :  ['required','mimes:jpeg,png','max:2048'],
             ],
             [
                 'slug' => 'Enter a unique slug for your the facility\'s link',
