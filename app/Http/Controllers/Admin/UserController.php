@@ -154,9 +154,13 @@ class UserController extends Controller
         if (isset($roles)) {
             $user->roles()->sync($roles);
             if($user->hasRole('TRAINER_ROLE')){
-                $trainer = Trainer::where('user_id','=',$user->id)->first();
-                $trainer->about = $attributes['about'];
-                $trainer->update();
+                if($trainer = Trainer::where('user_id','=',$user->id)->first()){
+                    $trainer->about = $attributes['about'];
+                    $trainer->update();
+                } else {
+                    Trainer::create(['user_id'=>$user->id,'about'=>$attributes['about']]);
+                }
+
                 // Trainer::create(['user_id'=>$user->id,'about'=>$attributes['about']]);
             }   
         }
@@ -208,7 +212,7 @@ class UserController extends Controller
                 'dob' => 'required|max:50',
                 'lead_id'=>'nullable|numeric',
                 'roles' => [Auth::guard('web')->user()->can('admin') ? 'nullable' : 'exclude'],
-                'subscriptionplans' => [$user->exists ? Rule::excludeIf(count(request()->input('roles'))>1) : Rule::excludeIf(count(request()->input('roles'))>0) , 'nullable'],
+                'subscriptionplans' => [$user->exists ? Rule::excludeIf(count(request()->input('roles') ?? [])>1) : Rule::excludeIf(count(request()->input('roles'))>0) , 'nullable'],
                 'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
                 'about' => 'nullable|max:500',
                 'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user)],

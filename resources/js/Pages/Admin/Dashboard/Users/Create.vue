@@ -46,7 +46,7 @@
 
             </div>
 
-            <div v-if="userInfo.roles.length===0">
+            <div v-if="!(userInfo.roles.includes(2)||userInfo.roles.includes(3))  && !url_params.lead_id">
 
                 <h5 class="mb-5 text-base font-medium text-gray-900 dark:text-white">Select Subscriptionplan(s):</h5>
                 <ul class="grid w-full gap-6 md:grid-cols-2">

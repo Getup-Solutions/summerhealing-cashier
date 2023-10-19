@@ -69,9 +69,9 @@ class FacilityController extends Controller
 
         if (isset($subscriptionplansPrices)) {
             foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
-                if($subscriptionplanPrice["price"]<$facility->price){
-                    $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"]]);
-                }    
+                // if($subscriptionplanPrice["price"]<=$facility->price){
+                    $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"] ?? 0]);
+                // }    
             }
         }
 
@@ -88,8 +88,10 @@ class FacilityController extends Controller
 
     public function edit(Facility $facility)
     {
-        $subscriptionplans = Subscriptionplan::where('published', 1)->get();
+        $subscriptionplans = $facility->subscriptionplans()->get();
+        // dd($facility->subscriptionplans()->get());
         foreach ($subscriptionplans as $subscriptionplan) {
+            // dd($facility->subscriptionplans()->get());
             $subscriptionplan->price = $facility->subscriptionplans()->find($subscriptionplan->id)->pivot->facility_price;
         }
         $subscriptionplansPrices = $subscriptionplans;

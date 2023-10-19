@@ -11,23 +11,23 @@
 
         <div class="max-w-5xl mx-auto px-6 md:px-0">
             <div class="py-10 md:py-20">
-                <!-- <h1 class="sh-head-2 mb-10">SUBSCRIPTION PLANS</h1> -->
+                <!-- <h1 class="sh-head-2 mb-10">SUBSCRIPTIONplan PLANS</h1> -->
 
                 <div>
                     <div class="grid md:grid-cols-3 gap-20">
                         <div class="md:col-span-2">
                             <p class="mb-6 sh-para text-left text-base">{{
                                 facility.description }}</p>
-                            <h1 class="sh-head-4 text-left font-bold mb-4">Get any of these Subscriptions to get extra offers :</h1>
+                            <h1 class="sh-head-4 text-left font-bold mb-4">Get any of these Subscriptionplans to get extra offers :</h1>
                             <div class="mb-10">
-                                <h1 class="sh-para text-lg text-left dark:text-gray-200 font-bold mb-4 underline">Subscriptions
+                                <h1 class="sh-para text-lg text-left dark:text-gray-200 font-bold mb-4 underline">Subscriptionplans
                                 </h1>
-                                <div class="grid grid-cols-5 gap-4" v-for="subscription in included_subscriptions" :key="subscription.id">
+                                <div class="grid grid-cols-5 gap-4" v-for="subscriptionplan in included_subscriptionplans" :key="subscriptionplan.id">
                                     <p class="mb-3 sh-para text-left text-base col-span-2">{{
-                                        subscription.title }}</p>
+                                        subscriptionplan.title }}</p>
                                     <p class="mb-3 sh-para text-base">-</p>
                                     <p class="mb-3 sh-para text-left text-base col-span-2">{{
-                                        subscription.offer_price }}</p>
+                                        subscriptionplan.offer_price }}</p>
                                 </div>
 
 
@@ -43,7 +43,7 @@
 </template>
 <script>
 export default {
-    props: ["facility", "included_subscriptions"],
+    props: ["facility", "included_subscriptionplans"],
 }
 </script>
 <script setup>

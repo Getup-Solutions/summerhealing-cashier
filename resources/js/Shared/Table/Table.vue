@@ -28,7 +28,7 @@
                         <span v-text="dataItem[row.value] ? 'Published' : 'Draft'" v-if="row.type === 'bool'"></span>
                         <span v-if="row.type === 'relation'" :class="{ 'font-semibold': row.relationType }">{{
                             relationValue(dataItem, row, row.relationType) }}</span>
-                        <span v-if="row.type === date">
+                        <span v-if="row.type === 'date'">
                             {{ toDate(dataItem[row.value]) }}
                         </span>
                         <div class="w-20 h-20 bg-cover bg-center"

@@ -85,7 +85,7 @@ class PublicPagesController extends Controller
             if($course->pivot->course_price == 0) {
                 $course->offer_price = 'FREE!';
             } elseif($course->pivot->course_price < $course->price) {
-                $course->offer_price = $course->pivot->course_price.' (' .round(($course->pivot->course_price*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+                $course->offer_price = $course->pivot->course_price.' (' .round(( ($course->price - $course->pivot->course_price)*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
                 $course->offer_price = $course->price;
             }
@@ -96,7 +96,7 @@ class PublicPagesController extends Controller
             if($facility->pivot->facility_price == 0) {
                 $facility->offer_price = 'FREE!';
             } elseif($facility->pivot->facility_price < $facility->price) {
-                $facility->offer_price = $facility->pivot->facility_price.' (' .round(($facility->pivot->facility_price*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+                $facility->offer_price = $facility->pivot->facility_price.' (' .round(( ($facility->price - $facility->pivot->facility_price)*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
                 $facility->offer_price = $facility->price;
             }
@@ -133,7 +133,7 @@ class PublicPagesController extends Controller
             if($subscriptionplan->pivot->course_price == 0) {
                 $subscriptionplan->offer_price = 'FREE!';
             } elseif($subscriptionplan->pivot->course_price < $course->price) {
-                $subscriptionplan->offer_price = $subscriptionplan->pivot->course_price.' (' .round(($subscriptionplan->pivot->course_price*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+                $subscriptionplan->offer_price = $subscriptionplan->pivot->course_price.' (' .round(( ($course->price - $subscriptionplan->pivot->course_price)*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
                 $subscriptionplan->offer_price = $course->price;
             }
@@ -153,7 +153,7 @@ class PublicPagesController extends Controller
             if($subscriptionplan->pivot->facility_price == 0) {
                 $subscriptionplan->offer_price = 'FREE!';
             } elseif($subscriptionplan->pivot->facility_price < $facility->price) {
-                $subscriptionplan->offer_price = $subscriptionplan->pivot->facility_price.' (' .round(($subscriptionplan->pivot->facility_price*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+                $subscriptionplan->offer_price =$subscriptionplan->pivot->facility_price.' (' .round(( ($facility->price - $subscriptionplan->pivot->facility_price)*100)/$facility->price,2,PHP_ROUND_HALF_UP).'% Discount)';
             } else {
                 $subscriptionplan->offer_price = $facility->price;
             }
