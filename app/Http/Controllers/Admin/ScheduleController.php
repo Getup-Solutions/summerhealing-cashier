@@ -52,14 +52,12 @@ class ScheduleController extends Controller
                     $eventInfo["eventable_id"] = $eventInfo["eventable_id"] ?? $schedule["scheduleable_id"];
                     $eventInfo["eventable_type"] = $schedule["scheduleable_type"];
                     $eventInfo["schedule_id"] = $schedule["id"];
-                    if ($eventInfo["event_trainers"] ?? false) {
-                        $trainers = json_decode($eventInfo["event_trainers"]);
-                    }
+                    // if ($eventInfo["event_trainers"] ?? false) {
+                    //     $trainers = json_decode($eventInfo["event_trainers"]);
+                    // }
                     unset($eventInfo["event_trainers"]);
                     $event = Event::create($eventInfo);
-                    if (isset($trainers)) {
-                        $event->trainers()->sync($trainers);
-                    };
+                    $event->trainers()->sync($event->eventable()->get()->first()->trainers()->get()->pluck('id')->toArray());
                     $event->days()->detach();
                     $event->days()->attach(array_search($day, $this->dayNames) + 1, ['schedule_id' => $schedule["id"]]);
                     $event->save();
@@ -122,17 +120,18 @@ class ScheduleController extends Controller
                     $eventInfo["eventable_id"] = $eventInfo["eventable_id"] ?? $schedule["scheduleable_id"];
                     $eventInfo["eventable_type"] = $schedule["scheduleable_type"];
                     $eventInfo["schedule_id"] = $schedule["id"];
-                    if ($eventInfo["event_trainers"] ?? false) {
-                        $trainers = json_decode($eventInfo["event_trainers"]);
-                    }
-                    unset($eventInfo["id"]);
+                    // if ($eventInfo["event_trainers"] ?? false) {
+                    //     $trainers = json_decode($eventInfo["event_trainers"]);
+                    // }
+                    // unset($eventInfo["id"]);
                     unset($eventInfo["event_trainers"]);
                     unset($eventInfo["pivot"]);
                     unset($eventInfo["trainer_names"]);
                     $event = Event::create($eventInfo);
-                    if (isset($trainers)) {
-                        $event->trainers()->sync($trainers);
-                    };
+                    $event->trainers()->sync($event->eventable()->get()->first()->trainers()->get()->pluck('id')->toArray());
+                    // if (isset($trainers)) {
+                    //     $event->trainers()->sync($trainers);
+                    // };
                     $event->days()->detach();
                     $event->days()->attach(array_search($day, $this->dayNames) + 1, ['schedule_id' => $schedule["id"]]);
                     $event->save();
