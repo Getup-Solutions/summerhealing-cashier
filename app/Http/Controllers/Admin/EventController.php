@@ -17,7 +17,7 @@ class EventController extends Controller
         $eventInfo["eventable_id"] = $eventableId;
         // $eventInfo["eventable_type"] = $schedule["scheduleable_type"];
         $eventInfo["schedule_id"] = $scheduleId;
-        $eventInfo["calender_id"] = Calender::where('formated_date', '=', date('Y/m/d', $date))->first()->id;
+        // $eventInfo["calender_id"] = Calender::where('formated_date', '=', date('Y/m/d', $date))->first()->id;
         if ($eventInfo["event_trainers"] ?? false) {
             $trainers = json_decode($eventInfo["event_trainers"]);
         }

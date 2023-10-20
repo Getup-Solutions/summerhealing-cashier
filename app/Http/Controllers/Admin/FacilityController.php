@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Inertia\Inertia;
 // use Illuminate\Http\Request;
 use App\Models\Facility;
+use App\Models\Trainer;
+use App\Models\Agegroup;
+use App\Models\Level;
 use App\Models\Subscriptionplan;
 use Illuminate\Validation\Rule;
 use App\Services\FileManagement;
@@ -30,14 +33,18 @@ class FacilityController extends Controller
 
     public function create()
     {
-        $subscriptionplans = Subscriptionplan::where('published', 1)->get();
-        foreach ($subscriptionplans as $subscriptionplan) {
-            $subscriptionplan->price = '';
-        }
-        $subscriptionplansPrices = $subscriptionplans;
+        // $subscriptionplans = Subscriptionplan::where('published', 1)->get();
+        // foreach ($subscriptionplans as $subscriptionplan) {
+        //     $subscriptionplan->price = '';
+        // }
+        // $subscriptionplansPrices = $subscriptionplans;
 
         return Inertia::render('Admin/Dashboard/Facilities/Create', [
-            'subscriptionplansPrices' => $subscriptionplansPrices,
+            // 'subscriptionplansPrices' => $subscriptionplansPrices,
+            'agegroups' => Agegroup::all(),
+            'levels' => Level::all(),
+            'trainers' =>Trainer::all(),
+            'subscriptionplans' => Subscriptionplan::where('published', 1)->get(),
 
         ]);
     }

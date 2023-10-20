@@ -11,6 +11,7 @@ class Calendar extends Model
     protected $with = ['events'];
     protected $append = ['session_events'];
     use HasFactory;
+    
     public function events()
     {
         return $this->belongsToMany(Event::class, 'calendar_event')->withPivot('schedule_id');
