@@ -105,7 +105,7 @@ export default {
                             url:'/admin/dashboard/subscriptionplans/create',
                         },
                         {
-                            name: "All subscriptionplans plans",
+                            name: "All subscriptionplans",
                             link: '/admin/dashboard/subscriptionplans',
                             url:'/admin/dashboard/subscriptionplans',
                         },
