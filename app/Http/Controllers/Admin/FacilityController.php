@@ -59,10 +59,20 @@ class FacilityController extends Controller
         }
         unset($attributes['thumbnail']);
 
+        if (isset($attributes['trainers'])) {
+            $trainers = $attributes['trainers'];
+        }
+        unset($attributes['trainers']);
+
         if (isset($attributes['subscriptionplansPrices'])) {
             $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
         unset($attributes['subscriptionplansPrices']);
+
+        // if (isset($attributes['subscriptionplansPrices'])) {
+        //     $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
+        // }
+        // unset($attributes['subscriptionplansPrices']);
 
         $facility = Facility::create($attributes);
 
@@ -74,13 +84,23 @@ class FacilityController extends Controller
             $facility->thumbnail = $thumbnail;
         }
 
+        if (isset($trainers)) {
+            $facility->trainers()->sync($trainers);
+        }
+
         if (isset($subscriptionplansPrices)) {
             foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
-                // if($subscriptionplanPrice["price"]<=$facility->price){
-                    $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"] ?? 0]);
-                // }    
+                $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"]]);
             }
         }
+
+        // if (isset($subscriptionplansPrices)) {
+        //     foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
+        //         // if($subscriptionplanPrice["price"]<=$facility->price){
+        //             $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"] ?? 0]);
+        //         // }    
+        //     }
+        // }
 
         $facility->save();
 
@@ -95,16 +115,31 @@ class FacilityController extends Controller
 
     public function edit(Facility $facility)
     {
-        $subscriptionplans = $facility->subscriptionplans()->get();
-        // dd($facility->subscriptionplans()->get());
+        $subscriptionplans = Subscriptionplan::where('published', 1)->get();
+        $selectedSubscriptionplansIds = $facility->subscriptionplans()->pluck('subscriptionplan_id')->toArray();
         foreach ($subscriptionplans as $subscriptionplan) {
-            // dd($facility->subscriptionplans()->get());
-            $subscriptionplan->price = $facility->subscriptionplans()->find($subscriptionplan->id)->pivot->facility_price;
+            if (in_array($subscriptionplan->id, $selectedSubscriptionplansIds)) {
+                $subscriptionplan->price = $facility->subscriptionplans()->find($subscriptionplan->id)->pivot->facility_price;
+
+            } else {
+                $subscriptionplan->price =(float)$facility->price;
+            }
         }
         $subscriptionplansPrices = $subscriptionplans;
+        // $subscriptionplans = $facility->subscriptionplans()->get();
+        // // dd($facility->subscriptionplans()->get());
+        // foreach ($subscriptionplans as $subscriptionplan) {
+        //     // dd($facility->subscriptionplans()->get());
+        //     $subscriptionplan->price = $facility->subscriptionplans()->find($subscriptionplan->id)->pivot->facility_price;
+        // }
+        // $subscriptionplansPrices = $subscriptionplans;
         return Inertia::render('Admin/Dashboard/Facilities/Edit', [
             'facility' => $facility,
+            // 'subscriptionplansPrices' => $subscriptionplansPrices,
+            'trainers' => Trainer::all(),
             'subscriptionplansPrices' => $subscriptionplansPrices,
+            'subscriptionplansSelected' => $facility->subscriptionplans()->pluck('subscriptionplan_id'),
+            'trainersSelected' => $facility->trainers()->pluck('trainer_id'),
         ]);
 
     }
@@ -152,7 +187,7 @@ class FacilityController extends Controller
 
     public function destroy(Facility $facility)
     {
-        // dd($teacher->course->all());
+        // dd($teacher->facility->all());
         $facility->delete();
         Storage::disk('public')->deleteDirectory('assets/app/images/facilities/id_' . $facility['id']);
 

@@ -73,28 +73,34 @@
             <Button
                 @click.prevent="editRequest({ url: '/admin/dashboard/facilities/', data: { ...facilityInfo, subscriptionplansPrices: subscriptionplansPricesModified }, dataId: facility.id, only: ['flash', 'errors'] })"
                 :text="'Update Facility'" :color="'blue'"></Button>
-                <Button @click.prevent="deleteId = facility.id" :text="'Delete Facility'" :color="'red'"></Button>
+            <Button @click.prevent="deleteId = facility.id" :text="'Delete Facility'" :color="'red'"></Button>
         </template>
     </Modal>
 </template>
 <script>
 
 export default {
-    props: ["errors", "subscriptionplansPrices","facility"],
+    props: ["errors", "subscriptionplansPrices", "facility", "trainers", "subscriptionplansPrices", "subscriptionplansSelected", "trainersSelected"],
     data() {
         return {
+            facilityInfo: Object.assign(this.facility, { subscriptionplansSelected: this.subscriptionplansSelected, trainers: this.trainersSelected }),
             deleteId: false,
-            facilityInfo: this.facility,
+            subscriptionplanPricing: this.facility.selectedSubscriptionplansWithPrice
         };
     },
     computed: {
-        subscriptionplansPricesModified() {
-            var subscriptionplansPricesNew = this.subscriptionplansPrices.filter((item) => {
-                return item;
-            });
-            // var newArr = selectedSubscriptionplan.map(v => ({ ...v, price: this.courseInfo.price }))
-            return subscriptionplansPricesNew
+        selectedSubscriptionplansWithPrice() {
+            var selectedSubscriptionplan = this.subscriptionplansPrices.filter((item) => this.courseInfo.subscriptionplansSelected.includes(item.id));
+            // var newArr = selectedSubscriptionplan.map(v => (v.price = (v.price===0) ? ))
+            return selectedSubscriptionplan;
         }
+        // subscriptionplansPricesModified() {
+        //     var subscriptionplansPricesNew = this.subscriptionplansPrices.filter((item) => {
+        //         return item;
+        //     });
+        //     // var newArr = selectedSubscriptionplan.map(v => ({ ...v, price: this.courseInfo.price }))
+        //     return subscriptionplansPricesNew
+        // }
 
     },
     methods: {
