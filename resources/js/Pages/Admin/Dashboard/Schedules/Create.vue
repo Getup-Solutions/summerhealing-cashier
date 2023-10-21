@@ -1,6 +1,6 @@
 <template>
     <!-- Modal content -->
-    <Modal :modalHeadingText="type ? `Schedule ${type}` : 'Create new Schedule'" :modalHeadingResetButton="true"
+    <Modal :showError="showError" :modalHeadingText="type ? `Schedule ${type}` : 'Create new Schedule'" :modalHeadingResetButton="true"
         :modalWidth="2">
         <template #body>
             <div class="grid md:grid-cols-2 gap-6 gap-y-4">
@@ -66,14 +66,15 @@
         </template>
         <template #footer>
             <Button
-                @click.prevent="createRequest({ url: createURL, data: { ...createData, scheduleInfo: { ...scheduleInfo, days: getDaysSelected, daysEvent: daysEvent } }, only: ['flash', 'errors'] })"
+                @click.prevent="createSchedule"
                 :text="'Create Schedule'" :color="'blue'"></Button>
         </template>
     </Modal>
 </template>
 <script>
 export default {
-    props: ["errors", "days", "type", "scheduleInfoData","createURL","createData","eventTitle","eventTrainers","scheduleableType"],
+    props: ["errors", "days", "type", "scheduleInfoData","createURL","createData","eventTitle","eventTrainers","scheduleableType","showError"],
+    emits:['scheduleCreated'],
     data() {
         return {
             scheduleInfo: this.scheduleInfoData ?? {scheduleable_type:this.scheduleableType,scheduleable_id:null},
@@ -126,6 +127,12 @@ export default {
             return this.daysSelected.filter((element) => {
                 return this.getDays.map((element) => element.id).includes(element)
             });
+        }
+    },
+    methods:{
+        createSchedule(){
+            this.$emit('scheduleCreated',false)
+            createRequest({ url: this.createURL, data: { ...this.createData, scheduleInfo: { ...this.scheduleInfo, days: this.getDaysSelected, daysEvent: this.daysEvent } }, only: ['flash', 'errors'] })
         }
     }
 };

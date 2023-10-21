@@ -261,7 +261,7 @@ class SessionController extends Controller
                 'video_url' => 'required|max:200',
                 'size' => 'required',
                 'level' => 'required',
-                'trainers' => 'nullable',
+                'trainers' => 'required',
                 'subscriptionplansPrices' => 'nullable',
                 'published' => 'required|boolean',
                 'scheduleInfo' => 'nullable',

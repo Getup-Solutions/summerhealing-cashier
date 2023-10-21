@@ -5,7 +5,7 @@
 
     <div class="grid gap-4">
         <!-- Modal content -->
-        <Modal :modalHeadingText="'Edit class'" :modalHeadingResetButton="true" :modalWidth="2">
+        <Modal :showError="hideError" :modalHeadingText="'Edit class'" :modalHeadingResetButton="true" :modalWidth="2">
             <template #body>
                 <div class="grid md:grid-cols-2 gap-6 gap-y-4">
                     <div class="col-span-2 grid md:grid-cols-2 gap-6 gap-y-4">
@@ -178,14 +178,14 @@
             <template #footer>
                 <Button
                     @click.prevent="editRequest({ url: '/admin/dashboard/sessions/', data: { ...sessionInfo, subscriptionplansPrices: selectedSubscriptionplansWithPrice }, dataId: session.id, only: ['flash', 'errors'] })"
-                    :text="'Edit Class'" :color="'blue'"></Button>
+                    :text="'Update Class'" :color="'blue'"></Button>
                 <Button @click.prevent="deleteId = session.id" :text="'Delete Class'" :color="'red'"></Button>
 
             </template>
         </Modal>
 
                 <!-- Schedule edit Modal -->
-                <ScheduleEdit :days="days" :type="'Class'" :errors="errors" :editURL="'/admin/dashboard/sessions/'" :editDataId="session.id" :scheduleInfoData="schedule ?? {}" :daysSelectedData="daysSelectedData ?? []" :daysEventData="daysEventData ?? []"
+                <ScheduleEdit :showError="!hideError" @scheduleCreated="(value)=>hideError = value" :days="days" :type="'Class'" :errors="errors" :editURL="'/admin/dashboard/sessions/'" :editDataId="session.id" :scheduleInfoData="schedule ?? {}" :daysSelectedData="daysSelectedData ?? []" :daysEventData="daysEventData ?? []"
             :editData="getEditData" :eventTitle="sessionInfo.title" :eventTrainers="sessionInfo.trainers" :scheduleableType="'App\\Models\\Session'" :scheduleableId="session.id"></ScheduleEdit>
 
     </div>
@@ -198,6 +198,7 @@ export default {
             sessionInfo: Object.assign(this.session, { subscriptionplansSelected: this.subscriptionplansSelected, trainers: this.trainersSelected }),
             deleteId: false,
             subscriptionplanPricing: this.session.selectedSubscriptionplansWithPrice,
+            hideError:true
         };
     },
     computed: {

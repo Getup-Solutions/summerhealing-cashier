@@ -37,7 +37,7 @@
                     <slot name="body"></slot>
                 </div>
                 <!-- Modal footer -->
-                <Errors :errors="$page.props.errors ?? false"></Errors>
+                <Errors v-if="showError ?? true" :errors="$page.props.errors ?? false"></Errors>
                 <div
                     class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600"
                 >
@@ -48,7 +48,7 @@
 </template>
 <script>
 export default {
-    props: ["modalHeadingText", "modalHeadingResetButton", "modalWidth"],
+    props: ["modalHeadingText", "modalHeadingResetButton", "modalWidth","showError"],
     methods: {
         reloadPage() {
             router.get(this.$page.url);

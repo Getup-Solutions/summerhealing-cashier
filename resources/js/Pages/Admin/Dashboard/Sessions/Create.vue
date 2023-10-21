@@ -1,7 +1,7 @@
 <template>
     <div class="grid gap-4">
         <!-- Modal content -->
-        <Modal :modalHeadingText="'Create new Class'" :modalHeadingResetButton="true" :modalWidth="2">
+        <Modal :modalHeadingText="'Create new Class'" :showError="hideError" :modalHeadingResetButton="true" :modalWidth="2">
             <template #body>
                 <div class="grid md:grid-cols-2 gap-6 gap-y-4">
                     <div class="col-span-2 grid md:grid-cols-2 gap-6 gap-y-4">
@@ -181,7 +181,7 @@
         </Modal>
 
         <!-- Schedule create Modal -->
-        <ScheduleCreate :days="days" :type="'Session'" :errors="errors" :createURL="'/admin/dashboard/sessions'"
+        <ScheduleCreate :showError="!hideError" @scheduleCreated="(value)=>hideError = value" :days="days" :type="'Session'" :errors="errors" :createURL="'/admin/dashboard/sessions'"
             :createData="getCreateData" :eventTitle="sessionInfo.title" :eventTrainers="sessionInfo.trainers" :scheduleableType="'App\\Models\\Session'"></ScheduleCreate>
     </div>
 </template>
@@ -193,6 +193,7 @@ export default {
         return {
             sessionInfo: { trainers: [], subscriptionplansSelected: [] },
             subscriptionPricing: [],
+            hideError:true
         };
     },
 

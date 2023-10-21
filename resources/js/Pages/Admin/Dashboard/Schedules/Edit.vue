@@ -72,13 +72,14 @@
             </div>
         </template>
         <template #footer>
-            <Button @click.prevent="sendEdit()" :text="'Edit Schedule'" :color="'blue'"></Button>
+            <Button @click.prevent="editSchedule()" :text="'Update Schedule'" :color="'blue'"></Button>
         </template>
     </Modal>
 </template>
 <script>
 export default {
     props: ["errors", "days", "type", "scheduleInfoData", "editURL", "editData", "eventTitle", "eventTrainers", "scheduleableType","scheduleableId", "daysSelectedData", "daysEventData", "editDataId"],
+    emits:['scheduleCreated'],
     data() {
         return {
             scheduleInfo: this.scheduleInfoData ?? { scheduleable_type: this.scheduleableType, scheduleable_id: this.scheduleableId },
@@ -106,18 +107,9 @@ export default {
         // this.daysEvent = [this.sunEvents, this.monEvents, this.tueEvents, this.wedEvents, this.thuEvents, this.friEvents, this.satEvents]
     },
     methods: {
-        sendEdit() {
-            console.log(this.daysEventData);
-            console.log({ ...this.editData, scheduleInfo: { ...this.scheduleInfo, days: this.getDaysSelected, daysEvent: JSON.parse(JSON.stringify(this.daysEvent)) } })
+        editSchedule() {
+            this.$emit('scheduleCreated',false)
             editRequest({ url: this.editURL, data: { ...this.editData, scheduleInfo: { ...this.scheduleInfo, days: this.getDaysSelected, daysEvent: this.daysEvent } }, dataId: this.editDataId, only: ['flash', 'errors'] })
-            // console.log(this.editData);
-            // editRequest({ url: this.editURL, data: this.editData, dataId: this.editDataId, only: ['flash', 'errors'] })
-            // this.editData['_method'] = "put";
-            // router.get('/admin/dashboard/sessions', {
-            //     preserveState: true,
-            //     preserveScroll: true,
-            //     only: ["flash","errors"],
-            // });
         }
     },
     computed: {
