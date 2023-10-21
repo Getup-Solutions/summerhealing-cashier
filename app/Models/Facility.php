@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Carbon;
+use App\Models\Trainer;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 class Facility extends Model
 {
     use HasFactory;
@@ -100,5 +103,10 @@ class Facility extends Model
     public function subscriptionplans()
     {
         return $this->belongsToMany(Subscriptionplan::class, 'facility_subscriptionplan')->withPivot('facility_price');
+    }
+
+    public function trainers(): BelongsToMany
+    {
+        return $this->belongsToMany(Trainer::class, 'facility_trainer');
     }
 }

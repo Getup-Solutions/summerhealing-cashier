@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Course extends Model
 {
@@ -110,7 +111,7 @@ class Course extends Model
         return $this->belongsToMany(Subscriptionplan::class, 'course_subscriptionplan')->withPivot('course_price');
     }
 
-    public function trainers()
+    public function trainers(): BelongsToMany
     {
         return $this->belongsToMany(Trainer::class, 'course_trainer');
     }

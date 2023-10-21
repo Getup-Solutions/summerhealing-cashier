@@ -17,6 +17,16 @@ class Trainer extends Model
         return $this->belongsToMany(Course::class, 'course_trainer');
     }
 
+    public function facilities()
+    {
+        return $this->belongsToMany(Facility::class, 'facility_trainer');
+    }
+
+    public function sessions()
+    {
+        return $this->belongsToMany(Session::class, 'sesssion_trainer');
+    }
+
     /**
      * Get the user that owns the Trainer
      *
@@ -31,6 +41,8 @@ class Trainer extends Model
     {
         static::deleting(function ($trainer) {
             $trainer->courses()->detach();
+            $trainer->facilities()->detach();
+            $trainer->sessions()->detach();
         });
     }
 }

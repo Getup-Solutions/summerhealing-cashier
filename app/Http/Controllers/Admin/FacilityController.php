@@ -164,20 +164,43 @@ class FacilityController extends Controller
             );
         }
 
-        if (isset($attributes['subscriptionplansPrices'])) {
+        if (isset($attributes['trainers'])) {
+            $trainers = $attributes['trainers'];
+        }
+        unset($attributes['trainers']);
+
+        if(isset($attributes['subscriptionplansPrices'])) {
             $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
         }
         unset($attributes['subscriptionplansPrices']);
+
+
+        if (isset($trainers)) {
+            $facility->trainers()->sync($trainers);
+        }
 
         $facility->subscriptionplans()->sync([]);
 
         if (isset($subscriptionplansPrices)) {
             foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
-                if($subscriptionplanPrice["price"]<$facility->price){
-                    $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"]]);
-                }    
+                $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"]]);
             }
         }
+
+        // if (isset($attributes['subscriptionplansPrices'])) {
+        //     $subscriptionplansPrices = $attributes['subscriptionplansPrices'];
+        // }
+        // unset($attributes['subscriptionplansPrices']);
+
+        // $facility->subscriptionplans()->sync([]);
+
+        // if (isset($subscriptionplansPrices)) {
+        //     foreach ($subscriptionplansPrices as $subscriptionplanPrice) {
+        //         if($subscriptionplanPrice["price"]<$facility->price){
+        //             $facility->subscriptionplans()->attach($subscriptionplanPrice["id"], ['facility_price' => $subscriptionplanPrice["price"]]);
+        //         }    
+        //     }
+        // }
 
         $facility->update($attributes);
 
@@ -205,8 +228,9 @@ class FacilityController extends Controller
                 'price' => 'required|numeric|max:100000',
                 'description' => 'required|max:1000',
                 'excerpt' => 'required|max:1000',
-                'published' => 'required|boolean',
+                'trainers' => 'required',
                 'subscriptionplansPrices' => 'nullable',
+                'published' => 'required|boolean',
                 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' :  ['required','mimes:jpeg,png','max:2048'],
             ],
             [
