@@ -184,9 +184,13 @@
             </template>
         </Modal>
 
-                <!-- Schedule edit Modal -->
-                <ScheduleEdit :showError="!hideError" @scheduleCreated="(value)=>hideError = value" :days="days" :type="'Class'" :errors="errors" :editURL="'/admin/dashboard/sessions/'" :editDataId="session.id" :scheduleInfoData="schedule ?? {}" :daysSelectedData="daysSelectedData ?? []" :daysEventData="daysEventData ?? []"
-            :editData="getEditData" :eventTitle="sessionInfo.title" :eventTrainers="sessionInfo.trainers" :scheduleableType="'App\\Models\\Session'" :scheduleableId="session.id"></ScheduleEdit>
+        <!-- Schedule edit Modal -->
+        <ScheduleEdit :showError="!hideError" @scheduleCreated="(value) => hideError = value" :days="days" :type="'Class'"
+            :errors="errors" :editURL="'/admin/dashboard/sessions/'" :editDataId="session.id"
+            :scheduleInfoData="schedule ?? {}" :daysSelectedData="daysSelectedData ?? []"
+            :daysEventData="daysEventData ?? []" :editData="getEditData" :eventTitle="sessionInfo.title"
+            :eventTrainers="sessionInfo.trainers" :scheduleableType="'App\\Models\\Session'" :scheduleableId="session.id">
+        </ScheduleEdit>
 
     </div>
 </template>
@@ -198,12 +202,12 @@ export default {
             sessionInfo: Object.assign(this.session, { subscriptionplansSelected: this.subscriptionplansSelected, trainers: this.trainersSelected }),
             deleteId: false,
             subscriptionplanPricing: this.session.selectedSubscriptionplansWithPrice,
-            hideError:true
+            hideError: true
         };
     },
     computed: {
-        getEditData(){
-            return { ...this.sessionInfo, subscriptionplansPrices: this.selectedSubscriptionplansWithPrice};
+        getEditData() {
+            return { ...this.sessionInfo, subscriptionplansPrices: this.selectedSubscriptionplansWithPrice };
 
         },
         selectedSubscriptionplansWithPrice() {

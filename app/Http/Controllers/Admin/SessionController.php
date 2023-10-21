@@ -268,8 +268,8 @@ class SessionController extends Controller
                 'scheduleInfo.start_date' => Rule::requiredIf(isset(request()->scheduleInfo)),
                 'scheduleInfo.end_date' => Rule::requiredIf(isset(request()->scheduleInfo)),
                 'scheduleInfo.days' => Rule::requiredIf(isset(request()->scheduleInfo)),
-                // 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : 'required|mimes:jpeg,png |max:2096',
-                'thumbnail' => 'nullable',
+                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : ['required','mimes:jpeg,png','max:2048'],
+                // 'thumbnail' => 'nullable',
             ],
             [
                 'slug' => 'Enter a unique slug for your the subscriptionplan\'s link',

@@ -196,7 +196,7 @@ class CourseController extends Controller
                 'video_url' => 'required|max:200',
                 'level' => 'required',
                 'trainers' => 'required',
-                'subscriptionplansPrices' => 'required',
+                'subscriptionplansPrices' => 'nullable',
                 'published' => 'required|boolean',
                 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : ['required','mimes:jpeg,png','max:2048'],
             ],

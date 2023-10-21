@@ -46,7 +46,7 @@ class ScheduleController extends Controller
             // dd(in_array($day, $daysInSchedule));
             if (in_array($day, $daysInSchedule)) {
                 // dd('ss');
-                $dayEvents = $daysEvent[array_search($day, $this->dayNames)];
+                $dayEvents = $daysEvent[array_search($day, $this->dayNames)] ?? [];
                 foreach ($dayEvents as $eventInfo) {
 
                     $eventInfo["eventable_id"] = $eventInfo["eventable_id"] ?? $schedule["scheduleable_id"];
@@ -115,7 +115,7 @@ class ScheduleController extends Controller
 
         foreach ($this->dayNames as $day) {
             if (in_array($day, $daysInSchedule)) {
-                $dayEvents = $daysEvent[array_search($day, $this->dayNames)];
+                $dayEvents = $daysEvent[array_search($day, $this->dayNames)] ?? [];
                 foreach ($dayEvents as $eventInfo) {
                     $eventInfo["eventable_id"] = $eventInfo["eventable_id"] ?? $schedule["scheduleable_id"];
                     $eventInfo["eventable_type"] = $schedule["scheduleable_type"];
@@ -223,5 +223,9 @@ class ScheduleController extends Controller
         }
         $schedule->update($scheduleInfo);
         return;
+    }
+    public function destroy($schedule)
+    {
+        $schedule->delete();
     }
 }

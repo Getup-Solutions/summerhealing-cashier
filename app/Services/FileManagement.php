@@ -6,11 +6,28 @@ use Illuminate\Support\Facades\Storage;
 
 class FileManagement
 {
+    public function sanitizeFileName($string, $force_lowercase = true, $anal = false)
+    {
+        $strip = array(
+            "~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]",
+            "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;",
+            "â€”", "â€“", ",", "<", ".", ">", "/", "?"
+        );
+        $clean = trim(str_replace($strip, "", strip_tags($string)));
+        $clean = preg_replace('/\s+/', "-", $clean);
+        $clean = ($anal) ? preg_replace("/[^a-zA-Z0-9]/", "", $clean) : $clean;
+        return ($force_lowercase) ? (function_exists('mb_strtolower') ? mb_strtolower($clean, 'UTF-8') : strtolower($clean)) : $clean;
+    }
+
     public function uploadFile(
         string $path,
         $file = null,
         array $files = null,
-        array $appendFilesTo = array(), bool $deleteOldFile = false, string $oldFile = null, string $storeAsName = '') {
+        array $appendFilesTo = array(),
+        bool $deleteOldFile = false,
+        string $oldFile = null,
+        string $storeAsName = ''
+    ) {
         if (!empty($files)) {
             foreach ($files as $file) {
                 if (is_file($file)) {
@@ -20,20 +37,18 @@ class FileManagement
                 }
             }
             return $appendFilesTo;
-
         } else if (is_file($file)) {
-            if(!is_string($file)){
+            if (!is_string($file)) {
                 if (!empty($file) && !empty($file->extension() ?? '') && is_file($file)) {
                     if ($deleteOldFile) {
-                        if(!str_starts_with($oldFile, 'assets/static')){
+                        if (!str_starts_with($oldFile, 'assets/static')) {
                             if (Storage::disk('public')->exists($oldFile)) {
                                 Storage::delete($oldFile);
                             }
                         }
-
                     }
                     if (empty($storeAsName)) {
-                        $storeAsName = str_replace(' ', '_', $file->getClientOriginalName());
+                        $storeAsName = str_replace(' ', '_', $this->sanitizeFileName(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) .'.' . $file->extension());
                     } else {
                         $storeAsName = $storeAsName . '.' . $file->extension();
                     }
@@ -42,7 +57,6 @@ class FileManagement
             } else {
                 return $file;
             }
-
         } else {
             if (Storage::disk('public')->exists($file)) {
                 return $file;
@@ -75,7 +89,7 @@ class FileManagement
             $newFiles = array_values($oldFilesArray);
             return $newFiles;
         } else {
-            if(!str_starts_with($fileUrl, 'assets/static')){
+            if (!str_starts_with($fileUrl, 'assets/static')) {
                 if (Storage::disk('public')->exists($fileUrl)) {
                     Storage::disk('public')->delete($fileUrl);
                 }
@@ -84,7 +98,6 @@ class FileManagement
             } else {
                 return $fileUrl;
             }
-
         }
     }
 
