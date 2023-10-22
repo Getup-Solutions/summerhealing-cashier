@@ -40,14 +40,17 @@ class SubscriptionplanController extends Controller
     {
         $attributes = $this->validateSubscriptionplan();
 
-        $stripePlan = $this->stripe->plans->create([
-            'amount' => $attributes["price"] * 100,
-            'currency' => 'inr',
-            'interval' => 'day',
-            'active' => $attributes["published"] == 1,
-            "interval_count" => $attributes["validity"],
-            'product' => ['name' => $attributes["title"]],
-        ]);
+        // $stripePlan = $this->stripe->plans->create([
+        //     'amount' => $attributes["price"] * 100,
+        //     'currency' => 'inr',
+        //     'interval' => 'day',
+        //     'active' => $attributes["published"] == 1,
+        //     "interval_count" => $attributes["validity"],
+        //     'product' => ['name' => $attributes["title"]],
+        // ]);
+
+
+
 
         if ($attributes['thumbnail'] ?? false) {
             $thumbnail = $attributes['thumbnail'];
@@ -55,6 +58,13 @@ class SubscriptionplanController extends Controller
         }
 
         $subscriptionplan = Subscriptionplan::create($attributes);
+
+        $stripePlan = $this->stripe->prices->create([
+            'unit_amount' => $attributes["price"] * 100,
+            'currency' => 'aud',
+            'recurring' => ['interval' => 'day', 'interval_count' => $attributes['validity']],
+            'product_data' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id,],
+        ]);
 
         $subscriptionplan->plan_id = $stripePlan->id;
 
@@ -96,7 +106,7 @@ class SubscriptionplanController extends Controller
                 []
             );
         } catch (\Throwable $th) {
-            
+
         }
 
         $stripePlan = $this->stripe->plans->create([
@@ -110,12 +120,12 @@ class SubscriptionplanController extends Controller
 
         if ($attributes['thumbnail']) {
             $attributes['thumbnail'] =
-            $fileManagement->uploadFile(
-                file: $attributes['thumbnail'] ?? false,
-                deleteOldFile: $subscriptionplan->thumbnail ?? false,
-                oldFile: $subscriptionplan->thumbnail,
-                path: 'assets/app/images/subscriptionplans/id_' . $subscriptionplan['id'] . '/thumbnail',
-            );
+                $fileManagement->uploadFile(
+                    file: $attributes['thumbnail'] ?? false,
+                    deleteOldFile: $subscriptionplan->thumbnail ?? false,
+                    oldFile: $subscriptionplan->thumbnail,
+                    path: 'assets/app/images/subscriptionplans/id_' . $subscriptionplan['id'] . '/thumbnail',
+                );
         } else if ($subscriptionplan->thumbnail) {
             $fileManagement->deleteFile(
                 fileUrl: $subscriptionplan->thumbnail
@@ -136,7 +146,7 @@ class SubscriptionplanController extends Controller
                 []
             );
         } catch (\Throwable $th) {
-            
+
         }
         $subscriptionplan->delete();
         Storage::disk('public')->deleteDirectory('assets/app/images/subscriptionplans/id_' . $subscriptionplan['id']);
@@ -156,7 +166,7 @@ class SubscriptionplanController extends Controller
                 'validity' => 'required|numeric',
                 'description' => 'required|max:1000',
                 'published' => 'required|boolean',
-                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' :  ['required','mimes:jpeg,png','max:2048'],
+                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : ['required', 'mimes:jpeg,png', 'max:2048'],
             ],
             [
                 'slug' => 'Enter a unique slug for your the subscriptionplan\'s link',
