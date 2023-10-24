@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Credit;
+use App\Models\Facility;
+use App\Models\Session;
 use App\Models\Subscriptionplan;
 use App\Services\FileManagement;
 use Illuminate\Support\Facades\Auth;
@@ -33,38 +36,45 @@ class SubscriptionplanController extends Controller
 
     public function create()
     {
-        return Inertia::render('Admin/Dashboard/Subscriptionplans/Create');
+        return Inertia::render('Admin/Dashboard/Subscriptionplans/Create',[
+            'sessions'=>Session::all(),
+            'facilities'=>Facility::all(),
+        ]);
     }
 
     public function store(FileManagement $fileManagement)
     {
+        // dd(request()->all());
         $attributes = $this->validateSubscriptionplan();
-
-        // $stripePlan = $this->stripe->plans->create([
-        //     'amount' => $attributes["price"] * 100,
-        //     'currency' => 'inr',
-        //     'interval' => 'day',
-        //     'active' => $attributes["published"] == 1,
-        //     "interval_count" => $attributes["validity"],
-        //     'product' => ['name' => $attributes["title"]],
-        // ]);
-
-
-
 
         if ($attributes['thumbnail'] ?? false) {
             $thumbnail = $attributes['thumbnail'];
-            $attributes['thumbnail'] = false;
         }
+        // unset($attributes['thumbnail']);
+
+        if ($attributes['creditsInfo'] ?? false) {
+            $creditsInfo = $attributes['creditsInfo'];
+            // dd($attributes);
+        }
+        unset($attributes['creditsInfo']);
 
         $subscriptionplan = Subscriptionplan::create($attributes);
 
-        $stripePlan = $this->stripe->prices->create([
-            'unit_amount' => $attributes["price"] * 100,
+        $stripePlan = $this->stripe->plans->create([
+            'amount' => $attributes["price"] * 100,
             'currency' => 'aud',
-            'recurring' => ['interval' => 'day', 'interval_count' => $attributes['validity']],
-            'product_data' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id,],
+            'interval' => 'day',
+            'active' => $attributes["published"] == 1,
+            "interval_count" => $attributes["validity"],
+            'product' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
         ]);
+
+        // $stripePlan = $this->stripe->prices->create([
+        //     'unit_amount' => $attributes["price"] * 100,
+        //     'currency' => 'aud',
+        //     'recurring' => ['interval' => 'day', 'interval_count' => $attributes['validity']],
+        //     'product_data' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
+        // ]);
 
         $subscriptionplan->plan_id = $stripePlan->id;
 
@@ -75,7 +85,10 @@ class SubscriptionplanController extends Controller
             );
             $subscriptionplan->thumbnail = $thumbnail;
             $subscriptionplan->save();
+        }
 
+        if($creditsInfo ?? false) {
+            (new CreditController)->store($creditsInfo,$subscriptionplan->id);
         }
 
         if (Auth::guard('web')->check()) {
@@ -90,8 +103,14 @@ class SubscriptionplanController extends Controller
 
     public function edit(Subscriptionplan $subscriptionplan)
     {
+        // dd($subscriptionplan->credits()->where('creditable_id',0)->where('creditable_type','App\\Models\\Session')->first());
         return Inertia::render('Admin/Dashboard/Subscriptionplans/Edit', [
             'subscriptionplan' => $subscriptionplan,
+            'sessionGenCredits'=>$subscriptionplan->credits()->where('creditable_id',0)->where('creditable_type','App\\Models\\Session')->first(),
+            'facilityGenCredits'=>$subscriptionplan->credits()->where('creditable_id',0)->where('creditable_type','App\\Models\\Facility')->first(),
+            'sessionCredits'=>$subscriptionplan->credits()->where('creditable_id','!=',0)->where('creditable_type','App\\Models\\Session')->get(),
+            'facilityCredits'=>$subscriptionplan->credits()->where('creditable_id','!=',0)->where('creditable_type','App\\Models\\Facility')->get(),
+
         ]);
 
     }
@@ -106,17 +125,17 @@ class SubscriptionplanController extends Controller
                 []
             );
         } catch (\Throwable $th) {
-
+            return back()->with('error', $th->getMessage());
         }
 
-        $stripePlan = $this->stripe->plans->create([
-            'amount' => $attributes["price"] * 100,
-            'currency' => 'inr',
-            'interval' => 'day',
-            'active' => $attributes["published"] == 1,
-            "interval_count" => $attributes["validity"],
-            'product' => ['name' => $attributes["title"]],
-        ]);
+        // $stripePlan = $this->stripe->plans->create([
+        //     'amount' => $attributes["price"] * 100,
+        //     'currency' => 'inr',
+        //     'interval' => 'day',
+        //     'active' => $attributes["published"] == 1,
+        //     "interval_count" => $attributes["validity"],
+        //     'product' => ['name' => $attributes["title"]],
+        // ]);
 
         if ($attributes['thumbnail']) {
             $attributes['thumbnail'] =
@@ -132,8 +151,29 @@ class SubscriptionplanController extends Controller
             );
         }
 
-        $attributes["plan_id"] = $stripePlan->id;
+        // $attributes["plan_id"] = $stripePlan->id;
+
+        // $stripePlan = $this->stripe->prices->create([
+        //     'unit_amount' => $attributes["price"] * 100,
+        //     'currency' => 'aud',
+        //     'recurring' => ['interval' => 'day', 'interval_count' => $attributes['validity']],
+        //     'product_data' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => asset($attributes['thumbnail'])], 'unit_label' => $subscriptionplan->id],
+        // ]);
+
+        $stripePlan = $this->stripe->plans->create([
+            'amount' => $attributes["price"] * 100,
+            'currency' => 'aud',
+            'interval' => 'day',
+            'active' => $attributes["published"] == 1,
+            "interval_count" => $attributes["validity"],
+            'product' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
+        ]);
+
+        $attributes['plan_id'] = $stripePlan->id;
+
         $subscriptionplan->update($attributes);
+
+        $subscriptionplan->update(['plan_id' => $stripePlan->id]);
 
         return back()->with('success', 'Subscription plan Updated!');
     }
@@ -146,7 +186,7 @@ class SubscriptionplanController extends Controller
                 []
             );
         } catch (\Throwable $th) {
-
+            return back()->with('error', $th->getMessage());
         }
         $subscriptionplan->delete();
         Storage::disk('public')->deleteDirectory('assets/app/images/subscriptionplans/id_' . $subscriptionplan['id']);
@@ -167,6 +207,7 @@ class SubscriptionplanController extends Controller
                 'description' => 'required|max:1000',
                 'published' => 'required|boolean',
                 'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : ['required', 'mimes:jpeg,png', 'max:2048'],
+                "creditsInfo"=> 'nullable'
             ],
             [
                 'slug' => 'Enter a unique slug for your the subscriptionplan\'s link',

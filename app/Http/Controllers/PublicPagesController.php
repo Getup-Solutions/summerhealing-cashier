@@ -118,7 +118,7 @@ class PublicPagesController extends Controller
         // }
         return Inertia::render('Public/SubscriptionplanSingle', [
             'subscriptionplan'=>$subscriptionplan,
-            'user_have_subscriptionplan'=>$logged_user ? $logged_user->hasSubscriptionplan($subscriptionplan->id) : false,
+            'user_have_subscriptionplan'=>$logged_user ? $logged_user->subscribed($subscriptionplan->slug) : false,
             // 'user_have_subscriptionplan_expires_in' => $user_have_subscriptionplan_expires_in,
             'courses_included'=>$courses_included,
             'facilities_included'=>$facilities_included

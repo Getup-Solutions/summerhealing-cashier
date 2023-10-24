@@ -1,5 +1,7 @@
 <template>
   <div class="bg-gray-50 dark:bg-sh_dark_blue min-h-screen">
+    <Notification></Notification>
+
     <NavBar :navMenu="JSON.parse($page.props.mainMenu)" @cartOpen="cartClick()"></NavBar>
     <slot></slot>
     <CartNew
@@ -32,4 +34,5 @@ export default {
 import NavBar from "../PublicPagesLayout/PublicPagesLayoutComponents/NavBar.vue";
 import Footer from "../PublicPagesLayout/PublicPagesLayoutComponents/Footer.vue";
 import CartNew from "../../Pages/Cart/Cart.vue";
+import Notification from "./PublicPagesLayoutComponents/Notification.vue";
 </script>

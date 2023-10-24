@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\SessionController;
 use App\Http\Controllers\Admin\TrainingController;
+use App\Http\Controllers\Admin\CreditController;
 use App\Http\Controllers\Admin\SubscriptionplanController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Mail\UserRegistration;
@@ -118,6 +119,7 @@ Route::name('admin.')->group(function () {
                     Route::resource('/subscriptionplans', SubscriptionplanController::class)->except('show');
                     Route::resource('/leads', LeadController::class)->except('show');
                     Route::resource('/trainings', TrainingController::class)->except('show');
+                    Route::resource('/credits', CreditController::class)->except('show');
 
                     // Route::resource('/users', UserController::class)->except('show');
                     // Route::get('/profile-info', [AdminDashboardController::class, 'profileInfo'])->name('profile_info');

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('plan_id')->nullable();
             $table->string('title');
             $table->string('slug');
-            $table->string('thumbnail');
+            $table->string('thumbnail')->default('assets/static/img/subscription.png');
             $table->text('description');
             $table->boolean('published')->default(true);
             $table->float('price');

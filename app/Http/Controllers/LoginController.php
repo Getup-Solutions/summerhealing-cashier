@@ -77,7 +77,11 @@ class LoginController extends Controller
 
             $attributes = $this->validateUser();
 
-            Auth::login(User::create($attributes));
+            $user = User::create($attributes);
+            $user->roles()->attach([1]);
+            $user->save();
+
+            Auth::login($user);
             return redirect('/')->with('success', 'Your account has been created.');
     }
 
@@ -92,7 +96,7 @@ class LoginController extends Controller
             'email' => ['required','email', Rule::unique('users', 'email')->ignore($user)],
             // 'gender' => 'nullable',
             // 'birthday' => 'nullable',
-            'phone_number' => 'required',
+            'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'password' => (request()->input('password') ?? false || !$user->exists ) ? 'required|confirmed|min:6': 'nullable',
             'tac'=>'required|accepted'
         ],[

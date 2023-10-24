@@ -77,56 +77,14 @@
                             </div>
                         </div>
                         <div>
-                            <div v-if="user_have_subscription">
-                                <div class="px-2 md:px-2 pt-4 pb-1">
-                                    <div
-                                        v-if="
-                                            user_have_subscription.hasValidSubscription &&
-                                            user_have_subscription.expires_in >
-                                                0
-                                        "
-                                    >
-                                        <p class="mb-3 sh-para text-left">
-                                            You already have this Subscription,
-                                            Your subscription expires in
-                                            {{
-                                                Math.abs(
-                                                    user_have_subscription.expires_in
-                                                )
-                                            }}
-                                            days.
-                                        </p>
-                                    </div>
-                                    <div v-else>
-                                        <p class="mb-3 sh-para text-left">
-                                            Your subscription has been expired
-                                            {{
-                                                Math.abs(
-                                                    user_have_subscription.expires_in
-                                                )
-                                            }}
-                                            days ago!.
-                                        </p>
-                                        <AddToCartCard
-                                            :item="subscriptionplan"
-                                            :type="'subscription'"
-                                        ></AddToCartCard>
-                                    </div>
-
-                                    <!-- <p
-                                        class="mb-3 sh-para text-left" v-else-if=""
-                                    >
-                                        Validity expires in :
-                                        days
-                                    </p> -->
+                            <div v-if="user_have_subscriptionplan">
+                                <div class="px-2 bg-white/20 border-2 border-white md:px-4 rounded-lg py-4">
+                                    <p class="sh-para text-left">
+                                        You already have this Subscription
+                                    </p>
                                 </div>
                             </div>
 
-                            <!-- <AddToCartCard
-                                v-else
-                                :item="subscriptionplan"
-                                :type="'subscription'"
-                            ></AddToCartCard> -->
                             <PayNowCard v-else
                                 :item="subscriptionplan"
                                 :url="'/subscription-plan/checkout'"
@@ -144,7 +102,7 @@ export default {
         "subscriptionplan",
         "courses_included",
         "facilities_included",
-        "user_have_subscription",
+        "user_have_subscriptionplan",
     ],
 };
 </script>

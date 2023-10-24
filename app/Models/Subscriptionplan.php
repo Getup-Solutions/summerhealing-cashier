@@ -7,6 +7,7 @@ use App\Models\Facility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Subscriptionplan extends Model
 {
@@ -116,6 +117,11 @@ class Subscriptionplan extends Model
 
             },
         );
+    }
+
+    public function credits(): HasMany
+    {
+        return $this->hasMany(Credit::class);
     }
 
     // protected static function booted()

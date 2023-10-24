@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Cashier\Billable;
+use function Illuminate\Events\queueable;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, Billable;
@@ -227,8 +229,27 @@ class User extends Authenticatable
         );
     }
 
-    public function phone()
+    public function stripeName(): string|null
     {
-        return $this->hasOne(Trainer::class);
+        return $this->full_name;
     }
+
+    public function stripePhone(): string|null
+{
+    return $this->phone_number;
+}
+
+    protected static function booted(): void
+    {
+        static::updated(queueable(function (User $customer) {
+            if ($customer->hasStripeId()) {
+                $customer->syncStripeCustomerDetails();
+            }
+        }));
+    }
+
+    // public function phone()
+    // {
+    //     return $this->hasOne(Trainer::class);
+    // }
 }
