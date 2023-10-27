@@ -164,8 +164,8 @@
         </template>
         <template #footer>
             <Button
-                @click.prevent="createCredits()"
-                :text="'Create Credits'"
+                @click.prevent="editCredits()"
+                :text="'Update Credits'"
                 :color="'blue'"
             ></Button>
         </template>

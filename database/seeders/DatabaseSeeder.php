@@ -124,7 +124,7 @@ class DatabaseSeeder extends Seeder
         // });
 
         // Populating Sessions
-        // Session::factory(10)->create();
+        Session::factory(10)->create();
 
         // Session::all()->random(5)->each(function ($session) use ($subscriptionplans) {
         //     $session->subscriptionplans()->attach(
@@ -151,7 +151,7 @@ class DatabaseSeeder extends Seeder
 
         // Lead::factory(10)->create();
 
-        // Facility::factory(10)->create();
+        Facility::factory(10)->create();
         // Facility::all()->random(5)->each(function ($facility) use ($subscriptionplans) {
         //     $facility->subscriptionplans()->attach(
         //         $subscriptionplans->random(rand(1, 10))->pluck('id')->toArray(),

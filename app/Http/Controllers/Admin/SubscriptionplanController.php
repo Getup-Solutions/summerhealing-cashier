@@ -105,6 +105,8 @@ class SubscriptionplanController extends Controller
     {
         // dd($subscriptionplan->credits()->where('creditable_id',0)->where('creditable_type','App\\Models\\Session')->first());
         return Inertia::render('Admin/Dashboard/Subscriptionplans/Edit', [
+            'sessions'=>Session::all(),
+            'facilities'=>Facility::all(),
             'subscriptionplan' => $subscriptionplan,
             'sessionGenCredits'=>$subscriptionplan->credits()->where('creditable_id',0)->where('creditable_type','App\\Models\\Session')->first(),
             'facilityGenCredits'=>$subscriptionplan->credits()->where('creditable_id',0)->where('creditable_type','App\\Models\\Facility')->first(),
@@ -119,6 +121,8 @@ class SubscriptionplanController extends Controller
     {
 
         $attributes = $this->validateSubscriptionplan($subscriptionplan);
+
+        dd($attributes['creditsInfo']);
         try {
             $this->stripe->plans->delete(
                 $subscriptionplan->plan_id,
@@ -137,6 +141,12 @@ class SubscriptionplanController extends Controller
         //     'product' => ['name' => $attributes["title"]],
         // ]);
 
+        if ($attributes['creditsInfo'] ?? false) {
+            $creditsInfo = $attributes['creditsInfo'];
+            // dd($attributes);
+        }
+        unset($attributes['creditsInfo']);
+
         if ($attributes['thumbnail']) {
             $attributes['thumbnail'] =
                 $fileManagement->uploadFile(
@@ -149,6 +159,10 @@ class SubscriptionplanController extends Controller
             $fileManagement->deleteFile(
                 fileUrl: $subscriptionplan->thumbnail
             );
+        }
+
+        if($creditsInfo ?? false) {
+            (new CreditController)->update($creditsInfo,$subscriptionplan->id);
         }
 
         // $attributes["plan_id"] = $stripePlan->id;
