@@ -92,7 +92,7 @@
             </template>
         </Modal>
 
-        <CreditCreate :errors="errors" :showError="!hideError" @scheduleCreated="(value)=>hideError = value" :sessions="sessions" :facilities="facilities" :createURL="'/admin/dashboard/subscriptionplans'" :createData="subscriptionPlanInfo"></CreditCreate>
+        <CreditCreate :errors="errors" :showError="!hideError" @creditsCreated="(value)=>hideError = value" :sessions="sessions" :facilities="facilities" :createURL="'/admin/dashboard/subscriptionplans'" :createData="subscriptionPlanInfo"></CreditCreate>
     </div>
 </template>
 <script>

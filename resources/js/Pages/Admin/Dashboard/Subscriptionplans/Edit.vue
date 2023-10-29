@@ -2,6 +2,7 @@
     <DeleteAlert v-if="deleteId" :id="deleteId" @close="deleteId = false" :url="'/admin/dashboard/subscriptionplans/'"
         :text="'Deleting the subscription plan will permanently removed from the database. You can\'t recover the subscription plan again. Are you sure about deleting?'">
     </DeleteAlert>
+    <div class="grid gap-8">
     <!-- Modal content -->
     <Modal :modalHeadingText="'Edit Subscriptionplan Plan'" :modalHeadingResetButton="true" :modalWidth="2"
         :showError="hideError">
@@ -49,9 +50,11 @@
         </template>
     </Modal>
 
-    <CreditEdit :errors="errors" :showError="!hideError" @scheduleUpdated="(value) => hideError = value" :sessions="sessions"
-        :facilities="facilities" :editURL="'/admin/dashboard/subscriptionplans/'" :editData="subscriptionPlanInfo"
+    <CreditEdit :errors="errors" :showError="!hideError" @creditsEdited="(value) => hideError = value" :sessions="sessions"
+        :facilities="facilities" :editURL="'/admin/dashboard/subscriptionplans/'" :editData="subscriptionplanInfo" :editDataId="subscriptionplan.id"
         :sessionGenCredits="sessionGenCredits" :facilityGenCredits="facilityGenCredits" :facilityCredits="facilityCredits" :sessionCredits="sessionCredits"></CreditEdit>
+    </div>
+
 </template>
 <script>
 export default {
@@ -60,6 +63,7 @@ export default {
         return {
             subscriptionplanInfo: this.subscriptionplan,
             deleteId: false,
+            hideError:true
         };
     },
     mounted() {

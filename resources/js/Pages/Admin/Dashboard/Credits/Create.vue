@@ -14,6 +14,7 @@
                     :type="'number'"
                     :min="'0'"
                     v-model="sessionGenCredits.credits"
+                    :error="errors['creditsInfo.sessionGenCredits.credits']"
                 >
                 </FormSimpleInput>
                 <FormSimpleInput
@@ -22,6 +23,7 @@
                     :type="'number'"
                     :min="0"
                     v-model="facilityGenCredits.credits"
+                    :error="errors['creditsInfo.facilityGenCredits.credits']"
                 >
                 </FormSimpleInput>
             </div>

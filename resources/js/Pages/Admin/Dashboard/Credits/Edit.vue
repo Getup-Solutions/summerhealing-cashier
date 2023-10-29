@@ -173,8 +173,8 @@
 </template>
 <script>
 export default {
-    props: ["errors", "sessions", "facilities","editData","editURL","showError","sessionCredits","facilityCredits","sessionGenCredits","facilityGenCredits"],
-    emits: ["creditsUpdated"],
+    props: ["errors", "sessions", "facilities","editData","editURL","showError","sessionCredits","facilityCredits","sessionGenCredits","facilityGenCredits","editDataId"],
+    emits: ["creditsEdited"],
     data() {
         return {
             sessionCredits: this.sessionCredits,
@@ -223,7 +223,7 @@ export default {
             return filteredFacilities;
         },
         editCredits() {
-            this.$emit("creditsUpdated", false);
+            this.$emit("creditsEdited", false);
             console.log({
                 sessionGenCredits: this.sessionGenCredits,
                 facilityGenCredits: this.facilityGenCredits,
@@ -239,7 +239,8 @@ export default {
             editRequest({
                 url: this.editURL,
                 data: { ...this.editData, creditsInfo: creditsData},
-                only: ["flash", "errors"],
+                dataId:this.editDataId,
+                only: ["flash", "errors","sessionGenCredits","facilityGenCredits","subscriptionplan"],
             });
         },
     },
