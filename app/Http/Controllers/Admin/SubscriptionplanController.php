@@ -61,14 +61,14 @@ class SubscriptionplanController extends Controller
 
         $subscriptionplan = Subscriptionplan::create($attributes);
 
-        // $stripePlan = $this->stripe->plans->create([
-        //     'amount' => $attributes["price"] * 100,
-        //     'currency' => 'aud',
-        //     'interval' => 'day',
-        //     'active' => $attributes["published"] == 1,
-        //     "interval_count" => $attributes["validity"],
-        //     'product' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
-        // ]);
+        $stripePlan = $this->stripe->plans->create([
+            'amount' => $attributes["price"] * 100,
+            'currency' => 'aud',
+            'interval' => 'day',
+            'active' => $attributes["published"] == 1,
+            "interval_count" => $attributes["validity"],
+            'product' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
+        ]);
 
         // $stripePlan = $this->stripe->prices->create([
         //     'unit_amount' => $attributes["price"] * 100,
@@ -77,8 +77,8 @@ class SubscriptionplanController extends Controller
         //     'product_data' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
         // ]);
 
-        // $subscriptionplan->plan_id = $stripePlan->id;
-        $subscriptionplan->plan_id = '';
+        $subscriptionplan->plan_id = $stripePlan->id;
+        // $subscriptionplan->plan_id = '';
 
         if ($thumbnail ?? false) {
             $thumbnail = $fileManagement->uploadFile(
@@ -125,14 +125,14 @@ class SubscriptionplanController extends Controller
 
         $attributes = $this->validateSubscriptionplan($subscriptionplan);
 
-        // try {
-        //     $this->stripe->plans->delete(
-        //         $subscriptionplan->plan_id,
-        //         []
-        //     );
-        // } catch (\Throwable $th) {
-        //     // return back()->with('error', $th->getMessage());
-        // }
+        try {
+            $this->stripe->plans->delete(
+                $subscriptionplan->plan_id,
+                []
+            );
+        } catch (\Throwable $th) {
+            // return back()->with('error', $th->getMessage());
+        }
 
         // $stripePlan = $this->stripe->plans->create([
         //     'amount' => $attributes["price"] * 100,
@@ -176,22 +176,22 @@ class SubscriptionplanController extends Controller
         //     'product_data' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => asset($attributes['thumbnail'])], 'unit_label' => $subscriptionplan->id],
         // ]);
 
-        // $stripePlan = $this->stripe->plans->create([
-        //     'amount' => $attributes["price"] * 100,
-        //     'currency' => 'aud',
-        //     'interval' => 'day',
-        //     'active' => $attributes["published"] == 1,
-        //     "interval_count" => $attributes["validity"],
-        //     'product' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
-        // ]);
+        $stripePlan = $this->stripe->plans->create([
+            'amount' => $attributes["price"] * 100,
+            'currency' => 'aud',
+            'interval' => 'day',
+            'active' => $attributes["published"] == 1,
+            "interval_count" => $attributes["validity"],
+            'product' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
+        ]);
 
         // $attributes['plan_id'] = $stripePlan->id;
-        $attributes['plan_id'] = '';
+        // $attributes['plan_id'] = '';
 
         $subscriptionplan->update($attributes);
 
-        // $subscriptionplan->update(['plan_id' => $stripePlan->id]);
-        $subscriptionplan->update(['plan_id' => '']);
+        $subscriptionplan->update(['plan_id' => $stripePlan->id]);
+        // $subscriptionplan->update(['plan_id' => '']);
 
         return back()->with('success', 'Subscription plan Updated!');
     }
@@ -199,10 +199,10 @@ class SubscriptionplanController extends Controller
     public function destroy(Subscriptionplan $subscriptionplan)
     {
         try {
-            // $this->stripe->plans->delete(
-            //     $subscriptionplan->plan_id,
-            //     []
-            // );
+            $this->stripe->plans->delete(
+                $subscriptionplan->plan_id,
+                []
+            );
             $subscriptionplan->credits()->delete();
             $subscriptionplan->delete();
             Storage::disk('public')->deleteDirectory('assets/app/images/subscriptionplans/id_' . $subscriptionplan['id']);
