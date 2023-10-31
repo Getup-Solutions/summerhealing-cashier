@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Day;
 use App\Models\Calendar;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Booking;
 
 class Event extends Model
 {
@@ -53,5 +55,15 @@ class Event extends Model
     public function calendars()
     {
         return $this->belongsToMany(Calendar::class, 'calendar_event');
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function bookingsFor($date)
+    {
+        return $this->bookings()->where('date',$date)->get();
     }
 }

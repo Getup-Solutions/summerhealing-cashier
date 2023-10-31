@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Cashier\Billable;
 use function Illuminate\Events\queueable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Booking;
 
 class User extends Authenticatable
 {
@@ -246,6 +248,11 @@ class User extends Authenticatable
                 $customer->syncStripeCustomerDetails();
             }
         }));
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
     }
 
     // public function phone()
