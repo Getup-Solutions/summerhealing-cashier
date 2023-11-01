@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('day');
             $table->string('day_name');
             $table->string('month_name');
-            $table->boolean('is_today')->default(false);
+            // $table->boolean('is_today')->default(false);
             $table->timestamps();
         });
     }

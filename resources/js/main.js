@@ -48,9 +48,9 @@ function editRequest({
     data['_method'] = "put";
     console.log(data);
     router.post(url + (dataId ?? ''), data, {
-        // preserveState: state_preservation,
-        // preserveScroll: scroll_preservation,
-        // only: only_list,
+        preserveState: state_preservation,
+        preserveScroll: scroll_preservation,
+        only: only_list,
     });
 }
 

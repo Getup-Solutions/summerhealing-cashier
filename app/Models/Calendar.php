@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Calendar extends Model
 {
     protected $with = ['events'];
-    protected $append = ['session_events'];
+    // protected $appends = ['session_events'];
     use HasFactory;
     
     public function events()
@@ -17,7 +17,14 @@ class Calendar extends Model
         return $this->belongsToMany(Event::class, 'calendar_event')->withPivot('schedule_id');
     }
     
-    public function sessionEvents(){
+    public function sessionEvents()
+    {
          return $this->events()->where('eventable_type','=','App\Models\Session')->get();
+    }
+
+    public function is_today()
+    {
+        return  $this->formated_date === date("Y-m-d",strtotime("today"));
+        // return date("Y-m-d",strtotime("today"));
     }
 }

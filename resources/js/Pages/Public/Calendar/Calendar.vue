@@ -17,10 +17,13 @@
                                 <ClockIcon class="text-gray-900 w-4">
                                 </ClockIcon>{{ tConvert(sessionEvent.end_time) }}
                             </div>
-                            <div class="bg-green-700 rounded-full w-24 text-white text-xs font-semibold py-1 flex gap-1 justify-center">
-                                {{ sessionEvent["size"]}} Available
+                            <div
+                                class="bg-green-700 rounded-full w-24 text-white text-xs font-semibold py-1 flex gap-1 justify-center">
+                                {{ sessionEvent["size"] }} Available
                             </div>
-                            <div class="rounded-full text-sm cursor-pointer hover:bg-blue-800 bg-sh_dark_blue py-2 px-2 w-40 text-center text-white">Mark Attendence {{ markAttendence(sessionEvent.start_time) }}</div>
+                            <div class="rounded-full text-sm cursor-pointer hover:bg-blue-800 bg-sh_dark_blue py-1.5 px-2 w-36 text-center text-white"
+                                @click="eventAction(sessionEvent, eventStatus(sessionEvent).buttonLink)">{{
+                                    eventStatus(sessionEvent).buttonText }}</div>
                             <!-- <h3>{{ calendar[selectedDate]["events"] }}</h3> -->
                         </div>
                     </div>
@@ -32,6 +35,9 @@
     </div>
 </template>
 <script>
+import { usePage } from '@inertiajs/vue3'
+
+const page = usePage()
 export default {
     props: ["calendar"],
     data() {
@@ -49,12 +55,43 @@ export default {
         },
 
     },
-    methods: {        
-        markAttendence(time){
+    methods: {
+        eventStatus(event) {
+            if (this.calendar[this.selectedDate]["is_today"]) {
+                var timeDifference = event.start_time.slice(0, 2) - new Date().getHours()
+                console.log(timeDifference);
+                if (timeDifference < 0) {
+                    return { buttonLink: false, buttonText: 'Event Passed' }
+                } else if (timeDifference >2 ) {
+                    return { buttonLink: 'calendar/book-event', buttonText: 'Book Now' }
+                } else {
+                    return { buttonLink: '', buttonText: 'Mark Attendence' }
+                }
+
+            } else {
+                return { buttonLink: '', buttonText: 'Book Now' }
+            }
+            // console.log(this.calendar[this.selectedDate]["is_today"]);
+        },
+        eventAction(event, url) {
+            // console.log(event.id);
+            var data = { event_id: event.id, calendar_id: this.calendar[this.selectedDate]['id'], date: this.calendar[this.selectedDate]['formated_date'], user_id: page.props.is_user_logged ? page.props.logged_user.id : false }
+            console.log(data);
+            router.post(url, data)
+        },
+        canAttendNow(event) {
+            console.log(event.start_time.slice(0, 2))
+            console.log(this.tConvert(event.start_time));
+            if ((event.start_time.slice(0, 2) - new Date().getHours()) < 0) {
+                return
+            } event.start_time.slice(0, 2) - new Date().getHours()
+            return event.start_time.slice(0, 2) - new Date().getHours()
+        },
+        markAttendence(time) {
             time = time.slice(0, -3);
             console.log(time);
             console.log(this.calendar[this.selectedDate]["formated_date"]);
-            var diffMs = new Date(this.calendar[this.selectedDate]["formated_date"]+' '+time) - new Date();
+            var diffMs = new Date(this.calendar[this.selectedDate]["formated_date"] + ' ' + time) - new Date();
             return Math.floor(diffMs / 86400000);
         },
         tConvert(time) {
@@ -77,4 +114,5 @@ import {
     ClockIcon
 } from "@heroicons/vue/24/solid";
 import CalendarHeader from "../../../Shared/Calendar/CalendarHeader.vue";
+import { router } from "@inertiajs/vue3";
 </script>

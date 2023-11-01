@@ -170,7 +170,7 @@ class DatabaseSeeder extends Seeder
                 'day'=> date("d",strtotime("today + ".$i." day")),
                 'day_name'=> date("l",strtotime("today + ".$i." day")),
                 'month_name'=> date("F",strtotime("today + ".$i." day")),
-                'is_today'=> date("Y/m/d") === date("Y/m/d",strtotime("today + ".$i." day"))
+                // 'is_today'=> date("Y/m/d",strtotime("today + ".$i." day")) === date("Y/m/d",strtotime("today"))
             ]);
         }
 
