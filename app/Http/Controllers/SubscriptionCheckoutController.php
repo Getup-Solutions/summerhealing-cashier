@@ -59,7 +59,7 @@ class SubscriptionCheckoutController extends Controller
     {
         $user = Auth::user();
         $plan = $request->get('plan');
-        if ($user->subscribed($plan['slug'])) {
+        if ($user->subscribed($plan['slug']) || $user->subscriptions->count()>0) {
             return redirect('/')->with('success', 'You already have a valid subscription to ' . $plan["title"]);
         } else {
             $paymentMethodID = $request->get('payment_method');

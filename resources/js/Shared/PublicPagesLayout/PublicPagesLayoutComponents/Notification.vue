@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed top-24 right-10 flex p-4 mb-4 text-sm z-30 shadow-xl rounded-lg"
+    <div class="fixed top-10 right-10 flex p-4 mb-4 text-sm z-30 shadow-xl rounded-lg"
         :class="{ 'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400': flash.success, 'text-white bg-red-700 dark:bg-red-700 dark:text-white': flash.error }"
         role="alert" v-if="show && (flash.success || flash.error)">
         <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20"
@@ -25,7 +25,7 @@ export default {
     },
     mounted() {
         this.show = true;
-        setTimeout(() => (this.show = false), 3000);
+        setTimeout(() => (this.show = false), 4000);
     },
     computed: {
         flash() {

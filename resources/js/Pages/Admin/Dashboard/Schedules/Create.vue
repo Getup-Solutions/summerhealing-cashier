@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div class="mt-4">
-                        <Button @click.prevent="daysEvent[index].push({ event_title:eventTitle,event_trainers:JSON.stringify(eventTrainers),eventable_type:scheduleableType, start_time: '00:00', end_time: '00:00', size: 5 })"
+                        <Button @click.prevent="daysEvent[index].push({ event_title:'',eventable_type:scheduleableType, start_time: '00:00', end_time: '00:00', size: 5 })"
                             :text="'Create new Event'" :color="'blue'" :fullWidth="true"></Button>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
 </template>
 <script>
 export default {
-    props: ["errors", "days", "type", "scheduleInfoData","createURL","createData","eventTitle","eventTrainers","scheduleableType","showError"],
+    props: ["errors", "days", "type", "scheduleInfoData","createURL","createData","scheduleableType","showError"],
     emits:['scheduleCreated'],
     data() {
         return {

@@ -1,14 +1,10 @@
 <template>
     <div class=" min-h-screen bg-white dark:bg-gray-50">
         <CalendarHeader :calendar="calendar" v-model="selectedDate"></CalendarHeader>
-        <div class="p-10">
+        <div class="md:px-10 md:py-8">
             <div class="grid gap-2">
                 <div class=" max-w-2xl" v-for="sessionEvent in sessionEvents" :key="sessionEvent">
-                    <div class=" border-b border-b-gray-400 p-4 grid grid-cols-6">
-                        <div>
-
-
-                        </div>
+                    <div class=" border-b border-b-gray-400 pb-4 grid grid-cols-6">
                         <div class="col-span-4 grid gap-2">
                             <p class="text-xl font-medium text-gray-800">{{ sessionEvent["event_title"] }}</p>
                             <p class="text-sm font-medium text-gray-800">Trainer: {{ sessionEvent["trainer_names"] }}</p>
@@ -21,7 +17,7 @@
                                 class="bg-green-700 rounded-full w-24 text-white text-xs font-semibold py-1 flex gap-1 justify-center">
                                 {{ sessionEvent["size"] }} Available
                             </div>
-                            <div class="rounded-full text-sm cursor-pointer hover:bg-blue-800 bg-sh_dark_blue py-1.5 px-2 w-36 text-center text-white"
+                            <div class="rounded-full text-sm cursor-pointer py-1.5 px-2 w-36 text-center text-white" :class="eventStatus(sessionEvent).buttonLink ? 'hover:bg-blue-800 bg-sh_dark_blue':'bg-gray-700'"
                                 @click="eventAction(sessionEvent, eventStatus(sessionEvent).buttonLink)">{{
                                     eventStatus(sessionEvent).buttonText }}</div>
                             <!-- <h3>{{ calendar[selectedDate]["events"] }}</h3> -->
@@ -40,6 +36,10 @@ import { usePage } from '@inertiajs/vue3'
 const page = usePage()
 export default {
     props: ["calendar"],
+    mounted() {
+        console.log(this.calendar.findIndex((element) => element['is_today'] === true))
+        this.selectedDate = this.calendar.findIndex((element) => element['is_today'] === true);
+    },
     data() {
         return {
             selectedDate: 0,
@@ -57,27 +57,32 @@ export default {
     },
     methods: {
         eventStatus(event) {
+            console.log(this.calendar[this.selectedDate]["is_today"]);
             if (this.calendar[this.selectedDate]["is_today"]) {
+                console.log(new Date() - new Date(this.calendar[this.selectedDate]['formated_date']) > 0);
                 var timeDifference = event.start_time.slice(0, 2) - new Date().getHours()
-                console.log(timeDifference);
+                // console.log(new Date().getHours());
                 if (timeDifference < 0) {
                     return { buttonLink: false, buttonText: 'Event Passed' }
-                } else if (timeDifference >2 ) {
+                } else if (timeDifference > 2) {
                     return { buttonLink: 'calendar/book-event', buttonText: 'Book Now' }
                 } else {
-                    return { buttonLink: '', buttonText: 'Mark Attendence' }
+                    return { buttonLink: 'calendar/attendance-event', buttonText: 'Mark Attendence' }
                 }
-
+            } else if (new Date() - new Date(this.calendar[this.selectedDate]['formated_date']) > 0) {
+                return { buttonLink: false, buttonText: 'Event Passed' }
             } else {
-                return { buttonLink: '', buttonText: 'Book Now' }
+                return { buttonLink: 'calendar/book-event', buttonText: 'Book Now' }
             }
             // console.log(this.calendar[this.selectedDate]["is_today"]);
         },
         eventAction(event, url) {
             // console.log(event.id);
-            var data = { event_id: event.id, calendar_id: this.calendar[this.selectedDate]['id'], date: this.calendar[this.selectedDate]['formated_date'], user_id: page.props.is_user_logged ? page.props.logged_user.id : false }
+            var data = { event_id: event.id, calendar_id: this.calendar[this.selectedDate]['id'], date: this.calendar[this.selectedDate]['formated_date'], time: `${this.tConvert(event.start_time)} - ${this.tConvert(event.end_time)}` }
             console.log(data);
-            router.post(url, data)
+            if (url) {
+                router.get(url, data)
+            }
         },
         canAttendNow(event) {
             console.log(event.start_time.slice(0, 2))

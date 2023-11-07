@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\ScheduleController;
+// use App\Models\Agegroup;
 use App\Models\Agegroup;
 use App\Models\Day;
 use App\Models\Level;
@@ -52,7 +53,6 @@ class SessionController extends Controller
 
         $attributes = $this->validateSession();
         // dd($attributes);
-
 
         if ($attributes['scheduleInfo'] ?? false) {
             $scheduleInfo = $attributes['scheduleInfo'];
@@ -145,19 +145,19 @@ class SessionController extends Controller
             'subscriptionplansSelected' => $session->subscriptionplans()->pluck('subscriptionplan_id'),
             'trainersSelected' => $session->trainers()->pluck('trainer_id'),
             // 'schedule'=> $session->schedule()->first(),
-            'days'=>Day::all(),
+            'days' => Day::all(),
             // 'daysSelectedData'=>isset($daysSelected) ? $daysSelected : [],
             // 'daysEventData'=> isset($daysEvent) ? $daysEvent : []
         ];
 
         if (isset($schedule_id)) {
-        // dd('ss');
+            // dd('ss');
 
-        $dataTosend = array_merge([
+            $dataTosend = array_merge([
                 'schedule' => $session->schedule()->first(),
                 'daysSelectedData' => $daysSelected,
                 'daysEventData' => $daysEvent
-            ],$dataTosend);
+            ], $dataTosend);
         }
         // dd($dataTosend);
 
@@ -214,7 +214,8 @@ class SessionController extends Controller
         }
 
         if (isset($scheduleInfo)) {
-            if(isset($scheduleInfo["id"])){
+            if ($session->schedule()->first()) {
+                $scheduleInfo["id"] = $session->schedule()->first()->id;
                 $scheduleController = new ScheduleController();
                 $scheduleController->update($scheduleInfo);
             } else {
@@ -224,9 +225,6 @@ class SessionController extends Controller
                 $scheduleController = new ScheduleController();
                 $scheduleController->store($scheduleInfo);
             }
-            // $scheduleInfo["scheduleable_type"] = 'App\Models\Session';
-            // $scheduleInfo["scheduleable_id"] = $session->id;
-
         }
 
         $session->update($attributes);
@@ -253,7 +251,7 @@ class SessionController extends Controller
         return request()->validate(
             [
                 'title' => 'required|min:3|max:50',
-                'slug' => ['required',], // Rule::unique('sessions', 'slug')->ignore($session)],
+                'slug' => ['required'], // Rule::unique('sessions', 'slug')->ignore($session)],
                 'price' => 'required|numeric|max:100000',
                 'description' => 'required|max:1000',
                 'excerpt' => 'required|max:1000',
@@ -268,7 +266,7 @@ class SessionController extends Controller
                 'scheduleInfo.start_date' => Rule::requiredIf(isset(request()->scheduleInfo)),
                 'scheduleInfo.end_date' => Rule::requiredIf(isset(request()->scheduleInfo)),
                 'scheduleInfo.days' => Rule::requiredIf(isset(request()->scheduleInfo)),
-                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : ['required','mimes:jpeg,png','max:2048'],
+                'thumbnail' => is_string(request()->input('thumbnail')) ? 'required' : ['required', 'mimes:jpeg,png', 'max:2048'],
                 // 'thumbnail' => 'nullable',
             ],
             [

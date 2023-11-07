@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Booking extends Model
+class Attendance extends Model
 {
     use HasFactory;
     protected $with=['user'];
@@ -18,7 +18,7 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function bookable(): MorphTo
+    public function attendanceable(): MorphTo
     {
         return $this->morphTo();
     }

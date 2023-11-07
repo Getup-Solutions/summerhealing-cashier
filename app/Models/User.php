@@ -55,10 +55,27 @@ class User extends Authenticatable
 
     protected $appends = ['avatar_url', 'full_name'];
 
-    public function subscriptionplans()
+    // public function subscriptionplans()
+    // {
+    //     return $this->belongsToMany(Subscriptionplan::class, 'subscriptionplan_user')->withPivot('created_at');
+    //     ;
+    // }
+
+    public function creditsLeftTo($type,$id)
     {
-        return $this->belongsToMany(Subscriptionplan::class, 'subscriptionplan_user')->withPivot('created_at');
-        ;
+        $subscriptionplansStripe = $this->subscriptions;
+        $credits = 0;
+        foreach ($subscriptionplansStripe as $subscriptionplanStripe) {
+            if($subscriptionplanStripe->active()){
+                $subscriptionplan = Subscriptionplan::where('slug',$subscriptionplanStripe->name)->first();
+                $credits = $credits + $subscriptionplan->creditTo($type,$id);
+                $subscriptionCreateDate = $subscriptionplanStripe->created_at;
+            }
+        }
+        $totalCredits = $credits;
+        $usedCredits = $this->attendances()->where('attendanceable_type',$type)->where('attendanceable_id',$id)->whereDate('created_at', '>=', $subscriptionCreateDate)->count();
+        $remainingCredits = $totalCredits - $usedCredits;
+        return $remainingCredits;
     }
 
     public function hasAnyRole($roles)
@@ -254,6 +271,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    // public function bookings(): HasMany
+    // {
+    //     return $this->hasMany(Booking::class);
+    // }
 
     // public function phone()
     // {

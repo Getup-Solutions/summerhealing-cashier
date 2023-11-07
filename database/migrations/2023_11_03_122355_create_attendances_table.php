@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id');
             $table->foreignId('calendar_id');
             $table->date('date');
             $table->foreignId('user_id');
-            $table->integer('bookable_id')->nullable();
-            $table->string('bookable_type')->nullable();
+            $table->integer('attendanceable_id')->nullable();
+            $table->string('attendanceable_type')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('attendances');
     }
 };

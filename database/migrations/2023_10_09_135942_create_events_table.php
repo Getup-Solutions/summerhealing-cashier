@@ -16,15 +16,10 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->integer('size');
-            // $table->foreignId('subscriptionplan_id')->constrained()->cascadeOnDelete();
             $table->foreignId('schedule_id');
-            // $table->string('location');
-            // $table->foreignId('trainer_id')->cascade();
             $table->integer('eventable_id');
             $table->string('eventable_type');
             $table->string('event_title');
-            // $table->string('trainers');
-           
             $table->timestamps();
         });
     }

@@ -124,6 +124,18 @@ class Subscriptionplan extends Model
         return $this->hasMany(Credit::class);
     }
 
+    public function creditTo($type,$id = 0)
+    {
+        $credits = $this->credits()->where('creditable_type',$type)->where('creditable_id',0)->first()->credits;
+        if($id != 0){
+            $credits = $credits + $this->credits()->where('creditable_type',$type)->where('creditable_id',$id)->first()->credits;
+        }
+        return $credits;
+        // foreach ($credits as $credit) {
+        //     $credit->
+        // }
+    }
+
     // protected static function booted()
     // {
     //     static::deleting(function ($subscription) {

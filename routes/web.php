@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\TrainingController;
 use App\Http\Controllers\Admin\CreditController;
 use App\Http\Controllers\Admin\SubscriptionplanController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\CalendarController;
 use App\Mail\UserRegistration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -49,11 +50,14 @@ Route::name('public.')->group(function () {
     Route::get('/subscriptionplans/{subscriptionplan:slug}', [PublicPagesController::class, 'subscriptionplanSinglePage'])->name('subscriptionplan_single');
     Route::get('/courses/{course:slug}', [PublicPagesController::class, 'courseSinglePage'])->name('course_single');
     Route::get('/wellness-center/{facility:slug}', [PublicPagesController::class, 'facilitySinglePage'])->name('facility_single');
-    Route::get('/calendar', [PublicPagesController::class, 'calendarPage'])->name('calendar');
+    Route::get('/calendar', [CalendarController::class, 'calendarPage'])->name('calendar.calendar_page');
+    Route::get('/calendar/book-event', [CalendarController::class, 'bookEventPage'])->name('calendar.book_event.create');
+    Route::get('/calendar/attendance-event', [CalendarController::class, 'attendanceEventPage'])->name('calendar.attendance_event.create');
+    Route::post('/calendar/book-event', [CalendarController::class, 'bookEventStore'])->name('calendar.book_event.store');
+    Route::post('/calendar/attendance-event', [CalendarController::class, 'attendanceEventStore'])->name('calendar.attendance_event.store');
+    Route::delete('/calendar/book-event/{booking:id}', [CalendarController::class, 'bookEventDestroy'])->name('calendar.book_event.destroy');
+    Route::delete('/calendar/attendance-event/{attendance:id}', [CalendarController::class, 'attendanceEventDestroy'])->name('calendar.attendance_event.destroy');
     
-    // Route::get('/pages/{customPage:slug}', [PublicPagesController::class, 'customPage'])->name('customPage');
-
-
     Route::name('account.')->group(function(){
         Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
         Route::post('login', [LoginController::class, 'auth'])->middleware('guest');

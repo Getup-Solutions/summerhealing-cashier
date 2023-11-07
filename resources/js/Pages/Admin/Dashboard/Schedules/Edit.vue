@@ -58,15 +58,9 @@
                         </div>
                     </div>
                     <div class="mt-4">
-                        <!-- <Button
-                            @click.prevent="daysEvent[index].push({ event_title: eventTitle, event_trainers: eventTrainers, eventable_type: scheduleableType, start_time: '00:00', end_time: '00:00', size: 5 })"
-                            :text="'Create new Event'" :color="'blue'" :fullWidth="true"></Button> -->
-                                                    <Button
-                            @click.prevent="daysEvent[index].push({ event_title: eventTitle,event_trainers: JSON.stringify(eventTrainers), eventable_type: scheduleableType, eventable_id: scheduleableId, start_time: '00:00', end_time: '00:00', size: 5 })"
+                        <Button
+                            @click.prevent="daysEvent[index].push({ event_title: '', eventable_type: scheduleableType, eventable_id: scheduleableId, start_time: '00:00', end_time: '00:00', size: 5 })"
                             :text="'Create new Event'" :color="'blue'" :fullWidth="true"></Button>
-                            <!-- <Button
-                            @click.prevent="daysEvent[index].push({ })"
-                            :text="'Create new Event'" :color="'blue'" :fullWidth="true"></Button> -->
                     </div>
                 </div>
             </div>
@@ -78,8 +72,8 @@
 </template>
 <script>
 export default {
-    props: ["errors", "days", "type", "scheduleInfoData", "editURL", "editData", "eventTitle", "eventTrainers", "scheduleableType","scheduleableId", "daysSelectedData", "daysEventData", "editDataId"],
-    emits:['scheduleCreated'],
+    props: ["errors", "days", "type", "scheduleInfoData", "editURL", "editData", "scheduleableType", "scheduleableId", "daysSelectedData", "daysEventData", "editDataId"],
+    emits: ['scheduleCreated'],
     data() {
         return {
             scheduleInfo: this.scheduleInfoData ?? { scheduleable_type: this.scheduleableType, scheduleable_id: this.scheduleableId },
@@ -90,25 +84,15 @@ export default {
         };
     },
     mounted() {
-        console.log(this.daysEventData.length);
-        if(this.daysEventData.length) {
-            console.log('sss');
-            this.daysEvent =  this.daysEventData
+        if (this.daysEventData.length) {
+            this.daysEvent = this.daysEventData
         } else {
-            this.daysEvent = [[],[],[],[],[],[],[]]
+            this.daysEvent = [[], [], [], [], [], [], []]
         }
-        // this.sunEvents = []
-        // this.monEvents = []
-        // this.tueEvents = []
-        // this.wedEvents = []
-        // this.thuEvents = []
-        // this.friEvents = []
-        // this.satEvents = []
-        // this.daysEvent = [this.sunEvents, this.monEvents, this.tueEvents, this.wedEvents, this.thuEvents, this.friEvents, this.satEvents]
     },
     methods: {
         editSchedule() {
-            this.$emit('scheduleCreated',false)
+            this.$emit('scheduleCreated', false)
             editRequest({ url: this.editURL, data: { ...this.editData, scheduleInfo: { ...this.scheduleInfo, days: this.getDaysSelected, daysEvent: this.daysEvent } }, dataId: this.editDataId, only: ['flash', 'errors'] })
         }
     },
@@ -152,11 +136,11 @@ export default {
 <script setup>
 import Button from "../../../../Shared/FormElements/Button.vue";
 import FormSimpleInput from "../../../../Shared/FormElements/FormSimpleInput.vue";
-import FormFileUploadSingle from "../../../../Shared/FormElements/FormFileUploadSingle.vue";
+// import FormFileUploadSingle from "../../../../Shared/FormElements/FormFileUploadSingle.vue";
 import Modal from "../../../../Shared/Modal/Modal.vue";
-import FormCheckBox from "../../../../Shared/FormElements/FormCheckBox.vue";
-import FormTextArea from "../../../../Shared/FormElements/FormTextArea.vue";
-import FormSelect from "../../../../Shared/FormElements/FormSelect.vue";
+// import FormCheckBox from "../../../../Shared/FormElements/FormCheckBox.vue";
+// import FormTextArea from "../../../../Shared/FormElements/FormTextArea.vue";
+// import FormSelect from "../../../../Shared/FormElements/FormSelect.vue";
 
 import { editRequest } from '../../../../main.js'
 

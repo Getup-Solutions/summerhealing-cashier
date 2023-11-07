@@ -182,7 +182,7 @@
 
         <!-- Schedule create Modal -->
         <ScheduleCreate :showError="!hideError" @scheduleCreated="(value)=>hideError = value" :days="days" :type="'Session'" :errors="errors" :createURL="'/admin/dashboard/sessions'"
-            :createData="getCreateData" :eventTitle="sessionInfo.title" :eventTrainers="sessionInfo.trainers" :scheduleableType="'App\\Models\\Session'"></ScheduleCreate>
+            :createData="getCreateData" :scheduleableType="'App\\Models\\Session'"></ScheduleCreate>
     </div>
 </template>
 <script>

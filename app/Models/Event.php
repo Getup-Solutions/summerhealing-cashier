@@ -12,6 +12,7 @@ use App\Models\Calendar;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Booking;
+use App\Models\Attendance;
 
 class Event extends Model
 {
@@ -65,5 +66,15 @@ class Event extends Model
     public function bookingsFor($date)
     {
         return $this->bookings()->where('date',$date)->get();
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function attendancesFor($date)
+    {
+        return $this->attendances()->where('date',$date)->get();
     }
 }

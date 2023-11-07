@@ -188,8 +188,7 @@
         <ScheduleEdit :showError="!hideError" @scheduleCreated="(value) => hideError = value" :days="days" :type="'Class'"
             :errors="errors" :editURL="'/admin/dashboard/sessions/'" :editDataId="session.id"
             :scheduleInfoData="schedule ?? {}" :daysSelectedData="daysSelectedData ?? []"
-            :daysEventData="daysEventData ?? []" :editData="getEditData" :eventTitle="sessionInfo.title"
-            :eventTrainers="sessionInfo.trainers" :scheduleableType="'App\\Models\\Session'" :scheduleableId="session.id">
+            :daysEventData="daysEventData ?? []" :editData="getEditData" :scheduleableType="'App\\Models\\Session'" :scheduleableId="session.id">
         </ScheduleEdit>
 
     </div>

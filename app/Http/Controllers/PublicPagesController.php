@@ -51,12 +51,7 @@ class PublicPagesController extends Controller
     }
 
 
-    public function calendarPage(){
-        // dd(Calendar::whereDate('formated_date', '<=', date("Y/m/d",strtotime("+ 1 month")))->get());
-        return Inertia::render('Public/Calendar/Calendar', [
-            'calendar'=>Calendar::whereDate('formated_date', '<=', date("Y/m/d",strtotime("+ 1 month")))->get()
-        ]);
-    }
+
 
     public function facilitiesPage(){
         return Inertia::render('Public/Facilities', [

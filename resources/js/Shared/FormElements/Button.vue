@@ -1,15 +1,15 @@
 <template>
   <div :class="{ 'w-full': fullWidth }" class="flex w-fit">
     <button type="submit" :class="{
-      'bg-blue-700 hover:bg-blue-800 focus:ring-blue-300  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-white dark:text-white':
+      'bg-blue-700 hover:bg-blue-800 h-10 focus:ring-blue-300  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-white dark:text-white':
         color === 'blue',
-      'bg-indigo-700 hover:bg-indigo-800 focus:ring-indigo-300  dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800 text-white dark:text-white':
+      'bg-indigo-700 hover:bg-indigo-800 h-10 focus:ring-indigo-300  dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800 text-white dark:text-white':
         color === 'indigo',
-      'bg-red-700 hover:bg-red-800 focus:ring-red-300  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 text-white dark:text-white':
+      'bg-red-700 hover:bg-red-800 h-10 focus:ring-red-300  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 text-white dark:text-white':
         color === 'red',
-      'bg-green-700 hover:bg-green-800 focus:ring-green-300  dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 text-white dark:text-white':
+      'bg-green-700 hover:bg-green-800 h-10 focus:ring-green-300  dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 text-white dark:text-white':
         color === 'green',
-        'bg-yellow-300 hover:bg-yellow-500 focus:ring-yellow-300  dark:bg-sh_yellow dark:hover:bg-yellow-400 dark:focus:ring-yellow-800 text-white dark:text-gray-900':
+        'bg-yellow-300 hover:bg-yellow-500 h-10 focus:ring-yellow-300  dark:bg-sh_yellow dark:hover:bg-yellow-400 dark:focus:ring-yellow-800 text-white dark:text-gray-900':
         color === 'yellow',
       'w-full': fullWidth,
       'rounded-full': rounded,
