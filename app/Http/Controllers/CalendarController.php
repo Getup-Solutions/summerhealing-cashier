@@ -105,7 +105,7 @@ class CalendarController extends Controller
         $bookingsForThisUserIds = Booking::where('calendar_id', $attributes['calendar_id'])->where('event_id', $attributes['event_id'])->pluck('user_id')->toArray();
         // $bookingsForThis = Booking::where('calendar_id', $attributes['calendar_id'])->where('event_id', $attributes['event_id'])->get();
         // dd($attendancesForThisUserIds);
-        $bookingsForThisNoAttendance = Booking::whereNotIn('user_id', $attendancesForThisUserIds)->get();
+        $bookingsForThisNoAttendance = Booking::where('calendar_id', $attributes['calendar_id'])->where('event_id', $attributes['event_id'])->whereNotIn('user_id', $attendancesForThisUserIds)->get();
         $usersNoBooking = User::whereNotIn('id',$bookingsForThisUserIds)->get();
         // dd($bookingsForThisNoAttendance);
 

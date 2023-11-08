@@ -18,7 +18,7 @@
                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                         clip-rule="evenodd"></path>
                 </svg> -->
-                <svg v-if="menuToggle" class="w-3 h-3 text-gray-800 dark:text-white" aria-hidden="true"
+                <!-- <svg v-if="menuToggle" class="w-3 h-3 text-gray-800 dark:text-white" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1" />
@@ -28,13 +28,13 @@
                     fill="none" viewBox="0 0 8 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1" />
-                </svg>
+                </svg> -->
 
 
 
             </button>
             <ul :id="`dropdown-example-${sidebarItem.name}`" class="hidden p-2 space-y-2 bg-gray-50 dark:bg-black/10 rounded-lg mt-2"
-                :class="{'bg-gray-300 dark:bg-blue-600/20':this.$page.url.startsWith(sidebarItem.urlStartsWith)}">
+                :class="{'bg-gray-300 dark:bg-blue-600/20 block':this.$page.url.startsWith(sidebarItem.urlStartsWith)}">
                 <li v-for="item in sidebarItem.subMenu" :key="item">
                     <Link :href="item.link" v-if="!item.hideIf"
                         class="flex items-center w-full p-2 text-gray-900 cursor-pointer transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"

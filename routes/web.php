@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\TrainingController;
 use App\Http\Controllers\Admin\CreditController;
 use App\Http\Controllers\Admin\SubscriptionplanController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\CalendarController;
 use App\Mail\UserRegistration;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +117,7 @@ Route::name('admin.')->group(function () {
                 Route::prefix('/dashboard')->group(function () {
                     Route::get('/', [AdminDashboardController::class, 'home'])->name('home');
                     Route::resource('/users', UserController::class)->except('show');
+                    Route::resource('/subscriptions', SubscriptionController::class)->except('show');
                     Route::resource('/courses', CourseController::class)->except('show');
                     Route::resource('/facilities', FacilityController::class)->except('show');
                     Route::resource('/sessions', SessionController::class)->except('show');
