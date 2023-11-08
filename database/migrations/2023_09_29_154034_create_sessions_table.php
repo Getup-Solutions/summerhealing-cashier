@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('slug');
             $table->longText('description')->nullable();
             $table->longText('excerpt')->nullable();
-            $table->string('thumbnail')->nullable();
-            $table->foreignId('agegroup_id');
+            $table->string('thumbnail')->default('assets/static/img/subscriptionplan.png');
+            $table->foreignId('agegroup_id')->nullable();
             $table->string('video_url')->default('sTANio_2E0Q');
             $table->integer('size')->default(10);
             $table->string('level')->nullable();
