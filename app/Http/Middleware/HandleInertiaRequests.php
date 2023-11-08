@@ -85,6 +85,7 @@ class HandleInertiaRequests extends Middleware
             "pages" => [
                 ["name" => "Subscription plans", "href" => asset('') . 'subscriptionplans'],
                 ["name" => "Courses", "href" => asset('') . 'courses'],
+                ["name" => "Classes", "href" => asset('') . 'classes'],
                 ["name" => "Wellness center", "href" => asset('') . 'wellness-center'],
                 ["name" => "Training Program", "href" => asset('') . 'trainings'],
                 ["name" => "About", "href" => asset('') . 'about'],
