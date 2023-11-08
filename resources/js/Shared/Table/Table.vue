@@ -97,6 +97,8 @@ export default {
                     }
                     return values.slice(0, -2);
                 } else {
+                    console.log(row.values[0]);
+                    console.log(dataItem["user"]);
                     return dataItem[row.values[0]] ? dataItem[row.values[0]][row.values[1]] ?? 'NULL' : 'NULL'
                 }
             } else if (row.values.length === 3) {

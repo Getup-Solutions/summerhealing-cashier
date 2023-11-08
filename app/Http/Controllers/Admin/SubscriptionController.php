@@ -12,11 +12,11 @@ class SubscriptionController extends Controller
 {
     public function index(){
         return Inertia::render('Admin/Dashboard/Subscriptions/Index', [
-            'subscriptionplans' => Subscription::filter(
-                request(['search', 'dateStart', 'dateEnd', 'sortBy', 'published'])
+            'subscriptions' => Subscription::filter(
+                request(['search', 'dateStart', 'dateEnd', 'sortBy', 'status'])
             )
                 ->paginate(3)->withQueryString(),
-            'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'published']),
+            'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'status']),
         ]);
     }
 }
