@@ -298,55 +298,58 @@ class DatabaseSeeder extends Seeder
             [
                 "title" => "Silver Intoduction",
                 "description" => "UNLIMITED YOGA CLASSES , 20% OFF WELLNESS CENTRE",
-                "validity" => "1 Month",
-                "price" => "$59",
+                "validity" => "30",
+                "price" => "59",
             ],
             [
                 "title" => "Crown  Introduction",
                 "description" => "ONE MONTH INTRO MEMBERSHIP,UNLIMITED YOGA, REBIRTHING BREATHWORK, AERIAL YOGA, SOUND MEDITATION, 1X INFRA RED SAUNA A WEEK, 20% OFF WELLNESS CENTRE",
-                "validity" => "1 Month",
-                "price" => "$159",
+                "validity" => "30",
+                "price" => "159",
             ],
             [
                 "title" => "Gold Membership",
                 "description" => "MINIMUM 2 MONTHS, UNLIMITED YOGA CLASSES, 20% OFF WELLNESS PROGRAM",
-                "validity" => "2 Months",
-                "price" => "$30 per week",
+                "validity" => "15",
+                "price" => "30",
             ],
             [
                 "title" => "Crown Membership",
                 "description" => " MINIMUM 2 MONTHS, UNLIMITED YOGA, REBIRTHING BREATHWORK ,AERIAL YOGA, SOUND MEDITATION, SHAMANIC  1x INFRA-RED SAUNAS PER WEEK, WELLNESS PROGRAM 50% OFF - massage, chakra bed, one on one yoga, rebirthing breathwork ",
-                "validity" => "2 Months",
-                "price" => "$40 per week",
+                "validity" => "30",
+                "price" => "40",
             ],
             [
                 "title" => "Concession Yogi Membership",
                 "description" => "  MINIMUM 2 MONTHS, UNLIMITED YOGA CLASSES, WELLNESS PROGRAM 20% OFF",
-                "validity" => "2 Months",
-                "price" => "$25 per week",
+                "validity" => "30",
+                "price" => "25",
             ],
             [
                 "title" => "Live Stream And Video On Demand",
                 "description" => "LIVE STREAM AND VIDEO ON DEMAND, CHOOSE ANY CLASS ",
-                "validity" => "2 Months",
-                "price" => "$10 per week",
+                "validity" => "20",
+                "price" => "10",
             ],
             [
-                "title" => "10 Visit Pass ",
+                "title" => "10 Visit Pass",
                 "description" => "10 VISIT PASS CONTRIBUTION EXPIRES IN 12 MONTHS",
-                "validity" => "12 Months",
-                "price" => "$210",
+                "payment_mode"=>"one-time",
+                "payment_interval_count"=>"12",
+                "payment_interval"=>"month",
+                // "validity" => "30",
+                "price" => "210",
             ],
         ];
 
-        foreach ($subscriptionplans as $subscriptionplan) {
-            Subscriptionplan::create([
-                "title" => $subscriptionplan["title"],
-                "description" => $subscriptionplan["description"],
-                "validity" => $subscriptionplan["validity"],
-                "price" => $subscriptionplan["price"],
-                "slug" => preg_replace('/[^A-Za-z0-9-]+/', '-', $subscriptionplan["title"]),
-            ]);
-        }
+        // foreach ($subscriptionplans as $subscriptionplan) {
+        //     Subscriptionplan::create([
+        //         "title" => $subscriptionplan["title"],
+        //         "description" => $subscriptionplan["description"],
+        //         "validity" => $subscriptionplan["validity"],
+        //         "price" => $subscriptionplan["price"],
+        //         "slug" => preg_replace('/[^A-Za-z0-9-]+/', '-', $subscriptionplan["title"]),
+        //     ]);
+        // }
     }
 }

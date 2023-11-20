@@ -15,6 +15,8 @@ class Subscriptionplan extends Model
 
     protected $appends = [ 'thumbnail_url'];
 
+    protected $with = [ 'credits'];
+
     public function scopeFilter($query, array $filters)
     {
         $query

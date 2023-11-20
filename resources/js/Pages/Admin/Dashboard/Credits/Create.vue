@@ -1,7 +1,7 @@
 <template>
     <!-- Modal content -->
     <Modal
-        :modalHeadingText="'Subscription plan Benefits'"
+        :modalHeadingText="'Membership Plan Benefits'"
         :modalHeadingResetButton="true"
         :modalWidth="2"
         :showError="showError"

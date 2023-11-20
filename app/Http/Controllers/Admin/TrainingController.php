@@ -17,14 +17,12 @@ class TrainingController extends Controller
     public function index()
     {
 
-        // dd(User::all());
         return Inertia::render('Admin/Dashboard/Trainings/Index', [
             'trainings' => Training::filter(
                 request(['search', 'dateStart', 'dateEnd', 'sortBy', 'published'])
             )
                 ->paginate(3)->withQueryString(),
             'filters' => Request::only(['search', 'sortBy', 'dateStart', 'dateEnd', 'published']),
-            // 'roles' => Role::all(),
         ]);
     }
 

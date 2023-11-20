@@ -18,7 +18,7 @@
                         <div class="md:col-span-2">
                             <p class="mb-6 sh-para text-left text-base">{{
                                 facility.description }}</p>
-                            <h1 class="sh-head-4 text-left font-bold mb-4">Get any of these Subscriptionplans to get extra offers :</h1>
+                            <!-- <h1 class="sh-head-4 text-left font-bold mb-4">Get any of these Subscriptionplans to get extra offers :</h1>
                             <div class="mb-10">
                                 <h1 class="sh-para text-lg text-left dark:text-gray-200 font-bold mb-4 underline">Subscriptionplans
                                 </h1>
@@ -31,7 +31,7 @@
                                 </div>
 
 
-                            </div>
+                            </div> -->
                         </div>
                         <AddToCartCard :item="facility" :type="'wellness'"></AddToCartCard>
                     </div>

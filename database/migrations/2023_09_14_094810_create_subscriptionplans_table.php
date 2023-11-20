@@ -16,11 +16,16 @@ return new class extends Migration
             $table->string('plan_id')->nullable();
             $table->string('title');
             $table->string('slug');
-            $table->string('thumbnail')->default('assets/static/img/subscription.png');
+            $table->string('thumbnail')->default('assets/static/img/subscriptionplan.png');
             $table->text('description');
+            $table->string('payment_mode');
+            $table->integer('payment_interval_count');
+            $table->integer('validity_count')->nullable();
+            $table->string('payment_interval');
+            $table->string('validity')->nullable();
             $table->boolean('published')->default(true);
             $table->float('price');
-            $table->string('validity');
+            $table->boolean('limit_purchase')->default(false);
             $table->timestamps();
         });
     }

@@ -62,13 +62,12 @@
 
             <!-- Subscription plans -->
             <div class="py-10 md:py-20">
-                <h1 class="sh-head-2 mb-10">SUBSCRIPTION PLANS</h1>
+                <h1 class="sh-head-2 mb-10">MEMBERSHIP PLANS</h1>
 
                 <div>
                     <div class="grid gap-10">
                         <Link href="/subscriptions" class="mx-auto">
-                        <button class="sh-button mx-auto w-60 text-base dark:hover:shadow-xl">See all Subscription
-                            plans</button>
+                        <button class="sh-button mx-auto w-60 text-base dark:hover:shadow-xl">See all Membership plans</button>
                         </Link>
 
                         <div v-for="subscriptionplan in subscriptionplans" :key="subscriptionplan.id">
@@ -97,7 +96,7 @@
                         </div>
 
                         <Link href="/subscriptions" class="mx-auto">
-                        <button class="sh-button mx-auto w-60 text-base dark:hover:shadow-xl">See all Subscription
+                        <button class="sh-button mx-auto w-60 text-base dark:hover:shadow-xl">See all Membership
                             plans</button></Link>
                     </div>
                 </div>

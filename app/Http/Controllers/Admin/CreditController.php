@@ -58,14 +58,14 @@ public function update($creditsInfo, $subscriptionplanId){
     }
     if(isset($creditsInfo["sessionCredits"])){
         foreach ($creditsInfo["sessionCredits"] as $sessionCredit) {
-            // $sessionCredit["subscriptionplan_id"] = $subscriptionplanId;
+            $sessionCredit["subscriptionplan_id"] = $subscriptionplanId;
             unset($sessionCredit['id']);
             Credit::create($sessionCredit);
         }
     }
     if(isset($creditsInfo["facilityCredits"])){
         foreach ($creditsInfo["facilityCredits"] as $facilityCredit) {
-            // $facilityCredit["subscriptionplan_id"] = $subscriptionplanId;
+            $facilityCredit["subscriptionplan_id"] = $subscriptionplanId;
             unset($facilityCredit['id']);
             Credit::create($facilityCredit);
         }

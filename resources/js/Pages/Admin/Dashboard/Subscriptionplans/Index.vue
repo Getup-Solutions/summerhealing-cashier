@@ -1,10 +1,12 @@
 <template>
-    <h2>Subscription Plans</h2>
+    <h2>Membership Plans</h2>
     <DeleteAlert v-if="deleteId" :id="deleteId" @close="deleteId = false" :url="'/admin/dashboard/subscriptionplans/'"
         :text="'Deleting the subscription will permanently removed from the database. You can\'t recover the subscription again. Are you sure about deleting?'">
     </DeleteAlert>
     <TableLayout>
-        <Filters :searchPlaceHolder="'Search by Subscription ID, Title, Description ..'" :filters="filters"
+        <Filters 
+            :searchPlaceHolder="'Search by Subscription ID, Title, Description ..'"
+            :filters="filters"
             :currentPage="subscriptionplans.current_page" :dataName="'subscriptionplans'" :sortByFilters="{ dateSort: true }" :enableFilters="{
                 search: true,
                 dateRange: true,
@@ -18,15 +20,21 @@
                         options: [{name:'Published', value:true},{name:'Draft', value:false}],
                     },
                 ],
-            }"></Filters>
-        <TableNew :data="subscriptionplans.data" :tableContent="[
-            { heading: 'Thumbnail', type: 'image', value: 'thumbnail_url' },
-            { heading: 'Title', type: 'text', value: 'title' },
-            { heading: 'Price', type: 'text', value: 'price' },
-            { heading: 'Validity', type: 'text', value: 'validity' },
-            { heading: 'Status', type: 'bool', value: 'published' },
-        ]" :actionLinks="[{ link: 'admin/dashboard/subscriptionplans', name: 'Edit' }]" :deleteEnable="true"
-            @deleteItem="(id) => deleteId = id"></TableNew>
+            }">
+        </Filters>
+        <TableNew 
+        :data="subscriptionplans.data" 
+        :tableContent="[
+            { heading: 'Thumbnail', type: 'image', value: 'thumbnail_url'},
+            { heading: 'Title', type: 'text', value: 'title'},
+            { heading: 'Price', type: 'text', value: 'price'},
+            { heading: 'Validity', type: 'text', value: 'validity'},
+            { heading: 'Status', type: 'bool', value: 'published'},
+        ]" 
+        :actionLinks="[{ link: 'admin/dashboard/subscriptionplans', name: 'Edit'}]" 
+        :deleteEnable="true"
+            @deleteItem="(id) => deleteId = id">
+        </TableNew>
         <PageNavigation :data="subscriptionplans"></PageNavigation>
     </TableLayout>
 </template>

@@ -1,107 +1,109 @@
 <template>
     <div class="grid gap-8">
         <!-- Modal content -->
-        <Modal
-            :modalHeadingText="'Create new Subscription Plan'"
-            :modalHeadingResetButton="true"
-            :modalWidth="2"
-            :showError="hideError"
-        >
+        <Modal :modalHeadingText="'Create a new Membership Plan'" :modalHeadingResetButton="true" :modalWidth="2"
+            :showError="hideError">
             <template #body>
                 <div class="grid md:grid-cols-2 gap-6 gap-y-4">
                     <!-- <div class="space-y-4"> -->
-                    <FormSimpleInput
-                        :label="'Title'"
-                        :name="'title'"
-                        :type="'text'"
-                        v-model="subscriptionPlanInfo.title"
-                        @change="nameToSlug()"
-                        :error="errors.title"
-                    >
+                    <FormSimpleInput :label="'Title'" :name="'title'" :type="'text'" v-model="subscriptionPlanInfo.title"
+                        @change="nameToSlug()" :error="errors.title">
                     </FormSimpleInput>
-                    <FormSimpleInput
-                        :label="'Slug'"
-                        :name="'slug'"
-                        :type="'text'"
-                        v-model="subscriptionPlanInfo.slug"
-                        @change="createSlug()"
-                        :error="errors.slug"
-                    >
+                    <FormSimpleInput :label="'Slug'" :name="'slug'" :type="'text'" v-model="subscriptionPlanInfo.slug"
+                        @change="createSlug()" :error="errors.slug">
                     </FormSimpleInput>
-                    <FormSimpleInput
-                        :label="'Price(AUD)'"
-                        :name="'price'"
-                        :type="'number'"
-                        v-model="subscriptionPlanInfo.price"
-                        :error="errors.price"
-                    >
-                    </FormSimpleInput>
-                    <FormSimpleInput
-                        :label="'Validity(in Days)'"
-                        :name="'validity'"
-                        :type="'number'"
-                        v-model="subscriptionPlanInfo.validity"
-                        :error="errors.validity"
-                    >
-                    </FormSimpleInput>
+
                 </div>
                 <div>
-                    <FormTextArea
-                        :label="'Description'"
-                        :name="'description'"
-                        v-model="subscriptionPlanInfo.description"
-                        :error="errors.description"
-                    >
+                    <FormTextArea :label="'Description'" :name="'description'" v-model="subscriptionPlanInfo.description"
+                        :error="errors.description">
                     </FormTextArea>
                 </div>
+
                 <div>
-                    <FormFileUploadSingle
-                        @fileChange="
-                            (file) => (subscriptionPlanInfo.thumbnail = file[0])
-                        "
-                        :label="'Thumbnail'"
-                        :oldImageLink="oldThumbnail"
-                        :rounded="false"
-                        :name="'thumbnail'"
-                        :hideInputBox="true"
-                        :error="errors.thumbnail"
-                    ></FormFileUploadSingle>
+                    <FormFileUploadSingle @fileChange="(file) => (subscriptionPlanInfo.thumbnail = file[0])
+                        " :label="'Thumbnail'" :oldImageLink="oldThumbnail" :rounded="false" :name="'thumbnail'"
+                        :hideInputBox="true" :error="errors.thumbnail"></FormFileUploadSingle>
                 </div>
 
-                <FormCheckBox
-                    :label="'Published'"
-                    :name="'published'"
-                    :checked="true"
-                    v-model="subscriptionPlanInfo.published"
-                    :error="errors.published"
-                >
-                </FormCheckBox>
+                <div class="grid md:grid-cols-2 gap-6 border-t border-gray-600 gap-y-4 py-4">
+                    <p class="text-blue-500 col-span-2 font-medium mb-4 text-md">
+                        Pricing and Validity
+                    </p>
+                    <div class="col-span-2 mb-2">
+                        <!-- <FormCheckBox :label="'Recurring Payment'" :name="'recurring'" :checked="true"
+                            v-model="subscriptionPlanInfo.recurring" :error="errors.recurring">
+                        </FormCheckBox> -->
+                        <div class="flex gap-4">
+                            <div class="flex items-center">
+                                <input id="one-time-payment" type="radio" value="one-time" name="one-time-payment"
+                                    v-model="subscriptionPlanInfo.payment_mode"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="one-time-payment"
+                                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">One-Time
+                                    Payment</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="recurring-payment" type="radio" value="recurring" name="recurring-payment"
+                                    v-model="subscriptionPlanInfo.payment_mode"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="recurring-payment"
+                                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Recurring
+                                    Payment</label>
+                            </div>
+                        </div>
+                        <div v-if="errors.payment_mode" v-text="errors.payment_mode" class="text-red-500 text-xs mt-2">
+                        </div>
+                    </div>
+                    <div class="col-span-2 flex items-start md:gap-4 gap-2">
+                        <FormSimpleInput :label="'Price(AUD)'" :name="'price'" :type="'number'"
+                            v-model="subscriptionPlanInfo.price" :error="errors.price">
+                        </FormSimpleInput>
+                        <FormSimpleInput :label="'For'" :name="'payment_interval_count'" :type="'number'"
+                            v-model="subscriptionPlanInfo.payment_interval_count" :error="errors.payment_interval_count">
+                        </FormSimpleInput>
+                        <FormSelect :label="'Interval'" :name="'payment_interval'"
+                            v-model="subscriptionPlanInfo.payment_interval" :error="errors.payment_interval"
+                            :optionsArray="[{ name: 'Day', value: 'day' }, { name: 'Week', value: 'week' }, { name: 'Month', value: 'month' }, { name: 'Year', value: 'year' }]"
+                            :optionName="'name'" :optionValue="'value'">
+                        </FormSelect>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <FormCheckBox :label="'Limit to 1 purchase per person'" :name="'limit_purchase'"
+                        v-model="subscriptionPlanInfo.limit_purchase" :error="errors.limit_purchase">
+                    </FormCheckBox>
+                    <FormCheckBox :label="'Published'" :name="'published'" :checked="true"
+                        v-model="subscriptionPlanInfo.published" :error="errors.published">
+                    </FormCheckBox>
+
+                </div>
+
+
             </template>
             <template #footer>
-                <Button
-                    @click.prevent="
-                        createRequest({
-                            url: '/admin/dashboard/subscriptionplans',
-                            data: subscriptionPlanInfo,
-                            only: ['flash', 'errors'],
-                        })
-                    "
-                    :text="'Create Subscription'"
-                    :color="'blue'"
-                ></Button>
+                <Button @click.prevent="
+                    createRequest({
+                        url: '/admin/dashboard/subscriptionplans',
+                        data: subscriptionPlanInfo,
+                        only: ['flash', 'errors'],
+                    })
+                    " :text="'Create a Membership Plan'" :color="'blue'"></Button>
             </template>
         </Modal>
 
-        <CreditCreate :errors="errors" :showError="!hideError" @creditsCreated="(value)=>hideError = value" :sessions="sessions" :facilities="facilities" :createURL="'/admin/dashboard/subscriptionplans'" :createData="subscriptionPlanInfo"></CreditCreate>
+        <CreditCreate :errors="errors" :showError="!hideError" @creditsCreated="(value) => hideError = value"
+            :sessions="sessions" :facilities="facilities" :createURL="'/admin/dashboard/subscriptionplans'"
+            :createData="subscriptionPlanInfo"></CreditCreate>
     </div>
 </template>
 <script>
 export default {
-    props: ["errors","sessions","facilities"],
+    props: ["errors", "sessions", "facilities"],
     data() {
         return {
-            subscriptionPlanInfo: {},
-            hideError:true
+            subscriptionPlanInfo: { payment_mode: 'one-time',limit_purchase:false },
+            hideError: true
         };
     },
     mounted() {

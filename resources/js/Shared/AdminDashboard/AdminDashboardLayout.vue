@@ -93,7 +93,7 @@ export default {
                     ],
                 },
                 {
-                    name: "Subscription Plans",
+                    name: "Membership plans",
                     link: "/admin/dashboard/subscriptionplans",
                     method: "get",
                     icon: IdentificationIcon,
@@ -105,9 +105,28 @@ export default {
                             url:'/admin/dashboard/subscriptionplans/create',
                         },
                         {
-                            name: "All subscriptionplans",
+                            name: "All Membership Plans",
                             link: '/admin/dashboard/subscriptionplans',
                             url:'/admin/dashboard/subscriptionplans',
+                        },
+                    ],
+                },
+                {
+                    name: "Add-ons",
+                    link: "/admin/dashboard/addons",
+                    method: "get",
+                    icon: IdentificationIcon,
+                    urlStartsWith:'/admin/dashboard/addons',
+                    subMenu: [
+                        {
+                            name: "Create",
+                            link: "/admin/dashboard/addons/create",
+                            url:'/admin/dashboard/addons/create',
+                        },
+                        {
+                            name: "All Add-ons",
+                            link: '/admin/dashboard/addons',
+                            url:'/admin/dashboard/addons',
                         },
                     ],
                 },

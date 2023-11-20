@@ -31,7 +31,7 @@ class PublicPagesController extends Controller
 
         // dd(Subscriptionplan::select('title','description','slug','validity','price')->where('published',1)->get());
         return Inertia::render('Public/Subscriptionplans', [
-            'subscriptionplans'=>Subscriptionplan::select('title','description','thumbnail','slug','validity','price')->where('published',1)->get(),
+            'subscriptionplans'=>Subscriptionplan::select('title','description','thumbnail','slug','validity','price')->where('published',1)->latest()->get(),
             // 'courses'=>Course::all()->take(3),
             // 'homePageContent' => $homePageContent,
             // 'categories' => Category::all(),
@@ -89,16 +89,16 @@ class PublicPagesController extends Controller
 
     public function subscriptionplanSinglePage(Subscriptionplan $subscriptionplan){
 
-        $courses_included = $subscriptionplan->courses()->get();
-        foreach($courses_included as $course){
-            if($course->pivot->course_price == 0) {
-                $course->offer_price = 'FREE!';
-            } elseif($course->pivot->course_price < $course->price) {
-                $course->offer_price = $course->pivot->course_price.' (' .round(( ($course->price - $course->pivot->course_price)*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
-            } else {
-                $course->offer_price = $course->price;
-            }
-        }
+        // $classes_included = $subscriptionplan->credits()->where('credita')->get();
+        // foreach($courses_included as $course){
+        //     if($course->pivot->course_price == 0) {
+        //         $course->offer_price = 'FREE!';
+        //     } elseif($course->pivot->course_price < $course->price) {
+        //         $course->offer_price = $course->pivot->course_price.' (' .round(( ($course->price - $course->pivot->course_price)*100)/$course->price,2,PHP_ROUND_HALF_UP).'% Discount)';
+        //     } else {
+        //         $course->offer_price = $course->price;
+        //     }
+        // }
 
         $facilities_included = $subscriptionplan->facilities()->get();
         foreach($facilities_included as $facility){
@@ -125,12 +125,23 @@ class PublicPagesController extends Controller
         //     dd($user_have_subscriptionplan_created->diffInDays($now));
         //     dd(Auth::guard('web')->user()->subscriptionplans()->get()->find($subscriptionplan->id)->pivot->created_at);
         // }
+        $sessions_credits = $subscriptionplan->credits()->where('creditable_type','App\Models\Session')->where('creditable_id','!=',0)->get();
+        foreach ($sessions_credits as $session_credit) {
+            $session_credit["title"] = Session::find($session_credit->creditable_id)->title;
+        }
+        $facility_credits = $subscriptionplan->credits()->where('creditable_type','App\Models\Facility')->where('creditable_id','!=',0)->get();
+        foreach ($facility_credits as $facility_credit) {
+            $facility_credit["title"] = Facility::find($facility_credit->creditable_id)->title;
+        }
+        // dd($sessions_credits);
         return Inertia::render('Public/SubscriptionplanSingle', [
             'subscriptionplan'=>$subscriptionplan,
+            'sessions_credits'=>$sessions_credits,
+            'facilities_credits'=>$facility_credits,
             'user_have_subscriptionplan'=>$logged_user ? $logged_user->subscribed($subscriptionplan->slug) : false,
             // 'user_have_subscriptionplan_expires_in' => $user_have_subscriptionplan_expires_in,
-            'courses_included'=>$courses_included,
-            'facilities_included'=>$facilities_included
+            // 'courses_included'=>$courses_included,
+            // 'facilities_included'=>$facilities_included
         ]);
     }
 

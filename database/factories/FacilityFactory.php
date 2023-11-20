@@ -19,7 +19,7 @@ class FacilityFactory extends Factory
         return [
             'title' => fake()->sentence(),
             'slug' => fake()->unique()->slug(),
-            'thumbnail'=> 'assets/static/img/subscription.png',
+            'thumbnail'=> 'assets/static/img/subscriptionplan.png',
             'excerpt' => fake()->paragraph(),
             'published' => fake()->randomElement([true,false]),
             'description' => fake()->paragraph(),
