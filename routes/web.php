@@ -50,7 +50,9 @@ Route::name('public.')->group(function () {
     Route::get('/trainings', [PublicPagesController::class, 'trainingsPage'])->name('trainings');
     // Route::get('/subscriptionplans', [PublicPagesController::class, 'subscriptionplanPage'])->name('subscriptionplan');
     Route::get('/about', [PublicPagesController::class, 'aboutPage'])->name('about');
+    Route::get('/thank-you', [PublicPagesController::class, 'thankYouPage'])->name('thank_you');
     Route::get('/contact', [PublicPagesController::class, 'contactPage'])->name('contact');
+    Route::post('/contact', [PublicPagesController::class, 'contactPageSubmit'])->name('contact.submit');
     Route::get('/subscriptionplans/{subscriptionplan:slug}', [PublicPagesController::class, 'subscriptionplanSinglePage'])->name('subscriptionplan_single');
     Route::get('/courses/{course:slug}', [PublicPagesController::class, 'courseSinglePage'])->name('course_single');
     Route::get('/classes/{session:slug}', [PublicPagesController::class, 'sessionSinglePage'])->name('session_single');
@@ -120,21 +122,23 @@ Route::name('admin.')->group(function () {
             Route::middleware(['auth', 'role:ADMIN_ROLE'])->group(function () {
                 Route::prefix('/dashboard')->group(function () {
                     Route::get('/', [AdminDashboardController::class, 'home'])->name('home');
+                    Route::get('/components', [AdminDashboardController::class, 'home'])->name('home');
                     Route::resource('/users', UserController::class)->except('show');
                     Route::resource('/subscriptions', SubscriptionController::class)->except('show');
-                    Route::resource('/courses', CourseController::class)->except('show');
+                    Route::resource('/components/courses', CourseController::class)->except('show');
                     Route::resource('/facilities', FacilityController::class)->except('show');
                     Route::resource('/sessions', SessionController::class)->except('show');
                     Route::resource('/trainers', TrainerController::class)->except(['show','store']);
                     Route::resource('/subscriptionplans', SubscriptionplanController::class)->except('show');
                     Route::resource('/addons', AddonController::class)->except('show');
                     Route::resource('/leads', LeadController::class)->except('show');
+                    Route::resource('/courses', CourseController::class)->except('show');
                     Route::resource('/trainings', TrainingController::class)->except('show');
                     Route::resource('/credits', CreditController::class)->except('show');
 
                     // Route::resource('/users', UserController::class)->except('show');
-                    // Route::get('/profile-info', [AdminDashboardController::class, 'profileInfo'])->name('profile_info');
-                    // Route::put('/profile-info', [AdminDashboardController::class, 'update'])->name('profile_info_update');
+                    Route::get('/profile-info', [AdminDashboardController::class, 'profileInfo'])->name('profile_info');
+                    Route::put('/profile-info', [AdminDashboardController::class, 'profileInfoUpdate'])->name('profile_info_update');
                 });
             });
         });

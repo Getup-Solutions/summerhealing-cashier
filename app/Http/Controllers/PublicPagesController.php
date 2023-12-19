@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Facility;
+use App\Models\Lead;
 use App\Models\Session;
 use App\Models\Training;
 use App\Models\Subscriptionplan;
@@ -63,9 +64,6 @@ class PublicPagesController extends Controller
             // 'productBestSellers'=>Product::whereIn('tag',['best_seller','new_arrival'])->paginate(10)->withQueryString()
         ]);
     }
-
-
-
 
     public function facilitiesPage(){
         return Inertia::render('Public/Facilities', [
@@ -165,6 +163,7 @@ class PublicPagesController extends Controller
             'included_subscriptionplans'=>$included_subscriptionplans
         ]);
     }
+
     public function sessionSinglePage(Session $session){
 
         $included_subscriptionplans = $session->subscriptionplans()->get();
@@ -203,4 +202,39 @@ class PublicPagesController extends Controller
             'included_subscriptionplans'=>$included_subscriptionplans
         ]);
     }
+
+    public function aboutPage(){
+        // dd("sss");
+        return Inertia::render('Public/About');
+    }
+
+    public function contactPage(){
+        // dd("sss");
+        return Inertia::render('Public/Contact');
+    }
+
+    public function contactPageSubmit(){
+        // dd('dd');
+        $attributes = request()->validate(
+            [
+                'first_name' => 'required|min:3|max:50',
+                'last_name' => 'required|max:50',
+                'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+                'email' => ['required', 'email'],
+                'message'=>'nullable'
+            ],
+            [
+                'phone_number' => 'Enter a valid Phone number with country code',
+            ]
+        );
+        $attributes['source']='contact_page';
+        // dd($attributes);
+        Lead::create($attributes);
+        return back()->with('success', 'Your request has been submitted!');
+    }
+
+    public function thankYouPage(){
+        return Inertia::render('Public/ThankYou');
+    }
+
 }

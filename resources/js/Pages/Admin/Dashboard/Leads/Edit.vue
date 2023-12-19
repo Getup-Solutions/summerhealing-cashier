@@ -6,22 +6,26 @@
     <Modal :modalHeadingText="'Edit Lead'" :modalHeadingResetButton="true" :modalWidth="2">
         <template #body>
             <div class="grid md:grid-cols-2 gap-6">
-
-                    <FormSimpleInput :label="'First Name'" :name="'first_name'" :type="'text'" v-model="leadInfo.first_name"
-                        :error="errors.first_name">
-                    </FormSimpleInput>
-                    <FormSimpleInput :label="'Last Name'" :name="'last_name'" :type="'text'" v-model="leadInfo.last_name"
-                        :error="errors.last_name">
-                    </FormSimpleInput>
-                    <FormSimpleInput :label="'Email'" :name="'email'" :type="'email'" v-model="leadInfo.email"
-                        :error="errors.email">
-                    </FormSimpleInput>
-                    <FormSimpleInput :label="'Phone Number'" :name="'phone_number'" :placeholder="'+61'" :type="'text'"
+                <FormSimpleInput :label="'First Name'" :name="'first_name'" :type="'text'" v-model="leadInfo.first_name"
+                    :error="errors.first_name">
+                </FormSimpleInput>
+                <FormSimpleInput :label="'Last Name'" :name="'last_name'" :type="'text'" v-model="leadInfo.last_name"
+                    :error="errors.last_name">
+                </FormSimpleInput>
+                <FormSimpleInput :label="'Email'" :name="'email'" :type="'email'" v-model="leadInfo.email"
+                    :error="errors.email">
+                </FormSimpleInput>
+                <FormSimpleInput :label="'Phone Number'" :name="'phone_number'" :placeholder="'+61'" :type="'text'"
                     v-model="leadInfo.phone_number" :error="errors.phone_number">
                 </FormSimpleInput>
                 <FormSimpleInput :label="'Source'" :name="'source'" :type="'text'" v-model="leadInfo.source"
-                        :error="errors.source">
-                    </FormSimpleInput>
+                    :error="errors.source">
+                </FormSimpleInput>
+                <div class="col-span-2">
+                    <FormTextArea :label="'Message'" :name="'message'" v-model="leadInfo.message"
+                        :error="errors.message">
+                    </FormTextArea>
+                </div>
             </div>
         </template>
         <template #footer>
@@ -42,7 +46,7 @@
 <script>
 
 export default {
-    props: ["errors","lead"],
+    props: ["errors", "lead"],
     data() {
         return {
             leadInfo: this.lead,
@@ -61,7 +65,7 @@ import FormTextArea from "../../../../Shared/FormElements/FormTextArea.vue";
 import FormSelect from "../../../../Shared/FormElements/FormSelect.vue";
 import DeleteAlert from "../../../../Shared/DeleteAlert.vue";
 
-import { editRequest,deleteRequest } from "../../../../main.js";
+import { editRequest, deleteRequest } from "../../../../main.js";
 
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'

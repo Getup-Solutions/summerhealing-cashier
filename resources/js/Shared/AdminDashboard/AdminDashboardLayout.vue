@@ -4,7 +4,7 @@
         :userAvatar="$page.props.logged_user.avatar" :userName="$page.props.logged_user.full_name"
         :userEmail="$page.props.logged_user.email" :navMenu="navMenu" :sidebarMenu="sidebarMenu">
         <div class="md:px-4 py-4 sm:ml-64 dark:bg-gray-900">
-            <div class="px-2 md:px-4  pt-4 pb-32 mt-14 min-h-screen">
+            <div class="px-2 md:px-4  pt-4 pb-32 mt-12 min-h-screen">
                 <slot></slot>
             </div>
             <Footer></Footer>
@@ -34,7 +34,11 @@ import {
     DocumentPlusIcon,
     CubeIcon,
     SparklesIcon,
-    RectangleStackIcon
+    RectangleStackIcon,
+    PlusCircleIcon,
+    ChartBarSquareIcon,
+    Square2StackIcon,
+    Squares2X2Icon
 } from "@heroicons/vue/24/solid";
 // initialize components based on data attribute selectors
 onMounted(() => {
@@ -65,30 +69,93 @@ export default {
                 },
             ],
             sidebarMenu: [
+                // {
+                //     icon: Squares2X2Icon,
+                //     name:"components",
+                //     urlStartsWith:'/admin/dashboard/components',
+                //     items: [
+                //         {
+                //             name: "Courses",
+                //             link: "/admin/dashboard/components/courses/create",
+                //             method: "get",
+                //             icon: BookOpenIcon,
+                //             urlStartsWith: '/admin/dashboard/components/courses',
+                //             subMenu: [
+                //                 {
+                //                     name: "Create",
+                //                     link: "/admin/dashboard/components/courses/create",
+                //                     url: '/admin/dashboard/components/courses/create',
+                //                 },
+                //                 {
+                //                     name: "All courses",
+                //                     link: '/admin/dashboard/components/courses',
+                //                     url: '/admin/dashboard/components/courses',
+                //                 },
+                //             ],
+                //         },
+                //         {
+                //             name: "Facilities",
+                //             link: "/admin/dashboard/facilities",
+                //             method: "get",
+                //             icon: CubeIcon,
+                //             urlStartsWith: '/admin/dashboard/facilities',
+                //             subMenu: [
+                //                 {
+                //                     name: "Create",
+                //                     link: "/admin/dashboard/facilities/create",
+                //                     url: '/admin/dashboard/facilities/create',
+                //                 },
+                //                 {
+                //                     name: "All facilities",
+                //                     link: '/admin/dashboard/facilities',
+                //                     url: '/admin/dashboard/facilities',
+                //                 },
+                //             ],
+                //         },
+                //         {
+                //             name: "Classes",
+                //             link: "/admin/dashboard/sessions",
+                //             method: "get",
+                //             icon: RectangleStackIcon,
+                //             urlStartsWith: '/admin/dashboard/sessions',
+                //             subMenu: [
+                //                 {
+                //                     name: "Create",
+                //                     link: "/admin/dashboard/sessions/create",
+                //                     url: '/admin/dashboard/sessions/create',
+                //                 },
+                //                 {
+                //                     name: "All classes",
+                //                     link: '/admin/dashboard/sessions',
+                //                     url: '/admin/dashboard/sessions',
+                //                 },
+                //             ],
+                //         },
+                //     ]
+                // },
                 {
                     name: "Dashboard",
                     link: "/admin/dashboard",
                     method: "get",
                     icon: ChartPieIcon,
-
-                    urlStartsWith:''
+                    urlStartsWith: ''
                 },
                 {
                     name: "Leads",
                     link: "/admin/dashboard/leads",
                     method: "get",
                     icon: DocumentPlusIcon,
-                    urlStartsWith:'/admin/dashboard/leads',
+                    urlStartsWith: '/admin/dashboard/leads',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/leads/create",
-                            url:'/admin/dashboard/leads/create',
+                            url: '/admin/dashboard/leads/create',
                         },
                         {
                             name: "All leads",
                             link: '/admin/dashboard/leads',
-                            url:'/admin/dashboard/leads',
+                            url: '/admin/dashboard/leads',
                         },
                     ],
                 },
@@ -97,36 +164,36 @@ export default {
                     link: "/admin/dashboard/subscriptionplans",
                     method: "get",
                     icon: IdentificationIcon,
-                    urlStartsWith:'/admin/dashboard/subscriptionplans',
+                    urlStartsWith: '/admin/dashboard/subscriptionplans',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/subscriptionplans/create",
-                            url:'/admin/dashboard/subscriptionplans/create',
+                            url: '/admin/dashboard/subscriptionplans/create',
                         },
                         {
                             name: "All Membership Plans",
                             link: '/admin/dashboard/subscriptionplans',
-                            url:'/admin/dashboard/subscriptionplans',
+                            url: '/admin/dashboard/subscriptionplans',
                         },
                     ],
                 },
                 {
-                    name: "Add-ons",
+                    name: "Add on Plans",
                     link: "/admin/dashboard/addons",
                     method: "get",
-                    icon: IdentificationIcon,
-                    urlStartsWith:'/admin/dashboard/addons',
+                    icon: PlusCircleIcon,
+                    urlStartsWith: '/admin/dashboard/addons',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/addons/create",
-                            url:'/admin/dashboard/addons/create',
+                            url: '/admin/dashboard/addons/create',
                         },
                         {
                             name: "All Add-ons",
                             link: '/admin/dashboard/addons',
-                            url:'/admin/dashboard/addons',
+                            url: '/admin/dashboard/addons',
                         },
                     ],
                 },
@@ -135,17 +202,17 @@ export default {
                     link: "/admin/dashboard/courses",
                     method: "get",
                     icon: BookOpenIcon,
-                    urlStartsWith:'/admin/dashboard/courses',
+                    urlStartsWith: '/admin/dashboard/courses',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/courses/create",
-                            url:'/admin/dashboard/courses/create',
+                            url: '/admin/dashboard/courses/create',
                         },
                         {
                             name: "All courses",
                             link: '/admin/dashboard/courses',
-                            url:'/admin/dashboard/courses',
+                            url: '/admin/dashboard/courses',
                         },
                     ],
                 },
@@ -154,17 +221,17 @@ export default {
                     link: "/admin/dashboard/facilities",
                     method: "get",
                     icon: CubeIcon,
-                    urlStartsWith:'/admin/dashboard/facilities',
+                    urlStartsWith: '/admin/dashboard/facilities',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/facilities/create",
-                            url:'/admin/dashboard/facilities/create',
+                            url: '/admin/dashboard/facilities/create',
                         },
                         {
                             name: "All facilities",
                             link: '/admin/dashboard/facilities',
-                            url:'/admin/dashboard/facilities',
+                            url: '/admin/dashboard/facilities',
                         },
                     ],
                 },
@@ -173,17 +240,17 @@ export default {
                     link: "/admin/dashboard/sessions",
                     method: "get",
                     icon: RectangleStackIcon,
-                    urlStartsWith:'/admin/dashboard/sessions',
+                    urlStartsWith: '/admin/dashboard/sessions',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/sessions/create",
-                            url:'/admin/dashboard/sessions/create',
+                            url: '/admin/dashboard/sessions/create',
                         },
                         {
                             name: "All classes",
                             link: '/admin/dashboard/sessions',
-                            url:'/admin/dashboard/sessions',
+                            url: '/admin/dashboard/sessions',
                         },
                     ],
                 },
@@ -192,17 +259,17 @@ export default {
                     link: "/admin/dashboard/trainers",
                     method: "get",
                     icon: UserIcon,
-                    urlStartsWith:'/admin/dashboard/trainers',
+                    urlStartsWith: '/admin/dashboard/trainers',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/trainers/create",
-                            url:'/admin/dashboard/trainers/create',
+                            url: '/admin/dashboard/trainers/create',
                         },
                         {
                             name: "All trainers",
                             link: '/admin/dashboard/trainers',
-                            url:'/admin/dashboard/trainers',
+                            url: '/admin/dashboard/trainers',
                         },
                     ],
                 },
@@ -211,17 +278,17 @@ export default {
                     link: "/admin/dashboard/trainings",
                     method: "get",
                     icon: SparklesIcon,
-                    urlStartsWith:'/admin/dashboard/trainings',
+                    urlStartsWith: '/admin/dashboard/trainings',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/trainings/create",
-                            url:'/admin/dashboard/trainings/create',
+                            url: '/admin/dashboard/trainings/create',
                         },
                         {
                             name: "All trainings",
                             link: '/admin/dashboard/trainings',
-                            url:'/admin/dashboard/trainings',
+                            url: '/admin/dashboard/trainings',
                         },
                     ],
                 },
@@ -230,17 +297,17 @@ export default {
                     link: "/admin/dashboard/users",
                     method: "get",
                     icon: UserGroupIcon,
-                    urlStartsWith:'/admin/dashboard/users',
+                    urlStartsWith: '/admin/dashboard/users',
                     subMenu: [
                         {
                             name: "Create",
                             link: "/admin/dashboard/users/create",
-                            url:'/admin/dashboard/users/create',
+                            url: '/admin/dashboard/users/create',
                         },
                         {
                             name: "All users",
                             link: "/admin/dashboard/users",
-                            url:'/admin/dashboard/users',
+                            url: '/admin/dashboard/users',
                         },
                     ],
                 },
@@ -249,7 +316,7 @@ export default {
                     link: "/admin/dashboard/profile-info",
                     method: "get",
                     icon: Cog6ToothIcon,
-                    urlStartsWith:'/admin/dashboard/profile-info',
+                    urlStartsWith: '/admin/dashboard/profile-info',
                 },
                 {
                     name: "Sign out",

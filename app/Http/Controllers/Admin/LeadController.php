@@ -84,7 +84,8 @@ class LeadController extends Controller
                 'last_name' => 'required|max:50',
                 'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
                 'source' => 'nullable',
-                'email' => ['required', 'email', Rule::unique('leads', 'email')->ignore($lead)],
+                'email' => ['required', 'email'],
+                'message'=>'nullable'
             ],
             [
                 'phone_number' => 'Enter a valid Phone number with country code',

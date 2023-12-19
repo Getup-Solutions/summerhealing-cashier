@@ -161,7 +161,7 @@ class SubscriptionplanController extends Controller
             $stripePlan = $this->stripe->prices->create([
                 'unit_amount' => $attributes["price"] * 100,
                 'currency' => 'aud',
-                'active' => $attributes['published'] == 1,
+                'active' => $attributes['published'] == true,
                 'product_data' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
             ]);
         } elseif ($attributes['payment_mode'] === 'recurring') {
@@ -169,7 +169,7 @@ class SubscriptionplanController extends Controller
                 'amount' => $attributes["price"] * 100,
                 'currency' => 'aud',
                 'interval' => $attributes["payment_interval"],
-                'active' => $attributes["published"] == 1,
+                'active' => $attributes["published"] == true,
                 "interval_count" => $attributes["payment_interval_count"],
                 'product' => ['name' => $attributes['title'], 'metadata' => ['description' => $attributes['description'], 'thumbnail_url' => $subscriptionplan->thumbnail_url], 'unit_label' => $subscriptionplan->id],
             ]);

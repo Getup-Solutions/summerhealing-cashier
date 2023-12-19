@@ -1,12 +1,16 @@
 <template>
     <div class="rounded-lg h-fit p-4 md:p-2 md:px-4 dark:border-2 dark:border-gray-500 dark:bg-white/20">
         <div class="px-2 md:px-2 pt-4 pb-1">
-            <p class="mb-3 sh-para text-left">Price : {{ item.price }} AUD</p>
-            <p class="mb-3 sh-para text-left" v-if="item.validity">Validity : {{ item.validity }} days
+            <p class="mb-3 sh-para text-left">Price : {{ item.price }} AUD
+                <span class="mb-3 sh-para text-left" v-if="item.payment_mode == 'recurring'">(Billed once per {{
+                    item.payment_interval_count }} {{ item.payment_interval }}s)</span>
+                <span class="mb-3 sh-para text-left" v-if="item.payment_mode == 'one-time'">( Valid for {{
+                    item.payment_interval_count }} {{ item.payment_interval }}s)
+                </span>
             </p>
         </div>
         <Link :href="`/subscription-plan/checkout/${item.id}`">
-            <button class="sh-button rounded-lg flex justify-center items-center w-full gap-2">Purchase
+        <button class="sh-button rounded-lg flex justify-center items-center w-full gap-2">Purchase
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -20,7 +24,7 @@
 </template>
 <script>
 export default {
-    props: ["item","type","url"]
+    props: ["item", "type", "url"]
 }
 </script>
 <script setup>

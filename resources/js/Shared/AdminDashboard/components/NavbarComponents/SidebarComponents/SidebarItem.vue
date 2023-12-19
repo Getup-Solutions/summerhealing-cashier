@@ -3,7 +3,7 @@
         <li v-if="sidebarItem.subMenu">
             <button type="button"
                 class="flex items-center w-full p-2 text-gray-900 transition cursor-pointer duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                @click="menuToggle =!menuToggle"
+                
                 :class="menuToggle ? (this.$page.url.startsWith(sidebarItem.urlStartsWith) ? 'dark:bg-blue-800 bg-blue-200' : ''): (this.$page.url.startsWith(sidebarItem.urlStartsWith) ? 'dark:bg-blue-800 bg-blue-200' : '')"
                 :aria-controls="`dropdown-example-${sidebarItem.name}`"
                 :data-collapse-toggle="`dropdown-example-${sidebarItem.name}`">
@@ -33,12 +33,12 @@
 
 
             </button>
-            <ul :id="`dropdown-example-${sidebarItem.name}`" class="hidden p-2 space-y-2 bg-gray-50 dark:bg-black/10 rounded-lg mt-2"
-                :class="{'bg-gray-300 dark:bg-blue-600/20 block':this.$page.url.startsWith(sidebarItem.urlStartsWith)}">
+            <ul :id="`dropdown-example-${sidebarItem.name}`" class="p-2 space-y-2  rounded-lg mt-2"
+                :class="this.$page.url.startsWith(sidebarItem.urlStartsWith) ? 'bg-gray-300 dark:bg-blue-600/20 block':'hidden bg-gray-50 dark:bg-black/10'">
                 <li v-for="item in sidebarItem.subMenu" :key="item">
                     <Link :href="item.link" v-if="!item.hideIf"
                         class="flex items-center w-full p-2 text-gray-900 cursor-pointer transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                        :class="{'dark:bg-blue-800 bg-gray-100':$page.url === item.url }" preserve-state>
+                        :class="{'dark:bg-blue-800 bg-gray-100':$page.url === item.url }">
                     {{ item.name }}</Link>
                 </li>
             </ul>
@@ -69,6 +69,8 @@ export default {
     },
     mounted() {
         this.menuToggle = false
+        console.log(this.sidebarItem.name);
+        console.log(this.$page.url);
         console.log(this.$page.url.startsWith(this.sidebarItem.urlStartsWith));
     },    
 };

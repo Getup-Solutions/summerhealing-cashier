@@ -11,7 +11,8 @@
         <TransitionChild as="template" enter="transition ease-in-out duration-300 transform"
           enter-from="-translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform"
           leave-from="translate-x-0" leave-to="-translate-x-full">
-          <DialogPanel class="relative flex w-full max-w-xs flex-col overflow-y-auto dark:bg-sh_dark_blue pb-12 shadow-xl">
+          <DialogPanel
+            class="relative flex w-full max-w-xs flex-col overflow-y-auto dark:bg-sh_dark_blue pb-12 shadow-xl">
             <div class="flex px-4 pb-2 pt-5">
               <button type="button" class="-m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
                 @click="open = false">
@@ -24,7 +25,8 @@
             <TabGroup as="div" class="mt-2">
               <div class="border-b border-gray-200">
                 <TabList class="-mb-px flex space-x-8 px-4">
-                  <Tab as="template" v-for="subscription in navMenu.subscriptions" :key="subscription.name" v-slot="{ selected }">
+                  <Tab as="template" v-for="subscription in navMenu.subscriptions" :key="subscription.name"
+                    v-slot="{ selected }">
                     <button :class="[
                       selected
                         ? 'border-transparent text-blue-700'
@@ -96,21 +98,10 @@
   </TransitionRoot>
 
   <header class="relative bg-white dark:bg-sh_dark_blue">
-    <Link href="/admin/dashboard" v-if="usePage().props.is_admin_logged"
-      class="fixed top-0 left-0 right-0 z-50 flex h-10 items-center justify-center bg-gray-800 px-4 text-xs font-medium text-white sm:px-6 lg:px-8 hover:underline cursor-pointer gap-2">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-      <path fill-rule="evenodd"
-        d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"
-        clip-rule="evenodd" />
-      <path fill-rule="evenodd"
-        d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"
-        clip-rule="evenodd" />
-    </svg>
 
-    Hello Admin, Visit Admin Dashboard!
-    </Link>
 
-    <p v-if="usePage().props.is_admin_logged" class="flex h-10 items-center justify-center bg-blue-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+    <p v-if="usePage().props.is_admin_logged"
+      class="flex h-10 items-center justify-center bg-blue-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
       {{ usePage().props.banner_text }}
     </p>
 
@@ -133,7 +124,8 @@
           <!-- Flyout menus -->
           <PopoverGroup class="hidden lg:ml-8 lg:block lg:self-stretch z-50">
             <div class="flex h-full space-x-8 items-center">
-              <Popover v-for="subscription in navMenu.subscriptions" :key="subscription.name" class="flex" v-slot="{ open }">
+              <Popover v-for="subscription in navMenu.subscriptions" :key="subscription.name" class="flex"
+                v-slot="{ open }">
                 <div class="relative flex">
                   <PopoverButton :class="[
                     open
@@ -156,11 +148,13 @@
                           <div class="col-start-2 grid grid-cols-2 gap-x-8">
                             <div v-for="item in subscription.featured" :key="item.name"
                               class="group relative text-base sm:text-sm">
-                              <div class="overflow-hidden rounded-lg bg-gray-100 dark:bg-white group-hover:opacity-75 h-48 w-48">
+                              <div
+                                class="overflow-hidden rounded-lg bg-gray-100 dark:bg-white group-hover:opacity-75 h-48 w-48">
                                 <img :src="item.imageSrc" :alt="item.imageAlt" @click="close"
                                   class="object-cover object-center" />
                               </div>
-                              <Link :href="item.href" @click="close" class="mt-6 block font-medium text-gray-900 dark:text-gray-300">
+                              <Link :href="item.href" @click="close"
+                                class="mt-6 block font-medium text-gray-900 dark:text-gray-300">
                               <span class="absolute inset-0 z-10" aria-hidden="true" />
                               {{ item.name }}
                               </Link>
@@ -169,13 +163,16 @@
                           </div>
                           <div class="row-start-1 grid grid-cols-3 gap-x-8 text-sm">
                             <div v-for="section in subscription.sections" :key="section.name">
-                              <p :id="`${section.name}-heading`" class="font-medium text-lg text-gray-900 dark:text-gray-100">
+                              <p :id="`${section.name}-heading`"
+                                class="font-medium text-lg text-gray-900 dark:text-gray-100">
                                 {{ section.name }}
                               </p>
                               <ul role="list" :aria-labelledby="`${section.name}-heading`"
                                 class="mt-2 sm:gap-x-48 space-y-1">
                                 <li v-for="item in section.items" :key="item.title" class="">
-                                  <Link :href="item.slug" class="hover:text-gray-800 font-light dark:text-gray-300 hover:dark:text-gray-100" @click="close">
+                                  <Link :href="item.slug"
+                                    class="hover:text-gray-800 font-light dark:text-gray-300 hover:dark:text-gray-100"
+                                    @click="close">
                                   <p>{{ item.title }}</p>
                                   </Link>
                                 </li>
@@ -190,7 +187,8 @@
               </Popover>
 
               <Link v-for="page in navMenu.pages" :key="page.name" :href="page.href"
-                class="flex items-center text-sm font-medium text-gray-700 dark:text-sh_yellow hover:text-gray-800">{{ page.name }}</Link>
+                class="flex items-center text-sm font-medium text-gray-700 dark:text-sh_yellow hover:text-gray-800">{{
+                  page.name }}</Link>
             </div>
           </PopoverGroup>
 
@@ -199,7 +197,8 @@
               <Link href="/login" class="text-sm font-medium text-gray-700 dark:text-sh_yellow hover:text-gray-800"
                 v-if="!usePage().props.logged_user.full_name ?? false">Sign in</Link>
               <Link href="/dashboard"
-                class="text-sm font-medium text-gray-700 dark:text-white hover:text-gray-800 flex items-center gap-2" v-else>
+                class="text-sm font-medium text-gray-700 dark:text-white hover:text-gray-800 flex items-center gap-2"
+                v-else>
               Hi, {{ usePage().props.logged_user.first_name }}
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                 <path fill-rule="evenodd"
@@ -210,8 +209,8 @@
               <span class="h-6 w-px bg-gray-200" aria-hidden="true" />
               <Link href="/register" class="text-sm font-medium text-gray-700 dark:text-white hover:text-gray-800"
                 v-if="!usePage().props.logged_user.full_name ?? false">Create account</Link>
-              <Link href="/logout" method="post" as="button" class="text-sm font-medium text-gray-700  dark:text-white hover:text-gray-800"
-                v-else>Log out</Link>
+              <Link href="/logout" method="post" as="button"
+                class="text-sm font-medium text-gray-700  dark:text-white hover:text-gray-800" v-else>Log out</Link>
             </div>
 
             <!-- <div class="hidden lg:ml-8 lg:flex">
@@ -224,8 +223,8 @@
 
             <!-- Search -->
             <div class="flex lg:ml-6">
-              <button class="p-2 text-gray-400 hover:text-gray-500 dark:text-white hover:dark:text-gray-200" data-dropdown-toggle="dropdownSearch"
-                data-dropdown-placement="bottom" id="dropdownSearchButton">
+              <button class="p-2 text-gray-400 hover:text-gray-500 dark:text-white hover:dark:text-gray-200"
+                data-dropdown-toggle="dropdownSearch" data-dropdown-placement="bottom" id="dropdownSearchButton">
                 <span class="sr-only">Search</span>
                 <MagnifyingGlassIcon class="h-6 w-6" aria-hidden="true" />
               </button>
@@ -253,10 +252,12 @@
             <!-- Cart -->
             <div class="ml-4 flow-root lg:ml-6">
               <div class="group -m-2 flex items-center p-2 cursor-pointer">
-                <ShoppingBagIcon class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-200 dark:text-white hover:dark:text-gray-200 cursor-pointer"
+                <ShoppingBagIcon
+                  class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-200 dark:text-white hover:dark:text-gray-200 cursor-pointer"
                   aria-hidden="true" @click="$emit('cartOpen', true)" />
-                <span class="ml-2 text-sm font-medium text-gray-700 dark:text-white hover:dark:text-gray-200 group-hover:text-gray-800 dark:group-hover:text-gray-200">{{
-                  usePage().props.cartCount ?? 0 }}</span>
+                <span
+                  class="ml-2 text-sm font-medium text-gray-700 dark:text-white hover:dark:text-gray-200 group-hover:text-gray-800 dark:group-hover:text-gray-200">{{
+                    usePage().props.cartCount ?? 0 }}</span>
                 <span class="sr-only">items in cart, view bag</span>
               </div>
             </div>
@@ -264,6 +265,20 @@
         </div>
       </div>
     </nav>
+
+    <Link href="/admin/dashboard" v-if="usePage().props.is_admin_logged"
+      class="fixed top-0 left-0 right-0 z-50 flex h-10 items-center justify-center bg-gray-800 px-4 text-xs font-medium text-white sm:px-6 lg:px-8 hover:underline cursor-pointer gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+      <path fill-rule="evenodd"
+        d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"
+        clip-rule="evenodd" />
+      <path fill-rule="evenodd"
+        d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"
+        clip-rule="evenodd" />
+    </svg>
+
+    Hello Admin, Visit Admin Dashboard!
+    </Link>
   </header>
 </template>
 <script>

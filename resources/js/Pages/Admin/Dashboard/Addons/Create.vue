@@ -1,10 +1,7 @@
 <template>
-    <DeleteAlert v-if="deleteId" :id="deleteId" @close="deleteId = false" :url="'/admin/dashboard/subscriptionplans/'"
-        :text="'Deleting the subscription plan will permanently removed from the database. You can\'t recover the subscription plan again. Are you sure about deleting?'">
-    </DeleteAlert>
     <div class="grid gap-8">
         <!-- Modal content -->
-        <Modal :modalHeadingText="'Edit Membership Plan'" :modalHeadingResetButton="true" :modalWidth="2"
+        <Modal :modalHeadingText="'Create Add on'" :modalHeadingResetButton="true" :modalWidth="2"
             :showError="hideError">
             <template #body>
                 <div class="grid md:grid-cols-2 gap-6 gap-y-4">
@@ -15,16 +12,18 @@
                     <FormSimpleInput :label="'Slug'" :name="'slug'" :type="'text'" v-model="subscriptionPlanInfo.slug"
                         @change="createSlug()" :error="errors.slug">
                     </FormSimpleInput>
+
                 </div>
                 <div>
                     <FormTextArea :label="'Description'" :name="'description'" v-model="subscriptionPlanInfo.description"
                         :error="errors.description">
                     </FormTextArea>
                 </div>
+
                 <div>
-                    <FormFileUploadSingle @fileChange="(file) => (subscriptionPlanInfo.thumbnail = file[0])"
-                        :label="'Thumbnail'" :oldImageLink="subscriptionplan.thumbnail_url" :rounded="false"
-                        :name="'thumbnail'" :hideInputBox="true" :error="errors.thumbnail"></FormFileUploadSingle>
+                    <FormFileUploadSingle @fileChange="(file) => (subscriptionPlanInfo.thumbnail = file[0])
+                        " :label="'Thumbnail'" :oldImageLink="oldThumbnail" :rounded="false" :name="'thumbnail'"
+                        :hideInputBox="true" :error="errors.thumbnail"></FormFileUploadSingle>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-6 border-t border-gray-600 gap-y-4 py-4">
@@ -70,57 +69,58 @@
                         </FormSelect>
                     </div>
                 </div>
-
-
                 <div class="grid grid-cols-2 gap-6">
-                    <FormCheckBox :label="'Limit to 1 purchase per person'" :name="'limit_purchase'" :checked="subscriptionPlanInfo.limit_purchase == 1"
+                    <FormCheckBox :label="'Limit to 1 purchase per person'" :name="'limit_purchase'"
                         v-model="subscriptionPlanInfo.limit_purchase" :error="errors.limit_purchase">
                     </FormCheckBox>
-                    <FormCheckBox :label="'Published'" :name="'published'"
+                    <FormCheckBox :label="'Published'" :name="'published'" :checked="true"
                         v-model="subscriptionPlanInfo.published" :error="errors.published">
                     </FormCheckBox>
 
                 </div>
+
+
             </template>
             <template #footer>
-                <Button @click.prevent="editRequest({
-                    url: '/admin/dashboard/subscriptionplans/',
-                    data: subscriptionPlanInfo,
-                    dataId: subscriptionplan.id,
-                    only: ['flash', 'errors', 'subscriptionplan'],
-                })" :text="'Update Subscription plan'" :color="'blue'"></Button>
-                <Button @click.prevent="deleteId = subscriptionplan.id" :text="'Delete Subscription plan'"
-                    :color="'red'"></Button>
+                <Button @click.prevent="
+                    createRequest({
+                        url: '/admin/dashboard/subscriptionplans',
+                        data: subscriptionPlanInfo,
+                        only: ['flash', 'errors'],
+                    })
+                    " :text="'Create a Membership Plan'" :color="'blue'"></Button>
             </template>
         </Modal>
 
-        <CreditEdit :errors="errors" :showError="!hideError" @creditsEdited="(value) => hideError = value"
-            :sessions="sessions" :facilities="facilities" :editURL="'/admin/dashboard/subscriptionplans/'"
-            :editData="subscriptionPlanInfo" :editDataId="subscriptionplan.id" :sessionGenCredits="sessionGenCredits ?? []"
-            :facilityGenCredits="facilityGenCredits ?? []" :facilityCredits="facilityCredits ?? []"
-            :sessionCredits="sessionCredits ?? []"></CreditEdit>
+        <CreditCreate :errors="errors" :showError="!hideError" @creditsCreated="(value) => hideError = value"
+            :sessions="sessions" :facilities="facilities" :createURL="'/admin/dashboard/subscriptionplans'"
+            :createData="subscriptionPlanInfo"></CreditCreate>
     </div>
 </template>
 <script>
 export default {
-    props: ["errors", "sessions", "facilities", "subscriptionplan", "sessionGenCredits", "facilityGenCredits", "facilityCredits", "sessionCredits"],
+    props: ["errors", "sessions", "facilities"],
     data() {
         return {
-            subscriptionPlanInfo: this.subscriptionplan,
-            deleteId: false,
+            subscriptionPlanInfo: { payment_mode: 'one-time',limit_purchase:false },
             hideError: true
         };
     },
     mounted() {
-        this.subscriptionPlanInfo.published = true
+        this.subscriptionPlanInfo.published = true;
     },
     methods: {
         nameToSlug() {
-            this.subscriptionPlanInfo.slug = changeToSlug(this.subscriptionPlanInfo.title)
+            this.subscriptionPlanInfo.slug = changeToSlug(
+                this.subscriptionPlanInfo.title
+            );
         },
         createSlug() {
-            this.subscriptionPlanInfo.slug = changeToSlug(this.subscriptionPlanInfo.title, this.subscriptionPlanInfo.slug)
-        }
+            this.subscriptionPlanInfo.slug = changeToSlug(
+                this.subscriptionPlanInfo.title,
+                this.subscriptionPlanInfo.slug
+            );
+        },
     },
 };
 </script>
@@ -132,19 +132,16 @@ import Modal from "../../../../Shared/Modal/Modal.vue";
 import FormCheckBox from "../../../../Shared/FormElements/FormCheckBox.vue";
 import FormTextArea from "../../../../Shared/FormElements/FormTextArea.vue";
 import FormSelect from "../../../../Shared/FormElements/FormSelect.vue";
-import DeleteAlert from "../../../../Shared/DeleteAlert.vue";
+import CreditCreate from "../Credits/Create.vue";
 
-import { changeToSlug, editRequest } from '../../../../main.js'
 
-import CreditEdit from "../Credits/Edit.vue";
-import { onMounted } from 'vue'
-import { initFlowbite } from 'flowbite'
+import { changeToSlug, createRequest } from "../../../../main.js";
 
+import { onMounted } from "vue";
+import { initFlowbite } from "flowbite";
 
 // initialize components based on data attribute selectors
 onMounted(() => {
     initFlowbite();
-})
-
-
+});
 </script>

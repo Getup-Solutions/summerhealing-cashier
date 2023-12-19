@@ -47,7 +47,7 @@
                             <div v-if="user_have_subscriptionplan">
                                 <div class="px-2 bg-white/20 border-2 border-white md:px-4 rounded-lg py-4">
                                     <p class="sh-para text-left">
-                                        You already have this Subscription
+                                        You already have this Membership
                                     </p>
                                 </div>
                             </div>

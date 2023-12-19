@@ -14,11 +14,17 @@ class AdminDashboardController extends Controller
 
     }
 
-    // public function profileInfo()
+    public function profileInfo()
+    {
+        return Inertia::render('Admin/Dashboard/ProfileInfo', [
+            'user' => Auth::guard('web')->user(),
+        ]);
+
+    }
+
+    // public function profileInfoUpdate()
     // {
-    //     return Inertia::render('AdminDashboard/ProfileInfo', [
-    //         'user' => Auth::guard('web')->user(),
-    //     ]);
+        
 
     // }
 }
